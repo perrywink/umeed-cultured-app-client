@@ -16,10 +16,9 @@ jobs:
     strategy:
       matrix:
         node-version: ${{ fromJSON(github.ref == 'refs/heads/main' && '[18]' || '[14,16,18]') }}
-        os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["ubuntu-latest"]' || '["ubuntu-latest", "windows-latest"]') }}
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    runs-on: ${{ matrix.os }}
+    runs-on: 'ubuntu-latest'
 
     steps:
     - name: checkout repository
@@ -36,31 +35,10 @@ jobs:
 
     - name: Build
       run: npm run build --if-present
-  
-  unit-tests:
-
-    runs-on: ubuntu-latest
-    needs: build
-
-    strategy:
-      matrix:
-        node-version: ${{ fromJSON(github.ref == 'refs/heads/main' && '[18]' || '[14,16,18]') }}
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     
-    steps:
-
-    - name: checkout repository
-      uses: actions/checkout@v3
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
     - name: Run Unit tests
       run: npm run test
-  
+
   # for future
   # perf-tests:
 
@@ -77,4 +55,32 @@ jobs:
 
   #   - name: Run Perf tests
   #     run: npm run perf-test
+
+  deploy:
+
+    runs-on: ubuntu-latest
+    needs: unit-tests
+
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+    
+    - name: Install Railway
+      run: npm i -g @railway/cli
+
+    - name: Deploy
+      run: railway up
+      env:
+        RAILWAY_TOKEN: aeb1ecd9-4b0f-4002-bdb8-0dd174ad5309
+
+
+
+
+
 
