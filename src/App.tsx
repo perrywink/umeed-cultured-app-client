@@ -2,29 +2,31 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 import { auth } from "./lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
-import UserContext from "./context/UserContext";
+import AuthContext from "./context/AuthContext";
 import Root from "./pages/Root";
 
 
 function App() {
-  const [user, setUser] = useState<string | null>("");
-  
+  const [authToken, setAuthToken] = useState<string | null>(
+    sessionStorage.getItem("auth_token")
+  );
+
   useEffect(() => {
-    onAuthStateChanged(auth, async (user) => {
-      return auth.onAuthStateChanged(async (user) => {
-        user ? setUser(user.uid) : setUser(null)
-      });
-    })
+    return auth.onAuthStateChanged(async (user) => {
+      if (user){
+        sessionStorage.setItem("auth_token", user?.refreshToken)
+        user ? setAuthToken(user.refreshToken) : setAuthToken(null)
+      }
+    });
   },[])
 
   return (
-    <UserContext.Provider value={user}>
+    <AuthContext.Provider value={authToken}>
       <Router>
         <Root/>
       </Router>
-    </UserContext.Provider>
+    </AuthContext.Provider>
   )
 }
 

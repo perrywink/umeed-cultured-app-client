@@ -7,7 +7,7 @@ type Props = {
 }
 
 const Button = ({handleClick, children, isDisabled = false}: Props) => {
-  const enabledStyles = "transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 hover:shadow-md"
+  const enabledStyles = "transition duration-200 bg-umeed-tangerine-500 hover:bg-umeed-tangerine-700 focus:bg-umeed-tangerine-700 focus:shadow-sm focus:ring-4 focus:bg-umeed-tangerine-700 focus:ring-opacity-50 hover:shadow-md"
 
   return (
     <button

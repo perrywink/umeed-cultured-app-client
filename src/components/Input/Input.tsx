@@ -1,11 +1,12 @@
 type Props = {
-  label: string,
-  handleChange: React.ChangeEventHandler<HTMLInputElement> | undefined,
-  type: string
-  isDisabled?: boolean
+  type: string;
+  label: string;
+  handleChange: React.ChangeEventHandler<HTMLInputElement> | undefined;
+  isDisabled?: boolean;
+  isRequired?: boolean;
 };
 
-const Input = ({label, handleChange, type, isDisabled = false}: Props) => {
+const Input = ({ label, handleChange, isDisabled = false, type }: Props) => {
   return (
     <>
       <label className="font-semibold text-sm text-gray-600 pb-1 block">

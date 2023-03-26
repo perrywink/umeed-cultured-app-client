@@ -21,6 +21,7 @@ const AuthForm = (props: Props) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleError = (error: FirebaseError) => {
     if(error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
@@ -40,16 +41,16 @@ const AuthForm = (props: Props) => {
       signInWithEmailAndPassword(auth, email, password)
         .then(() => navigate('/dashboard'))
         .catch(e => handleError(e))
-    } else {
+    } else if (!isLogin && (confirmPassword === password)) {
       createUserWithEmailAndPassword(auth, email, password)
-        .then(() => navigate('/login'))
+        .then(() => {navigate('/login')})
         .catch(e => handleError(e))
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
-      <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
+      <div className="p-10 xs:p-0 mx-0 md:mx-auto md:w-full md:max-w-md">
         <h1 className="font-bold text-center text-2xl mb-5">Cultured UP App</h1>
         <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
           <div className="px-5 py-7">
@@ -63,7 +64,14 @@ const AuthForm = (props: Props) => {
               label="Password"
               handleChange={(e) => setPassword(e.target.value)}
             />
-            <Button handleClick={handleSubmit} isDisabled={!email || !password}>
+            { !isLogin && (
+              <Input
+                type="password"
+                label="Confirm Password"
+                handleChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            )}
+            <Button handleClick={handleSubmit}>
               {isLogin ? "Login" : "Register"}
             </Button>
           </div>
