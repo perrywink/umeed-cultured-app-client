@@ -1,7 +1,7 @@
 import {
   BrowserRouter as Router,
 } from "react-router-dom";
-import { auth } from "./lib/firebase";
+import { auth } from "./config/firebase";
 import { useEffect, useState } from "react";
 import AuthContext from "./context/AuthContext";
 import Root from "./pages/Root";
