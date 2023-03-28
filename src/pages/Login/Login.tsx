@@ -1,7 +1,5 @@
 import { auth } from "../../config/firebase";
-import {
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Button, Icon, Input, LinkButton } from "../../components";
 import { ToastContainer, toast } from "react-toastify";
@@ -14,15 +12,14 @@ import useFormValidator from "../../hooks/useFormValidator";
 const AuthForm = () => {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>(false)
-  const {handleFirebaseAuthError} = useFirebaseAuthErrorHandler()
-  const {checkEmptyFields, checkMatchingFields} = useFormValidator()
-
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const { handleFirebaseAuthError } = useFirebaseAuthErrorHandler();
+  const { checkEmptyFields, checkMatchingFields } = useFormValidator();
 
   const handleError = (error: FirebaseError) => {
-    toast.error(handleFirebaseAuthError(error))
+    toast.error(handleFirebaseAuthError(error));
   };
 
   const validateForm = () => {
@@ -49,8 +46,10 @@ const AuthForm = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
-      <div className="p-10 xs:p-0 mx-0 md:mx-auto md:w-full md:max-w-md">
-        <h1 className="font-bold text-center text-2xl mb-5">Cultured UP App</h1>
+      <div className="md:p-10 p-3 mx-0 md:mx-auto md:w-full md:max-w-md">
+        <h1 className="font-cormorant text-center text-4xl mb-10">
+          Cultured UP App
+        </h1>
         <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
           <div className="px-5 py-7">
             <Input
@@ -71,16 +70,15 @@ const AuthForm = () => {
             <div className="grid grid-cols-2 gap-1">
               <div className="text-left whitespace-nowrap">
                 <LinkButton handleClick={() => {}}>
-                  <div className="inline-block align-text-bottom">
-                    <Icon
-                      size={4}
-                      strokeWidth={2}
-                      d={
-                        "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      }
-                    />
-                  </div>
-                  <span className="inline-block ml-1">Forgot Password?</span>
+                  <Icon
+                    size={5}
+                    strokeWidth={2}
+                    styles="inline-block align-text-top"
+                    d={
+                      "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    }
+                  />
+                  <span className="inline-block ml-1">Forgot Password</span>
                 </LinkButton>
               </div>
               <div className="text-right whitespace-nowrap">
@@ -89,16 +87,15 @@ const AuthForm = () => {
                     navigate("/register");
                   }}
                 >
-                  <div className="inline-block align-text-bottom">
-                    <Icon
-                      size={4}
-                      strokeWidth={2}
-                      d={
-                        "M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                      }
-                    />
-                  </div>
-                  <span className="inline-block ml-1">Register?</span>
+                  <Icon
+                    size={5}
+                    strokeWidth={2}
+                    styles="inline-block align-text-top"
+                    d={
+                      "M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                    }
+                  />
+                  <span className="inline-block ml-1">Register</span>
                 </LinkButton>
               </div>
             </div>

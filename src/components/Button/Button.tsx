@@ -14,7 +14,7 @@ const Button = ({handleClick, children, isDisabled = false, isLoading}: Props) =
   return (
     <button
       type="button"
-      className={`${isDisabled ? "bg-gray-300" : enabledStyles} text-white w-full py-2.5 rounded-lg text-sm shadow-sm font-semibold text-center inline-block flex items-center justify-center`}
+      className={`${isDisabled ? "bg-gray-300" : enabledStyles} text-white w-full py-2.5 rounded-lg text-xl shadow-sm font-semibold text-center inline-block flex items-center justify-center`}
       onClick={handleClick}
       disabled={isDisabled}
     >

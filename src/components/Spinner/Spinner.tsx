@@ -2,7 +2,7 @@ type Props = {
     size?: number
 }
 
-const Spinner = ({size = 4} : Props) => {
+const Spinner = ({size = 5} : Props) => {
   return (
     <div className="flex items-center justify-center">
       <div

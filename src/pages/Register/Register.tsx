@@ -53,8 +53,8 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
-      <div className="p-10 xs:p-0 mx-0 md:mx-auto md:w-full md:max-w-md">
-        <h1 className="font-bold text-center text-2xl mb-5">Cultured UP App</h1>
+      <div className="md:p-10 p-3 mx-0 md:mx-auto md:w-full md:max-w-md">
+        <h1 className="font-cormorant text-center text-4xl mb-10">Cultured UP App</h1>
         <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
           <div className="px-5 py-7">
             <Input
@@ -82,14 +82,14 @@ const Register = () => {
                 <LinkButton handleClick={() => {}}>
                   <div className="inline-block align-text-bottom">
                     <Icon
-                      size={4}
+                      size={5}
                       strokeWidth={2}
                       d={
                         "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                       }
                     />
                   </div>
-                  <span className="inline-block ml-1">Forgot Password?</span>
+                  <span className="inline-block ml-1">Forgot Password</span>
                 </LinkButton>
               </div>
               <div className="text-right whitespace-nowrap">
@@ -100,7 +100,7 @@ const Register = () => {
                 >
                   <div className="inline-block align-text-bottom">
                     <Icon
-                      size={4}
+                      size={5}
                       strokeWidth={2}
                       d={
                         "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"

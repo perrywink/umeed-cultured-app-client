@@ -23,8 +23,8 @@ module.exports = {
       'umeed-cyan':'#D4F1F4'
     },
     fontFamily:{
-      'umeed-serif': ['Cormorant Garamond', 'serif'],
-      'umeed-sans-serif': ['Roboto', 'sans-serif']
+      'cormorant': ['Cormorant Garamond', 'serif'],
+      'sans': ['Roboto', 'sans-serif']
     },
     extend: {},
   },
