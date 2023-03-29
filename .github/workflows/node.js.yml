@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ${{ fromJSON(github.ref == 'refs/heads/main' && '[18]' || '[14,16,18]') }}
+        node-version: ${{ fromJSON(github.ref == 'refs/heads/main' && '[18]' || '[16,18]') }}
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     runs-on: 'ubuntu-latest'
@@ -75,7 +75,7 @@ jobs:
       run: npm i -g @railway/cli
 
     - name: Deploy
-      run: railway up
+      run: railway up --service cultured-app-client
       env:
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
