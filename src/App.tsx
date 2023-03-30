@@ -1,8 +1,32 @@
+import {
+  BrowserRouter as Router,
+} from "react-router-dom";
+import { auth } from "./config/firebase";
+import { useEffect, useState } from "react";
+import AuthContext from "./context/AuthContext";
+import Root from "./pages/Root";
+
+
 function App() {
+  const [authToken, setAuthToken] = useState<string | null>(
+    sessionStorage.getItem("auth_token")
+  );
+
+  useEffect(() => {
+    return auth.onAuthStateChanged(async (user) => {
+      if (user){
+        sessionStorage.setItem("auth_token", user?.refreshToken)
+        user ? setAuthToken(user.refreshToken) : setAuthToken(null)
+      }
+    });
+  },[])
+
   return (
-    <div className="text-3xl font-bold">
-      <h1>Umeed Pschology App</h1>
-    </div>
+    <AuthContext.Provider value={authToken}>
+      <Router>
+        <Root/>
+      </Router>
+    </AuthContext.Provider>
   )
 }
 
