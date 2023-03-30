@@ -8,23 +8,29 @@ import { FirebaseError } from "firebase/app";
 import { useNavigate } from "react-router-dom";
 import useFirebaseAuthErrorHandler from "../../hooks/useFirebaseAuthErrorHandler";
 import useFormValidator from "../../hooks/useFormValidator";
+import { useCreateUser } from "../../api/user";
+import { RegUser } from "../../types/User";
 
 const Register = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
   const { handleFirebaseAuthError } = useFirebaseAuthErrorHandler();
   const { checkEmptyFields, checkMatchingFields } = useFormValidator();
+
+  const { mutate: registerUser } = useCreateUser();
 
   const handleError = (error: FirebaseError) => {
     toast.error(handleFirebaseAuthError(error));
   };
 
   const validateForm = () => {
-    if (!checkEmptyFields([email, password, confirmPassword])) {
+    if (!checkEmptyFields([email, username, password, confirmPassword])) {
       toast.error("All required fields are not filled up.");
       return false;
     }
@@ -36,6 +42,14 @@ const Register = () => {
   };
 
   const handleSuccess = () => {
+    const newUser : RegUser = {
+      email: email,
+      username: username,
+      userType: "USER",
+    }
+
+    registerUser(newUser);
+
     navigate("/dashboard");
     toast.success("You're logged in!");
   };
@@ -61,6 +75,11 @@ const Register = () => {
               type="text"
               label="Email"
               handleChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              type="text"
+              label="Username"
+              handleChange={(e) => setUsername(e.target.value)}
             />
             <Input
               type="password"

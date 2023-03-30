@@ -16,7 +16,7 @@ const AuthForm = () => {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const { handleFirebaseAuthError } = useFirebaseAuthErrorHandler();
-  const { checkEmptyFields, checkMatchingFields } = useFormValidator();
+  const { checkEmptyFields } = useFormValidator();
 
   const handleError = (error: FirebaseError) => {
     toast.error(handleFirebaseAuthError(error));
