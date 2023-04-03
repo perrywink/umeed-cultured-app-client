@@ -8,6 +8,8 @@ import { FirebaseError } from "firebase/app";
 import { useNavigate } from "react-router-dom";
 import useFirebaseAuthErrorHandler from "../../hooks/useFirebaseAuthErrorHandler";
 import useFormValidator from "../../hooks/useFormValidator";
+import { createAuthToken } from "../../api/auth";
+import secureLocalStorage from "react-secure-storage";
 
 const AuthForm = () => {
   const navigate = useNavigate();
@@ -30,16 +32,22 @@ const AuthForm = () => {
     return true;
   };
 
-  const handleSuccess = () => {
-    navigate("/dashboard");
-    toast.success("You're logged in!");
+  const handleSuccess = (username: string) => {
+    createAuthToken(username)
+    .then( response => {
+      const token = response.data.token;
+      secureLocalStorage.setItem("token", token);
+      navigate("/dashboard");
+      toast.success("You're logged in!");
+    })
+    .catch((e) => handleError(e));
   };
 
   const handleSubmit = () => {
     if (!validateForm()) return;
     setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => handleSuccess())
+      .then(() => handleSuccess(email))
       .catch((e) => handleError(e))
       .finally(() => setLoading(false));
   };

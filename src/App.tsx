@@ -23,6 +23,7 @@ function App() {
         sessionStorage.setItem("auth_token", user?.refreshToken)
         user ? setAuthToken(user.refreshToken) : setAuthToken(null)
       }
+
     });
   },[])
 
