@@ -6,8 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FirebaseError } from "firebase/app";
 import { useNavigate } from "react-router-dom";
-import useFirebaseAuthErrorHandler from "../../hooks/useFirebaseAuthErrorHandler";
-import useFormValidator from "../../hooks/useFormValidator";
+import { useFirebaseAuthErrorHandler, useFormValidator } from "../../hooks";
 
 const AuthForm = () => {
   const navigate = useNavigate();
