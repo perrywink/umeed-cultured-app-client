@@ -40,7 +40,7 @@ const AuthForm = () => {
       navigate("/dashboard");
       toast.success("You're logged in!");
     })
-    .catch((e) => handleError(e));
+    .catch((e) => console.log(e));
   };
 
   const handleSubmit = () => {

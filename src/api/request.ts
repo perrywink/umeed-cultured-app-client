@@ -1,8 +1,10 @@
 import axios from 'axios';
+import secureLocalStorage from "react-secure-storage";
 
-const client = axios.create({ baseURL: "http://localhost:3000" });
+
+const client = axios.create({ baseURL: import.meta.env.VITE_BASE_URL  });
 export const request = async (options: any) => {
-  client.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('token')}`;
+  client.defaults.headers.common.Authorization = `Bearer ${secureLocalStorage.getItem('token')}`;
 
   const onSuccess = (response: any) => {
     return response;
