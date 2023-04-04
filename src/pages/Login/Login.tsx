@@ -57,7 +57,7 @@ const AuthForm = () => {
             Hi Again!
           </div>
           <div className="text-center font-sans text-sm font-light text-gray-600 mt-2 mb-5">
-            Put in your details to continue.
+            Enter your details to continue.
           </div>
           <Input
             type="text"

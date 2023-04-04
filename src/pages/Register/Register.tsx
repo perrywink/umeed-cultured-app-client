@@ -61,8 +61,8 @@ const Register = () => {
           <div className="text-center font-cormorant italic text-5xl font-bold text-gray-900">
             Welcome!
           </div>
-          <div className="text-center font-sans text-md font-light text-gray-600 mt-2 mb-5">
-            Enter your details to get started!
+          <div className="text-center font-sans text-sm font-light text-gray-600 mt-2 mb-5">
+            Enter your details to get started.
           </div>
           <Input
             type="text"
