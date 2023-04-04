@@ -1,6 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 const colors = require('tailwindcss/colors')
 
+// deleting deprecated color names to silence warnings
+delete colors['lightBlue'];
+delete colors['warmGray'];
+delete colors['trueGray'];
+delete colors['coolGray'];
+delete colors['blueGray'];
+
 module.exports = {
   content: [
     "./index.html",
@@ -11,8 +18,11 @@ module.exports = {
       ...colors,
       'umeed-dogwood':'#F6D2C2',
       'umeed-tangerine':{
-        500: '#ECA484',
-        700: '#DE612B'
+        100: '#f8ded3',
+        300: '#eb9d7a',
+        500: '#dd5c22',
+        700: '#853714',
+        900: '#2c1207'
       },
       'umeed-beige': '#EC9C83',
       'umeed-brown':'#B3867A',

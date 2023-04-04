@@ -1,26 +1,17 @@
 import { ReactNode } from "react";
-import Spinner from "../Spinner/Spinner";
 
-type Props = {
-    handleClick : () => void
-    children: ReactNode
-    isDisabled?: boolean
-    isLoading?: boolean
-}
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode;
+  styles?: string;
+};
 
-const Button = ({handleClick, children, isDisabled = false, isLoading}: Props) => {
-  const enabledStyles = "transition duration-20 bg-umeed-tangerine-500 hover:bg-umeed-tangerine-700 focus:bg-umeed-tangerine-700 focus:shadow-sm focus:ring-4 focus:bg-umeed-tangerine-700 focus:ring-opacity-50 hover:shadow-md"
-
+const Button = ({ children, styles, ...rest }: Props) => {
   return (
     <button
-      type="button"
-      className={`${isDisabled ? "bg-gray-300" : enabledStyles} text-white w-full py-2.5 rounded-lg text-xl shadow-sm font-semibold text-center inline-block flex items-center justify-center`}
-      onClick={handleClick}
-      disabled={isDisabled}
+      className={`font-cormorant rounded-none w-full p-2 font-medium tracking-wide transition-colors duration-300 transform focus:outline-none bg-umeed-tangerine-300 text-gray-800 hover:bg-umeed-tangerine-700 hover:text-white ${styles}`}
+      {...rest}
     >
-      <span className="inline-block mr-2">
-        {isLoading ?  <Spinner/> : children}
-      </span>
+      {children}
     </button>
   );
 };
