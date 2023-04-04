@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import useFirebaseAuthErrorHandler from "../../hooks/useFirebaseAuthErrorHandler";
 import useFormValidator from "../../hooks/useFormValidator";
 import { createAuthToken } from "../../api/auth";
-import secureLocalStorage from "react-secure-storage";
+import { encryptData } from "../../utils/crypto";
 
 const AuthForm = () => {
   const navigate = useNavigate();
@@ -35,8 +35,8 @@ const AuthForm = () => {
   const handleSuccess = (username: string) => {
     createAuthToken(username)
     .then( response => {
-      const token = response.data.token;
-      secureLocalStorage.setItem("token", token);
+      const token = encryptData(response.data.token,import.meta.env.VITE_SALT);
+      localStorage.setItem("token", token);
       navigate("/dashboard");
       toast.success("You're logged in!");
     })

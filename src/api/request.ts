@@ -1,10 +1,11 @@
 import axios from 'axios';
-import secureLocalStorage from "react-secure-storage";
+import { decryptData } from '../utils/crypto';
 
 
 const client = axios.create({ baseURL: import.meta.env.VITE_BASE_URL  });
 export const request = async (options: any) => {
-  client.defaults.headers.common.Authorization = `Bearer ${secureLocalStorage.getItem('token')}`;
+  const header = localStorage.getItem('token') ? decryptData(localStorage.getItem('token'),import.meta.env.VITE_SALT) : ''
+  client.defaults.headers.common.Authorization = `Bearer ${header}`;
 
   const onSuccess = (response: any) => {
     return response;
