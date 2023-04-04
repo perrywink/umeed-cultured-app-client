@@ -74,7 +74,9 @@ const AuthForm = () => {
             <div className="text-left whitespace-nowrap">
               <CheckboxInput label="Remember me"/>
             </div>
-            <LinkButton onClick={() => {}}>Forgot Password?</LinkButton>
+            <LinkButton onClick={() => navigate('/reset-password')}>
+              Forgot Password?
+            </LinkButton>
           </div>
           <Button
             onClick={handleSubmit}
