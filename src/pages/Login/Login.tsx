@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useFirebaseAuthErrorHandler, useFormValidator } from "../../hooks";
 import CheckboxInput from "../../components/Input/CheckboxInput";
 import AllHandsIn from '../../assets/all_hands_in.png'
+import LogoAlpha from '../../assets/cup-logo-alpha.png'
 
 const AuthForm = () => {
   const navigate = useNavigate();
@@ -48,11 +49,14 @@ const AuthForm = () => {
   return (
     <div className="min-h-screen bg-gray-50 grid md:grid-cols-2">
       <div className="md:p-10 p-3 mx-0 md:mx-auto md:w-full md:max-w-md flex flex-col justify-center">
-        <div className="px-5 py-7">
+        <div className="flex justify-center">
+          <img src={LogoAlpha} alt="Cultured Up All Logo" className="object-cover w-24 h-20"/>
+        </div>
+        <div className="px-5 pb-7">
           <div className="text-center font-cormorant italic text-5xl font-bold text-gray-900">
             Hi Again!
           </div>
-          <div className="text-center font-sans text-md font-light text-gray-600 mt-2 mb-5">
+          <div className="text-center font-sans text-sm font-light text-gray-600 mt-2 mb-5">
             Put in your details to continue.
           </div>
           <Input
@@ -83,8 +87,8 @@ const AuthForm = () => {
           Don't have an account? <span className="font-bold hover:underline cursor-pointer" onClick={() => navigate("/register")}>Register now</span>
         </div>
       </div>
-      <div className="bg-umeed-tangerine-300 hidden md:block">
-        <img src={AllHandsIn} alt="all hands in" className="object-cover w-full h-full opacity-80"/>
+      <div className="hidden md:block">
+        <img src={AllHandsIn} alt="all hands in" className="object-cover w-full h-full"/>
       </div>
     </div>
   );
