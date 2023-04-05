@@ -13,13 +13,16 @@ const ResetPassword = () => {
 
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const { handleFirebaseAuthError } = useFirebaseAuthErrorHandler();
+  const { handleFirebaseResetPasswordError } = useFirebaseAuthErrorHandler();
 
 
   const handleSubmit = () => {
+    setLoading(true)
+
     sendPasswordResetEmail(auth, email)
       .then(() => toast.success("Instructions sent to your inbox!"))
-      .catch((e) => {})
+      .catch((e) => handleFirebaseResetPasswordError(e))
+      .finally(() => setLoading(false))
   }
 
   return ( 
@@ -50,7 +53,7 @@ const ResetPassword = () => {
             </Button>
           </div>
           <div className="text-center font-cormorant text-md text-gray-900 mt-5">
-            Don't actually have an account? <span className="font-bold hover:underline cursor-pointer" onClick={() => navigate("/register")}>Register now</span>
+            Reset done? <span className="font-bold hover:underline cursor-pointer" onClick={() => navigate("/login")}>Back to Login</span>
           </div>
         </div>
         <div className="hidden md:block">

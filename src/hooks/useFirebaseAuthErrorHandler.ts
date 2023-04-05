@@ -20,8 +20,20 @@ const useFirebaseAuthErrorHandler = () => {
         return "Internal error occured.";
     };
 
+    const handleFirebaseResetPasswordError = (error: FirebaseError) => {
+      if (error.code === "auth/user-not-found") {
+        return "User not found. Please register with us.";
+      }
+      if (error.code === "auth/invalid-email") {
+        return "Please check your email";
+      }
+      console.error(error);
+      return "Internal error occured.";
+    };
+
     return {
-        handleFirebaseAuthError
+        handleFirebaseAuthError,
+        handleFirebaseResetPasswordError
     }
 }
 
