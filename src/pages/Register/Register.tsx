@@ -1,15 +1,17 @@
 import { auth } from "../../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Button, Icon, Input, LinkButton } from "../../components";
-import { ToastContainer, toast } from "react-toastify";
+import { Button, Input, SecretInput, Spinner } from "../../components";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FirebaseError } from "firebase/app";
 import { useNavigate } from "react-router-dom";
-import useFirebaseAuthErrorHandler from "../../hooks/useFirebaseAuthErrorHandler";
-import useFormValidator from "../../hooks/useFormValidator";
 import { useCreateUser } from "../../api/user";
 import { RegUser } from "../../types/User";
+import { useFirebaseAuthErrorHandler, useFormValidator } from "../../hooks";
+import CheckboxInput from "../../components/Input/CheckboxInput";
+import AllHandsIn from '../../assets/all_hands_in.png'
+import LogoAlpha from '../../assets/cup-logo-alpha.png'
 
 const Register = () => {
   const navigate = useNavigate();
@@ -64,72 +66,59 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
-      <div className="md:p-10 p-3 mx-0 md:mx-auto md:w-full md:max-w-md">
-        <h1 className="font-cormorant text-center text-4xl mb-10">
-          Cultured UP App
-        </h1>
-        <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
-          <div className="px-5 py-7">
-            <Input
-              type="text"
-              label="Email"
-              handleChange={(e) => setEmail(e.target.value)}
-            />
-            <Input
-              type="text"
-              label="Username"
-              handleChange={(e) => setUsername(e.target.value)}
-            />
-            <Input
-              type="password"
-              label="Password"
-              handleChange={(e) => setPassword(e.target.value)}
-            />
-            <Input
-              type="password"
-              label="Confirm Password"
-              handleChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <Button handleClick={handleSubmit} isLoading={loading}>
-              Register
-            </Button>
+    <div className="min-h-screen bg-gray-50 grid md:grid-cols-2">
+      <div className="md:p-10 p-3 mx-0 md:mx-auto md:w-full md:max-w-md flex flex-col justify-center">
+        <div className="flex justify-center">
+          <img src={LogoAlpha} alt="Cultured Up All Logo" className="object-cover w-24 h-20"/>
+        </div>
+        <div className="px-5 pb-7">
+          <div className="text-center font-cormorant italic text-5xl font-bold text-gray-900">
+            Welcome!
           </div>
-          <div className="py-5">
-            <div className="grid grid-cols-2 gap-1">
-              <div className="text-left whitespace-nowrap">
-                <LinkButton handleClick={() => {}}>
-                  <Icon
-                    strokeWidth={2}
-                    styles="w-5 h-5 text-gray-500 inline-block align-text-top"
-                    d={
-                      "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    }
-                  />
-                  <span className="inline-block ml-1">Forgot Password</span>
-                </LinkButton>
-              </div>
-              <div className="text-right whitespace-nowrap">
-                <LinkButton
-                  handleClick={() => {
-                    navigate("/login");
-                  }}
-                >
-                  <Icon
-                    strokeWidth={2}
-                    styles="w-5 h-5 text-gray-500 inline-block align-text-top"
-                    d={
-                      "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    }
-                  />
-                  <span className="inline-block ml-1">Login</span>
-                </LinkButton>
-              </div>
+          <div className="text-center font-sans text-sm font-light text-gray-600 mt-2 mb-5">
+            Enter your details to get started.
+          </div>
+          <Input
+            type="text"
+            label="Email"
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="john@doe.com"
+          />
+          <Input
+            type="text"
+            label="Username"
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="john doe"
+          />
+          <SecretInput
+            label="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Minimum 6 characters."
+          />
+          <SecretInput
+            label="Confirm Password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Make sure it matches!"
+          />
+          <div className="mb-5">
+            <div className="text-left whitespace-nowrap">
+              <CheckboxInput label="I agree to the terms of service"/>
             </div>
           </div>
+          <Button
+            onClick={handleSubmit}
+            styles="mt-5 text-lg"
+          >
+            {loading ? <Spinner /> : "Register"}
+          </Button>
+        </div>
+        <div className="text-center font-cormorant text-md text-gray-900 mt-5">
+          Already have an account? <span className="font-bold hover:underline cursor-pointer" onClick={() => navigate("/login")}>Login</span>
         </div>
       </div>
-      <ToastContainer />
+      <div className="hidden md:block">
+        <img src={AllHandsIn} alt="all hands in" className="object-cover w-full h-full"/>
+      </div>
     </div>
   );
 };

@@ -16,7 +16,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
       <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
         <div className="px-5 py-7">Hello there! You're logged in :D</div>
-        <Button handleClick={handleSignout} >
+        <Button onClick={handleSignout} >
             Sign out
         </Button>
       </div>
