@@ -1,7 +1,7 @@
 import { auth } from "../../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Button, Icon, Input, SecretInput, Spinner } from "../../components";
+import { Button, Input, SecretInput, Spinner } from "../../components";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FirebaseError } from "firebase/app";

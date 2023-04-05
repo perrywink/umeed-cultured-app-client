@@ -1,7 +1,7 @@
 import { auth } from "../../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Button, Icon, Input, LinkButton, SecretInput, Spinner } from "../../components";
+import { Button, Input, LinkButton, SecretInput, Spinner } from "../../components";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FirebaseError } from "firebase/app";
@@ -74,7 +74,9 @@ const AuthForm = () => {
             <div className="text-left whitespace-nowrap">
               <CheckboxInput label="Remember me"/>
             </div>
-            <LinkButton onClick={() => {}}>Forgot Password?</LinkButton>
+            <LinkButton onClick={() => navigate('/reset-password')}>
+              Forgot Password?
+            </LinkButton>
           </div>
           <Button
             onClick={handleSubmit}
