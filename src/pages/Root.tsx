@@ -10,7 +10,7 @@ function Root() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       </Routes>
       <ToastContainer />
     </>

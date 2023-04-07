@@ -39,7 +39,7 @@ const AuthForm = () => {
     .then( response => {
       const token = encryptData(response.data.token,import.meta.env.VITE_SALT);
       localStorage.setItem("token", token);
-      navigate("/dashboard");
+      navigate("/");
       toast.success("You're logged in!");
     })
     .catch((e) => console.log(e));
