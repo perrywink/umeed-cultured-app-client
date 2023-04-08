@@ -9,9 +9,6 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
-import {authVerify} from "./utils/authVerify"
-import { encryptData } from "./utils/crypto";
-
 
 function App() {
   const [authToken, setAuthToken] = useState<string | null>(
@@ -19,16 +16,21 @@ function App() {
   );
   const queryClient = new QueryClient()
 
-  authVerify()
-
   useEffect(() => {
-    return auth.onAuthStateChanged(async (user) => {
-      if (user){
-        sessionStorage.setItem("user", user.email?encryptData(user.email,import.meta.env.VITE_SALT):"");
-        sessionStorage.setItem("auth_token", user?.refreshToken)
-        user ? setAuthToken(user.refreshToken) : setAuthToken(null)
+    return auth.onAuthStateChanged(async (userCred) => {
+      if (userCred){
+        userCred.getIdToken()
+          .then((token) => {
+            sessionStorage.setItem("auth_token", token)
+            setAuthToken(token)
+          })
+          .catch((e) => {
+            setAuthToken(null)
+            console.error(e)
+          })
+      } else {
+        setAuthToken(null)
       }
-
     });
   },[])
 
