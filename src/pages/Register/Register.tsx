@@ -25,7 +25,7 @@ const Register = () => {
   const { handleFirebaseAuthError } = useFirebaseAuthErrorHandler();
   const { checkEmptyFields, checkMatchingFields } = useFormValidator();
 
-  const { mutate: registerUser} = useCreateUser();
+  const { mutate: registerUser } = useCreateUser();
 
   const handleError = (error: FirebaseError) => {
     toast.error(handleFirebaseAuthError(error));
@@ -50,8 +50,6 @@ const Register = () => {
       userType: "USER",
     }
     registerUser(newUser);
-    // navigate("/");
-    // toast.success("You're logged in!");
   };
 
   const handleSubmit = () => {
