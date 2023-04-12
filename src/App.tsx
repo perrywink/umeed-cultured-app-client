@@ -8,7 +8,8 @@ import Root from "./pages/Root";
 import {
   QueryClient,
   QueryClientProvider,
-} from '@tanstack/react-query'
+} from '@tanstack/react-query';
+import { encryptData } from "./utils/crypto";
 
 function App() {
   const [authToken, setAuthToken] = useState<string | null>(
@@ -21,7 +22,7 @@ function App() {
       if (userCred){
         userCred.getIdToken()
           .then((token) => {
-            sessionStorage.setItem("auth_token", token)
+            sessionStorage.setItem("auth_token", encryptData(token, import.meta.env.VITE_SALT))
             setAuthToken(token)
           })
           .catch((e) => {
