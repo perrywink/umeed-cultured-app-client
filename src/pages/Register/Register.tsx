@@ -18,6 +18,7 @@ const Register = () => {
 
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [contact, setContact] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -32,7 +33,7 @@ const Register = () => {
   };
 
   const validateForm = () => {
-    if (!checkEmptyFields([email, username, password, confirmPassword])) {
+    if (!checkEmptyFields([email, username, contact, password, confirmPassword])) {
       toast.error("All required fields are not filled up.");
       return false;
     }
@@ -46,6 +47,7 @@ const Register = () => {
   const handleSuccess = () => {
     const newUser : RegUser = {
       email: email,
+      contact: contact,
       username: username,
       userType: "USER",
     }
@@ -85,6 +87,12 @@ const Register = () => {
             label="Username"
             onChange={(e) => setUsername(e.target.value)}
             placeholder="john doe"
+          />
+          <Input
+            type="text"
+            label="Contact Number"
+            onChange={(e) => setContact(e.target.value)}
+            placeholder="0412346789"
           />
           <SecretInput
             label="Password"
