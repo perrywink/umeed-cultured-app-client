@@ -12,8 +12,6 @@ import { useFirebaseAuthErrorHandler, useFormValidator } from "../../hooks";
 import CheckboxInput from "../../components/Input/CheckboxInput";
 import AllHandsIn from '../../assets/all_hands_in.png'
 import LogoAlpha from '../../assets/cup-logo-alpha.png'
-import { createAuthToken } from "../../api/auth";
-import { encryptData } from "../../utils/crypto";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -51,16 +49,7 @@ const Register = () => {
       username: username,
       userType: "USER",
     }
-
     registerUser(newUser);
-
-    createAuthToken(username)
-    .then( response => {
-      const token = encryptData(response.data.token,import.meta.env.VITE_SALT);
-      localStorage.setItem("token", token);
-      navigate("/");
-      toast.success("You're logged in!");
-    })
   };
 
   const handleSubmit = () => {

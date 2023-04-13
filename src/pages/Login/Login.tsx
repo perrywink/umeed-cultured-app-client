@@ -6,8 +6,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FirebaseError } from "firebase/app";
 import { useNavigate } from "react-router-dom";
-import { createAuthToken } from "../../api/auth";
-import { encryptData } from "../../utils/crypto";
 import { useFirebaseAuthErrorHandler, useFormValidator } from "../../hooks";
 import CheckboxInput from "../../components/Input/CheckboxInput";
 import AllHandsIn from '../../assets/all_hands_in.png'
@@ -34,22 +32,16 @@ const AuthForm = () => {
     return true;
   };
 
-  const handleSuccess = (username: string) => {
-    createAuthToken(username)
-    .then( response => {
-      const token = encryptData(response.data.token,import.meta.env.VITE_SALT);
-      localStorage.setItem("token", token);
-      navigate("/");
-      toast.success("You're logged in!");
-    })
-    .catch((e) => console.log(e));
+  const handleSuccess = () => {
+    navigate("/");
+    toast.success("You're logged in!");
   };
 
   const handleSubmit = () => {
     if (!validateForm()) return;
     setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => handleSuccess(email))
+      .then(() => handleSuccess())
       .catch((e) => handleError(e))
       .finally(() => setLoading(false));
   };
