@@ -33,7 +33,7 @@ export const useCreateUser = () => {
       if (errorData && errorData.includes("Unique constraint failed on the fields: (`username`)")){
         toast.error("Username already taken")
       } else {
-        toast.error("Internal server error occured.")
+        toast.error(errorData)
       }
       auth.currentUser?.delete()
         .then(() => console.log("Firebase record deleted"))
