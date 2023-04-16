@@ -5,6 +5,7 @@ import { request } from "./request";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { auth } from "../config/firebase";
+import { EContact } from "../types/EContact";
 
 const registerUser = async (data: RegUser) => {
   const r = {
@@ -41,3 +42,24 @@ export const useCreateUser = () => {
     }
   });
 };
+
+const registerEContact = async (data: EContact) => {
+  const r = {
+    url: userEndpoint + '/register-contact',
+    method: "POST",
+    data: data,
+    headers: { "Content-Type": "application/json" },
+  };
+  const response = await request(r);
+  return response;
+};
+
+export const useCreateEContact = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(registerEContact, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["econtact"]);
+    }
+  })
+}
