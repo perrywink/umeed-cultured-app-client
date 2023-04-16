@@ -50,6 +50,7 @@ const Register = () => {
       contact: contact,
       username: username,
       userType: "USER",
+      firebaseUid: auth.currentUser!.uid
     }
     registerUser(newUser);
   };
