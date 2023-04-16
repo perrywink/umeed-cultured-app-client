@@ -2,15 +2,12 @@
  * @jest-environment jsdom
  */
 
-
 import React from "react";
 import AuthForm from "../Login";
-import { fireEvent, getByRole, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, getByRole, render, screen } from "@testing-library/react";
 import {BrowserRouter as Router} from 'react-router-dom';
-import '@testing-library/jest-dom';
-import {log} from 'console';
-import firebase from 'firebase/app';
-import { auth } from "../../../config/firebase";
+import '@testing-library/jest-dom'
+import {log} from 'console'
 
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -18,19 +15,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
-
-jest.mock("../../../config/firebase");
-// mock firebase auth functions
-// jest.mock("firebase/auth", () => ({
-//     signInWithEmailAndPassword: jest.fn(),
-//     auth: jest.fn().mockReturnThis(),
-// }));
-
 describe('AuthForm component', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
     it('should render the component onto the screen', () => {
         expect(true).toBeTruthy();
     });
@@ -56,7 +41,13 @@ describe('AuthForm component', () => {
         const passwordInput= getByPlaceholderText('Minimum 6 characters.') as HTMLInputElement;
         fireEvent.change(passwordInput, {target: {value: "johndoe123"}});
         expect(passwordInput.value).toBe("johndoe123");
+    });
 
+    it('should not submit the form when required fields are empty', () => {
+        render(<AuthForm />);
+        const loginButton = screen.getByText('Login');
+        fireEvent.click(loginButton);
+        expect(mockedUsedNavigate).not.toHaveBeenCalled();
     });
 
 });
