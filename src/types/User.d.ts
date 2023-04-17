@@ -11,7 +11,8 @@ export type RegUser = {
   email: string
   contact: string
   username: string
-  userType: Role
+  userType: Role,
+  firebaseUid: string
 }
 
 export const Role: {
