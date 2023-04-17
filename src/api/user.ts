@@ -39,6 +39,7 @@ export const useCreateUser = () => {
       auth.currentUser?.delete()
         .then(() => console.log("Firebase record deleted"))
         .catch(() => console.error("Firebase record could not be deleted."))
+      sessionStorage.clear()
     }
   });
 };
