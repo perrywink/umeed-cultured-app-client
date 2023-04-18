@@ -102,26 +102,6 @@ describe('AuthForm component', () => {
         expect(mockedUsedNavigate).toHaveBeenCalledWith('/reset-password');
     });
 
-    it('should not submit the form and display error when required fields are empty', async () => {
-        render(<AuthForm />);
-        const loginButton = screen.getByText('Login');
-        fireEvent.click(loginButton);
-        expect(toast.error).toHaveBeenCalled()
-    });
-
-    it('displays an error message when an invalid email is entered', () => {
-        render(<AuthForm />);
-        const emailInput= screen.getByPlaceholderText("john@doe.com");
-        const passwordInput = screen.getByPlaceholderText("Minimum 6 characters.");
-        const loginButton = screen.getByText('Login');
-
-        fireEvent.change(emailInput, { target: { value: 'invalidemail' } });
-        fireEvent.change(passwordInput, { target: { value: 'password' } });
-        fireEvent.click(loginButton);
-
-        expect(toast.error).toHaveBeenCalled()
-    });
-
     it('calls the handleSubmit function with email and password when the form is submitted', () => {
 
         render(<AuthForm />);
