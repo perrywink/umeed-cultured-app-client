@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { RegUser } from "../types/User";
+import { PGUser, RegUser } from "../types/User";
 import { userEndpoint } from "./endpoints";
 import { request } from "./request";
 import { useNavigate } from "react-router-dom";
@@ -61,6 +61,43 @@ export const useCreateEContact = () => {
   return useMutation(registerEContact, {
     onSuccess: () => {
       queryClient.invalidateQueries(["econtact"]);
+    }
+  })
+}
+
+export const useGetUser = () => {
+  const firebaseUid = auth.currentUser?.uid
+
+  return useQuery(
+    ['user', firebaseUid],
+    async () => {
+      return request({ url: `${userEndpoint}/get` }).then((response) => {
+        return response.data;
+      });
+    }, {
+      enabled: typeof firebaseUid !== 'undefined' 
+    }
+  );
+};
+
+const updateUser = async (data: Partial<PGUser>) => {
+  const r = {
+    url: userEndpoint + '/update',
+    method: "POST",
+    data: data,
+    headers: { "Content-Type": "application/json" },
+  };
+  const response = await request(r);
+  return response;
+};
+
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+  const firebaseUid = auth.currentUser?.uid
+
+  return useMutation(updateUser, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['user', firebaseUid]);
     }
   })
 }

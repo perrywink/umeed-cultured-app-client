@@ -1,14 +1,58 @@
-import { useState } from "react";
-import Interests from "./Interests";
-import EContact from "./EContact";
-import AllHandsIn from '../../assets/all_hands_in.png'
+import { useEffect, useState } from "react";
+import InterestsStep from "./InterestsStep";
+import EContactStep from "./EContactStep";
+import AllHandsIn from "../../assets/all_hands_in.png";
+import { useCreateEContact, useUpdateUser } from "../../api/user";
+import { toast } from "react-toastify";
 
 const Onboarding = () => {
   const [pageNum, setPageNum] = useState<number>(0);
 
+  //input field states are managed here to disguise a single form as 2 pages
+  const [name, setName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const { mutate: registerEContact, isSuccess: eContactSuccess, isError: eContactError } = useCreateEContact();
+  const { mutate: updateUser, isSuccess: onboardSuccess, isError: onboardError } = useUpdateUser();
+
+  const handleSubmit = () => {
+    setLoading(true);
+    registerEContact({
+      name: name,
+      phoneNumber: phoneNumber,
+    });
+    updateUser({
+      onboarded: true
+    })
+  };
+
+  // useEffect(() => {
+  //   if (eContactSuccess && onboardSuccess) {
+  //     toast.success("You're onboarded!")
+  //   } else {
+  //     toast.error("Something went wrong :(")
+  //   }
+  //   setLoading(false);
+  // }, []);
+
   const onboardingSteps = [
-    { component: <EContact />, label: "Emergency Contact" },
-    { component: <Interests />, label: "Interests" },
+    {
+      component: (
+        <EContactStep
+          setPageNum={setPageNum}
+          nameState={{ name, setName }}
+          phoneNumberState={{ phoneNumber, setPhoneNumber }}
+        />
+      ),
+      label: "Emergency Contact",
+    },
+    {
+      component: (
+        <InterestsStep handleSubmit={handleSubmit} loading={loading} />
+      ),
+      label: "Interests",
+    },
   ];
 
   return (
@@ -53,7 +97,11 @@ const Onboarding = () => {
         </div>
       </div>
       <div className="hidden md:block">
-        <img src={AllHandsIn} alt="all hands in" className="object-cover w-full h-full"/>
+        <img
+          src={AllHandsIn}
+          alt="all hands in"
+          className="object-cover w-full h-full"
+        />
       </div>
     </div>
   );
