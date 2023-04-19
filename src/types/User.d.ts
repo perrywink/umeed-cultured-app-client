@@ -1,15 +1,18 @@
 export type PGUser = {
-    email: string
-    username: string
-    userType: Role
-    blocked: boolean
-    onboarded: boolean
+  email: string
+  username: string
+  contact: string
+  userType: Role
+  blocked: boolean
+  onboarded: boolean
 }
 
 export type RegUser = {
   email: string
+  contact: string
   username: string
-  userType: Role
+  userType: Role,
+  firebaseUid: string
 }
 
 export const Role: {
