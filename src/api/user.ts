@@ -92,7 +92,7 @@ const updateUser = async (data: Partial<PGUser>) => {
   return response;
 };
 
-export const useUpdateUser = () => {
+export const useUpdateUser = (options?: any) => {
   const queryClient = useQueryClient();
   const firebaseUid = auth.currentUser?.uid
 
@@ -103,6 +103,33 @@ export const useUpdateUser = () => {
     onError: (e: any) => {
       console.error(e)
       toast.error(e.data)
-    }
+    },
+    ...options
   })
 }
+
+const assignUserTags = async (data: number[]) => {
+  const r = {
+    url: userEndpoint + '/assign-tags',
+    method: "POST",
+    data: data,
+    headers: { "Content-Type": "application/json" },
+  };
+  const response = await request(r);
+  return response;
+};
+
+export const useAssignUserTags = () => {
+  const queryClient = useQueryClient();
+  const firebaseUid = auth.currentUser?.uid
+
+  return useMutation(assignUserTags, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["userTags", firebaseUid]);
+    },
+    onError: (e: any) => {
+      const errorData: string = e?.data
+      toast.error(errorData)
+    }
+  });
+};
