@@ -61,6 +61,10 @@ export const useCreateEContact = () => {
   return useMutation(createEContact, {
     onSuccess: () => {
       queryClient.invalidateQueries(["econtact"]);
+    },
+    onError: (e: any) => {
+      console.error(e)
+      toast.error(e)
     }
   })
 }
@@ -85,7 +89,7 @@ export const useGetUser = (staleTime = 3000) => {
 const updateUser = async (data: Partial<PGUser>) => {
   const r = {
     url: userEndpoint + '/update',
-    method: "POST",
+    method: "PUT",
     data: data,
     headers: { "Content-Type": "application/json" },
   };
@@ -100,6 +104,10 @@ export const useUpdateUser = () => {
   return useMutation(updateUser, {
     onSuccess: () => {
       queryClient.invalidateQueries(['user', firebaseUid]);
+    },
+    onError: (e: any) => {
+      console.error(e)
+      toast.error(e)
     }
   })
 }
