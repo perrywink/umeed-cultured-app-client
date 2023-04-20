@@ -14,7 +14,7 @@ const Onboarding = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const { mutate: registerEContact, isSuccess: eContactSuccess, isError: eContactError, isIdle: econtactIdle } = useCreateEContact();
-  const { mutate: updateUser, isSuccess: onboardSuccess, isError: onboardError, isIdle: updateUserIdle  } = useUpdateUser();
+  const { mutate: updateUser, isSuccess: onboardSuccess, isIdle: updateUserIdle  } = useUpdateUser();
 
   const handleSubmit = () => {
     setLoading(true);
@@ -27,28 +27,23 @@ const Onboarding = () => {
   useEffect(() => {
     if (econtactIdle)
       return
-
     if (eContactSuccess) {
       updateUser({
         onboarded: true
       })
     } else {
-      toast.error("Error occured while saving emergency contact.")
       setLoading(false);
     }
   }, [eContactSuccess, eContactError])
 
   useEffect(() => {
-    if (econtactIdle)
+    if (updateUserIdle)
       return
-
     if (onboardSuccess) {
       toast.success("You're onboarded!")
-    } else {
-      toast.error("Internal server error occured.")
     }
     setLoading(false);
-  }, [onboardSuccess, onboardError]);
+  }, [onboardSuccess]);
 
   const onboardingSteps = [
     {

@@ -60,7 +60,7 @@ export const useCreateEContact = () => {
     },
     onError: (e: any) => {
       console.error(e)
-      toast.error(e)
+      toast.error(e.data)
     }
   })
 }
@@ -102,7 +102,7 @@ export const useUpdateUser = () => {
     },
     onError: (e: any) => {
       console.error(e)
-      toast.error(e)
+      toast.error(e.data)
     }
   })
 }
