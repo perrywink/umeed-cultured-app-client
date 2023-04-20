@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { auth } from "../config/firebase";
 import { EContact } from "../types/EContact";
 
-const registerUser = async (data: RegUser) => {
+const createUser = async (data: RegUser) => {
   const r = {
     url: userEndpoint + '/register',
     method: "POST",
@@ -22,7 +22,7 @@ export const useCreateUser = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  return useMutation(registerUser, {
+  return useMutation(createUser, {
     onSuccess: () => {
       queryClient.invalidateQueries(["user"]);
       navigate("/");
@@ -44,7 +44,7 @@ export const useCreateUser = () => {
   });
 };
 
-const registerEContact = async (data: EContact) => {
+const createEContact = async (data: EContact) => {
   const r = {
     url: userEndpoint + '/register-contact',
     method: "POST",
@@ -58,24 +58,26 @@ const registerEContact = async (data: EContact) => {
 export const useCreateEContact = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(registerEContact, {
+  return useMutation(createEContact, {
     onSuccess: () => {
       queryClient.invalidateQueries(["econtact"]);
     }
   })
 }
 
-export const useGetUser = () => {
+export const useGetUser = (staleTime = 3000) => {
   const firebaseUid = auth.currentUser?.uid
 
   return useQuery(
     ['user', firebaseUid],
     async () => {
       return request({ url: `${userEndpoint}/get` }).then((response) => {
+        console.log('response.data', response.data)
         return response.data;
       });
     }, {
-      enabled: typeof firebaseUid !== 'undefined' 
+      enabled: typeof firebaseUid !== 'undefined',
+      staleTime
     }
   );
 };

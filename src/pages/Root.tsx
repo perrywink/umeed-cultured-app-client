@@ -2,15 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import { OnboardingRoute, PrivateRoute } from "../components";
 import { Login, Register, Dashboard, ResetPassword, Onboarding} from "../pages";
 import { ToastContainer } from "react-toastify";
-import { useGetUser } from "../api/user";
-import { useEffect } from "react";
-import { useUserContext } from "../context/UserContext";
+
 
 function Root() {
-  const {data} = useGetUser();
-  const {setUser} = useUserContext();
-  useEffect(() => setUser(data), [data])
-
   return (
     <>
       <Routes>

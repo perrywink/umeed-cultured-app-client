@@ -1,7 +1,5 @@
 import { useAuthContext } from "../../context/AuthContext";
-import { useUserContext } from "../../context/UserContext";
 import { Navigate } from "react-router-dom";
-import { useEffect } from "react";
 import { useGetUser } from "../../api/user";
 
 type Props = {
@@ -10,14 +8,18 @@ type Props = {
 
 const PrivateRoute = ({children} : Props) => {
     const authToken = useAuthContext();
-    const {user} = useUserContext();
-    console.log('ONBOARD', user?.onboarded)
+    const {data: resUser, isLoading} = useGetUser();
 
-    if (authToken && user?.onboarded)
-        return children
-    else if (authToken)
-        return <Navigate to='/onboarding'/>
-    return (<Navigate to='/login'/>);
+    if (!isLoading && resUser) {
+        if (authToken && resUser.onboarded){
+            return children
+        }
+        else if (authToken && !resUser.onboarded){
+            return <Navigate to='/onboarding'/>
+        }
+        return (<Navigate to='/login'/>);
+    }
+    return <></>
 }
  
 export default PrivateRoute;

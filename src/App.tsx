@@ -10,7 +10,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { encryptData } from "./utils/crypto";
-import { UserProvider } from "./context/UserContext";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 function App() {
   const [authToken, setAuthToken] = useState<string | null>(
@@ -40,12 +40,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContext.Provider value={authToken}>
-        <UserProvider>
-          <Router>
-            <Root/>
-          </Router>
-        </UserProvider>
+        <Router>
+          <Root/>
+        </Router>
       </AuthContext.Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }
