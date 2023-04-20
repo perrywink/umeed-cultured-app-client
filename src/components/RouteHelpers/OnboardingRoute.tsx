@@ -10,15 +10,17 @@ const OnboardingRoute = ({children} : Props) => {
     const authToken = useAuthContext();
     const {data: resUser, isLoading} = useGetUser();
 
-    if (!isLoading && resUser) {
-        if (authToken && !resUser.onboarded){
-            return children
-        } else if (authToken && resUser.onboarded) {
-            return <Navigate to='/'/>
-        }
-        return <Navigate to='/login'/>;
-    }
-    return <></>
+    if (!authToken)
+        return <Navigate to='/login'/>
+
+    if (isLoading || !resUser) 
+        return <></>
+
+    if (resUser.onboarded){
+        return <Navigate to='/'/>
+    } 
+    
+    return children
 }
  
 export default OnboardingRoute;
