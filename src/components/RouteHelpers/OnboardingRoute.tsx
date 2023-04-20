@@ -6,20 +6,19 @@ type Props = {
     children: JSX.Element
 }
 
-const PrivateRoute = ({children} : Props) => {
+const OnboardingRoute = ({children} : Props) => {
     const authToken = useAuthContext();
     const {data: resUser, isLoading} = useGetUser();
 
     if (!isLoading && resUser) {
-        if (authToken && resUser.onboarded){
+        if (authToken && !resUser.onboarded){
             return children
+        } else if (authToken && resUser.onboarded) {
+            return <Navigate to='/'/>
         }
-        else if (authToken && !resUser.onboarded){
-            return <Navigate to='/onboarding'/>
-        }
-        return (<Navigate to='/login'/>);
+        return <Navigate to='/login'/>;
     }
     return <></>
 }
  
-export default PrivateRoute;
+export default OnboardingRoute;

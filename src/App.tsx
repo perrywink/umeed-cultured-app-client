@@ -10,6 +10,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { encryptData } from "./utils/crypto";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 function App() {
   const [authToken, setAuthToken] = useState<string | null>(
@@ -22,15 +23,16 @@ function App() {
       if (userCred){
         userCred.getIdToken()
           .then((token) => {
+            // console.log('TOKEN', token)
             sessionStorage.setItem("auth_token", encryptData(token, import.meta.env.VITE_SALT))
             setAuthToken(token)
           })
           .catch((e) => {
-            setAuthToken(null)
+            sessionStorage.clear()
             console.error(e)
           })
       } else {
-        setAuthToken(null)
+        sessionStorage.clear()
       }
     });
   },[])
@@ -42,6 +44,7 @@ function App() {
           <Root/>
         </Router>
       </AuthContext.Provider>
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   )
 }

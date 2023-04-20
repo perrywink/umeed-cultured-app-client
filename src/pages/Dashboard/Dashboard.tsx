@@ -8,7 +8,6 @@ const Dashboard = () => {
   const handleSignout = () => {
     signOut(auth)
     sessionStorage.clear()
-    localStorage.removeItem("token")
     navigate('/login')
   }
 
