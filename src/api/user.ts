@@ -26,16 +26,12 @@ export const useCreateUser = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["user"]);
       navigate("/");
-      toast.success("You're logged in!");
+      toast.success("You're registered! Just a few more steps...");
     },
     onError: (e: any) => {
       console.error("Error creating user, deleting record from firebase.")
       const errorData: string = e?.data
-      if (errorData && errorData.includes("Unique constraint failed on the fields: (`username`)")){
-        toast.error("Username already taken")
-      } else {
-        toast.error(errorData)
-      }
+      toast.error(errorData)
       auth.currentUser?.delete()
         .then(() => console.log("Firebase record deleted"))
         .catch(() => console.error("Firebase record could not be deleted."))
@@ -76,7 +72,6 @@ export const useGetUser = (staleTime = 3000) => {
     ['user', firebaseUid],
     async () => {
       return request({ url: `${userEndpoint}/get` }).then((response) => {
-        console.log('response.data', response.data)
         return response.data;
       });
     }, {
