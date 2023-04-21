@@ -3,7 +3,7 @@
  */
 
 import AuthForm from "../Login";
-import { fireEvent, getByRole, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import '@testing-library/jest-dom'
 import { auth } from "../../../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -72,9 +72,11 @@ describe('AuthForm component', () => {
         const passwordInput = getByPlaceholderText('Minimum 6 characters.') as HTMLInputElement;
         const loginButton = getByText("Login");
     
-        fireEvent.change(emailInput, {target: {value: "test@example.com"}});
-        fireEvent.change(passwordInput, {target: {value: "password"}});
-        fireEvent.click(loginButton);
+        act(() => {
+            fireEvent.change(emailInput, {target: {value: "test@example.com"}});
+            fireEvent.change(passwordInput, {target: {value: "password"}});
+            fireEvent.click(loginButton);
+        });
     
         await waitFor(() => {
           expect(mockSignInWithEmailAndPassword).toHaveBeenCalledTimes(1);
@@ -102,7 +104,7 @@ describe('AuthForm component', () => {
         expect(mockedUsedNavigate).toHaveBeenCalledWith('/reset-password');
     });
 
-    it('calls the handleSubmit function with email and password when the form is submitted', () => {
+    it('calls the handleSubmit function with email and password when the form is submitted', async () => {
 
         render(<AuthForm />);
         const emailInput= screen.getByPlaceholderText("john@doe.com");
@@ -113,7 +115,9 @@ describe('AuthForm component', () => {
         fireEvent.change(passwordInput, { target: { value: 'johndoe123' } });
         fireEvent.click(loginButton);
 
-        expect(signInWithEmailAndPassword).toHaveBeenCalledWith(auth, 'john@doe.com', 'johndoe123');
+        await waitFor(() => {
+            expect(signInWithEmailAndPassword).toHaveBeenCalledWith(auth, 'john@doe.com', 'johndoe123');
+        });
     });
 
 });
