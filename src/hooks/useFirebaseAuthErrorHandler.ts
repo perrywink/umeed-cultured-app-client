@@ -16,6 +16,9 @@ const useFirebaseAuthErrorHandler = () => {
         if (error.code === "auth/weak-password") {
           return "Your password should at least be 6 characters long";
         }
+        if (error.code === "auth/email-already-in-use") {
+          return "That email is already associated with an account";
+        }
         console.error(error)
         return "Internal error occured.";
     };
