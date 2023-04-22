@@ -22,10 +22,6 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
     refetch();
   }, [searchKeyword]);
 
-  useEffect(() => {
-    console.log(selectedTagIds)
-  }, [selectedTagIds]);
-
   const loadOptions = () => {
     if (!isLoading && data) {
       const tags = data as Tag[];
