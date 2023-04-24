@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import InterestsStep from "./InterestsStep";
 import EContactStep from "./EContactStep";
 import AllHandsIn from "../../assets/all_hands_in.png";
-import { useCreateEContact, useUpdateUser } from "../../api/user";
+import {
+  useAssignUserTags,
+  useCreateEContact,
+  useGetUser,
+  useUpdateUser,
+} from "../../api/user";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Onboarding = () => {
   const [pageNum, setPageNum] = useState<number>(0);
@@ -11,10 +17,23 @@ const Onboarding = () => {
   //input field states are managed here to disguise a single form as 2 pages
   const [name, setName] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const { mutate: registerEContact, isSuccess: eContactSuccess, isError: eContactError, isIdle: econtactIdle } = useCreateEContact();
-  const { mutate: updateUser, isSuccess: onboardSuccess, isError: onboardError, isIdle: updateUserIdle  } = useUpdateUser();
+  const {
+    mutate: registerEContact,
+    isSuccess: successEContact
+  } = useCreateEContact();
+  const {
+    mutate: assignUserTags,
+    isSuccess: successUserTags
+  } = useAssignUserTags();
+  const {
+    mutate: updateUser,
+    isSuccess: onboardSuccess,
+  } = useUpdateUser({enabled: successEContact && successUserTags});
+  
 
   const handleSubmit = () => {
     setLoading(true);
@@ -22,33 +41,19 @@ const Onboarding = () => {
       name: name,
       phoneNumber: phoneNumber,
     });
+    assignUserTags(selectedTagIds);
+    updateUser({
+      onboarded: true,
+    });
   };
 
   useEffect(() => {
-    if (econtactIdle)
-      return
-
-    if (eContactSuccess) {
-      updateUser({
-        onboarded: true
-      })
-    } else {
-      toast.error("Error occured while saving emergency contact.")
-      setLoading(false);
-    }
-  }, [eContactSuccess, eContactError])
-
-  useEffect(() => {
-    if (econtactIdle)
-      return
-
     if (onboardSuccess) {
-      toast.success("You're onboarded!")
-    } else {
-      toast.error("Internal server error occured.")
+      toast.success("You're onboarded!");
+      navigate('/')
     }
     setLoading(false);
-  }, [onboardSuccess, onboardError]);
+  }, [onboardSuccess]);
 
   const onboardingSteps = [
     {
@@ -63,7 +68,11 @@ const Onboarding = () => {
     },
     {
       component: (
-        <InterestsStep handleSubmit={handleSubmit} loading={loading} />
+        <InterestsStep
+          handleSubmit={handleSubmit}
+          loading={loading}
+          selectedTagIdsState={{ selectedTagIds, setSelectedTagIds }}
+        />
       ),
       label: "Interests",
     },
