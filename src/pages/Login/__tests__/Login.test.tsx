@@ -27,6 +27,7 @@ jest.mock('react-toastify', () => ({
 
 describe('AuthForm component', () => {
 
+    //clear all mock functions
     beforeEach(() => {
         jest.clearAllMocks();
     });

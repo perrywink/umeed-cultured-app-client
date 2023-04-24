@@ -10,16 +10,18 @@ const PrivateRoute = ({children} : Props) => {
     const authToken = useAuthContext();
     const {data: resUser, isLoading} = useGetUser();
 
-    if (!isLoading && resUser) {
-        if (authToken && resUser.onboarded){
-            return children
-        }
-        else if (authToken && !resUser.onboarded){
-            return <Navigate to='/onboarding'/>
-        }
-        return (<Navigate to='/login'/>);
+    if (!authToken) {
+        return <Navigate to='/login'/>
     }
-    return <></>
+
+    if (isLoading || !resUser) 
+        return <></>
+
+    if (!resUser.onboarded){
+        return <Navigate to='/onboarding'/>
+    } 
+
+    return children
 }
  
 export default PrivateRoute;
