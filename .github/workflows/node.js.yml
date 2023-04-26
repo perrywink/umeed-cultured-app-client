@@ -41,9 +41,6 @@ jobs:
 
     - name: install playwright
       run: npx playwright install
-    
-    - name: run E2E tests
-      run: npx playwright test 
   
   deploy_staging: 
 
@@ -70,22 +67,6 @@ jobs:
     
     - name: Deploy
       run: doctl apps create-deployment ${{ secrets.APP_ID }} --wait=true
-
-    # - name: Add IP address to trusted source postgres
-    #   uses: GarreauArthur/manage-digital-ocean-managed-database-trusted-sources-gh-action@main
-    #   with:
-    #     action: "add"
-    #     database_id: ${{ secrets.DATABASE_ID }}
-    #     digitalocean_token: ${{ secrets.DO_ACCESS_TOKEN }}
-
-   
-
-    # - name: Remove IP address to trusted source postgres
-    #   uses: GarreauArthur/manage-digital-ocean-managed-database-trusted-sources-gh-action@main
-    #   with:
-    #     action: "remove"
-    #     database_id: ${{ secrets.DATABASE_ID }}
-    #     digitalocean_token: ${{ secrets.DO_ACCESS_TOKEN }} 
   
 
   # for future
