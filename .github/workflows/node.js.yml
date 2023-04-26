@@ -72,8 +72,9 @@ jobs:
     #     database_id: ${{ secrets.DATABASE_ID }}
     #     digitalocean_token: ${{ secrets.DO_ACCESS_TOKEN }}
 
-    # - name: run E2E tests
-    #   run: npm run test:e2e
+    - name: run E2E tests
+      run: npm run playwright | 
+        npm run test:e2e 
 
     # - name: Remove IP address to trusted source postgres
     #   uses: GarreauArthur/manage-digital-ocean-managed-database-trusted-sources-gh-action@main
