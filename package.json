@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
-    "start": "npx http-server ./dist"
+    "start": "npx http-server ./dist -a 0.0.0.0 -p 8080 -c-1"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.28.0",
