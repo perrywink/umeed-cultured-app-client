@@ -38,6 +38,11 @@ jobs:
     
     - name: Run Unit tests
       run: npm run test
+
+    - name: run E2E tests
+      run: |
+        npx playwright install
+        npx playwright test 
   
   deploy_staging: 
 
@@ -72,10 +77,7 @@ jobs:
     #     database_id: ${{ secrets.DATABASE_ID }}
     #     digitalocean_token: ${{ secrets.DO_ACCESS_TOKEN }}
 
-    - name: run E2E tests
-      run: |
-        npx playwright install
-        npx playwright test 
+   
 
     # - name: Remove IP address to trusted source postgres
     #   uses: GarreauArthur/manage-digital-ocean-managed-database-trusted-sources-gh-action@main
