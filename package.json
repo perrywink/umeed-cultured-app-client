@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:e2e": "npx playwright test",
     "start": "npx http-server ./dist -a 0.0.0.0 -p 8080 -c-1"
   },
   "dependencies": {

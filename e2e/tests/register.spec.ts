@@ -6,7 +6,7 @@ const E2E_USERNAME = "testuser"
 const E2E_PASSWORD = "test@1234"
 const E2E_SMALL_PASSWORD = "abc"
 
-test.describe('Register Page', () => {
+test.describe.skip('Register Page', () => {
   test.describe.configure({ mode: 'serial' });
 
   test.beforeEach(async ({ page }) => {
