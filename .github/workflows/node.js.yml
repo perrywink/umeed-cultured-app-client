@@ -39,6 +39,31 @@ jobs:
     - name: Run Unit tests
       run: npm run test
   
+  deploy_staging: 
+
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: install dependencies 
+      run: npm install
+
+    - name: Install Doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DO_ACCESS_TOKEN }}
+    
+    - name: Deploy
+      run: doctl apps create-deployment ${{ secrets.APP_ID }} --wait=true 
+  
 
   # for future
   # perf-tests:
