@@ -27,15 +27,16 @@ const AuthForm = () => {
   const { handleFirebaseAuthError } = useFirebaseAuthErrorHandler();
   const { checkEmptyFields } = useFormValidator();
   const [submitClicked, setSubmitClicked] = useState(false);
-  const { data: resUser } = useGetUser();
+  const { data: resUser, isSuccess } = useGetUser();
 
-  if (submitClicked === true) {
+  if (submitClicked && isSuccess) {
     if (resUser.userType === "ADMIN") {
       navigate("/admin");
     } else {
       navigate("/");
     }
-    toast.success("You're logged in!");
+    setSubmitClicked(false);
+    toast.success("You're logged in!", { toastId: "login-toast" });
   }
 
   const handleError = (error: FirebaseError) => {
@@ -49,27 +50,6 @@ const AuthForm = () => {
     }
     return true;
   };
-
-  /*
-  const handleSuccess = () => {
-    if (resUser.userType === "ADMIN") {
-      navigate("/admin");
-    } else {
-      navigate("/");
-    }
-
-    toast.success("You're logged in!");
-  };
-
-  const handleSubmit = () => {
-    if (!validateForm()) return;
-    setLoading(true);
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => handleSuccess())
-      .catch((e) => handleError(e))
-      .finally(() => setLoading(false));
-  };
-*/
 
   const handleSubmit = () => {
     if (!validateForm()) return;
