@@ -38,9 +38,6 @@ jobs:
     
     - name: Run Unit tests
       run: npm run test
-
-    - name: install playwright
-      run: npx playwright install
   
   deploy_staging: 
 
