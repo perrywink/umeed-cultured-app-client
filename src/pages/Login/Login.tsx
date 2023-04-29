@@ -1,6 +1,6 @@
 import { auth } from "../../config/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -27,20 +27,33 @@ const AuthForm = () => {
   const { handleFirebaseAuthError } = useFirebaseAuthErrorHandler();
   const { checkEmptyFields } = useFormValidator();
   const [submitClicked, setSubmitClicked] = useState(false);
-  const { data: resUser, isSuccess } = useGetUser();
+  const { data: resUser, isSuccess: getUserSuccess, isError: getUserError, isFetched: getUserFetched } = useGetUser();
 
-  if (submitClicked && isSuccess) {
-    if (resUser.userType === "ADMIN") {
-      navigate("/admin");
-    } else {
-      navigate("/");
+  useEffect(() => {
+    if (submitClicked && getUserSuccess) {
+      if (resUser.userType === "ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+      setSubmitClicked(false);
+      toast.success("You're logged in!", { toastId: "login-toast" });
+      setLoading(false);
     }
-    setSubmitClicked(false);
-    toast.success("You're logged in!", { toastId: "login-toast" });
-  }
+  }, [submitClicked, getUserSuccess])
+
+  useEffect(() => {
+    if (submitClicked && getUserFetched && getUserError) {
+      toast.error("Your account does not exist. Please contact an admin.", {toastId: "login-toast"})
+      auth.signOut()
+      sessionStorage.clear()
+      setLoading(false);
+    }
+  }, [submitClicked, getUserError, getUserFetched])
 
   const handleError = (error: FirebaseError) => {
     toast.error(handleFirebaseAuthError(error));
+    setLoading(false);
   };
 
   const validateForm = () => {
@@ -57,7 +70,6 @@ const AuthForm = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => setSubmitClicked(true))
       .catch((e) => handleError(e))
-      .finally(() => setLoading(false));
   };
 
   return (
