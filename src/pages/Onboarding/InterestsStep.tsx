@@ -37,7 +37,7 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
 
   const loadSelected = () => {
     return selectedTagIds.map(id => {
-      return options.find(o => o.value == id)
+      return options.find(o => o.value == id)!
     })
   }
   
