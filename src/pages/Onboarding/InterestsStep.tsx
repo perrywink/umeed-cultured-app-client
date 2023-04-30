@@ -13,14 +13,16 @@ interface Props {
   }
 }
 
+type SelectOption = {
+  value: number;
+  label: string;
+}
+
 const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) => {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [options, setOptions] = useState<SelectOption[]>([]);
   const {selectedTagIds, setSelectedTagIds} = selectedTagIdsState;
   const { data, refetch, isLoading } = useSearchTags(searchKeyword);
-
-  useEffect(() => {
-    refetch();
-  }, [searchKeyword]);
 
   const loadOptions = () => {
     if (!isLoading && data) {
@@ -30,7 +32,22 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
         label: tag.name,
       }));
     }
+    return []
   };
+
+  const loadSelected = () => {
+    return selectedTagIds.map(id => {
+      return options.find(o => o.value == id)
+    })
+  }
+  
+  useEffect(() => {
+    setOptions(loadOptions())
+  }, [])
+
+  useEffect(() => {
+    refetch();
+  }, [searchKeyword]);
 
   const onChange = (selectedOptions: MultiValue<{
     value: number;
@@ -46,7 +63,8 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
       Interests
       <Select
         isMulti
-        options={loadOptions()}
+        options={options}
+        value={loadSelected()}
         onInputChange={(keyword) => setSearchKeyword(keyword as string)}
         onChange={onChange}
       />
