@@ -36,9 +36,7 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
   };
 
   const loadSelected = () => {
-    return selectedTagIds.map(id => {
-      return options.find(o => o.value == id)!
-    })
+    return options.filter(o => selectedTagIds.includes(o.value))
   }
   
   useEffect(() => {
@@ -66,7 +64,7 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
         options={options}
         value={loadSelected()}
         onInputChange={(keyword) => setSearchKeyword(keyword as string)}
-        onChange={onChange}
+        onChange={onChange} 
       />
       <Button onClick={handleSubmit} styles="mt-5 text-lg">
         {loading ? <Spinner /> : "Get Started"}
