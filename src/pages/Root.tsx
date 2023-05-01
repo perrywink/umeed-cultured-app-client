@@ -7,6 +7,7 @@ import {
   AdminDashboard,
   ResetPassword,
   Onboarding,
+  CreatePost
 } from "../pages";
 import { ToastContainer } from "react-toastify";
 
@@ -38,6 +39,14 @@ function Root() {
           element={
             <PrivateRoute>
               <AdminDashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/admin/post'
+          element={
+            <PrivateRoute>
+              <CreatePost />
             </PrivateRoute>
           }
         />
