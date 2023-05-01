@@ -5,7 +5,8 @@ import AllHandsIn from "../../assets/all_hands_in.png";
 import {
   useAssignUserTags,
   useCreateEContact,
-  useGetUser,
+  useGetUserEContact,
+  useGetUserTags,
   useUpdateUser,
 } from "../../api/user";
 import { toast } from "react-toastify";
@@ -21,39 +22,48 @@ const Onboarding = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const {
-    mutate: registerEContact,
-    isSuccess: successEContact
-  } = useCreateEContact();
-  const {
-    mutate: assignUserTags,
-    isSuccess: successUserTags
-  } = useAssignUserTags();
-  const {
-    mutate: updateUser,
-    isSuccess: onboardSuccess,
-  } = useUpdateUser({enabled: successEContact && successUserTags});
-  
+  const { mutateAsync: registerEContact } = useCreateEContact();
+  const { mutateAsync: assignUserTags } = useAssignUserTags();
+  const { mutateAsync: updateUser } = useUpdateUser();
 
-  const handleSubmit = () => {
-    setLoading(true);
-    registerEContact({
-      name: name,
-      phoneNumber: phoneNumber,
-    });
-    assignUserTags(selectedTagIds);
-    updateUser({
-      onboarded: true,
-    });
+  const { data: eContact, isSuccess: getEContactSuccess } = useGetUserEContact();
+  const { data: tags, isSuccess: getTagsSuccess } = useGetUserTags();
+
+  const handleSubmit = async () => {
+    try {
+      // using mutateAsync makes sure that one does not happen before the other.
+      await registerEContact({
+        name: name,
+        phoneNumber: phoneNumber,
+      });
+      await assignUserTags(selectedTagIds);
+      await updateUser({
+        onboarded: true,
+      });
+      toast.success("You're onboarded!");
+      navigate("/");
+    } catch (err: any) {
+      toast.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // used to prefill values if any were present
   useEffect(() => {
-    if (onboardSuccess) {
-      toast.success("You're onboarded!");
-      navigate('/')
+    if (getEContactSuccess && eContact) {
+      setName(eContact.name)
+      setPhoneNumber(eContact.phoneNumber)
     }
-    setLoading(false);
-  }, [onboardSuccess]);
+  }, [getEContactSuccess])
+
+  useEffect(() => {
+    if (getTagsSuccess && tags) {
+      const tmp = tags.map((t:any) => t.tagId)
+      console.log("TAGS", tmp)
+      setSelectedTagIds(tmp)
+    }
+  }, [getTagsSuccess])
 
   const onboardingSteps = [
     {

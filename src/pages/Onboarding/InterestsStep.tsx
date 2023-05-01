@@ -24,24 +24,17 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
   const {selectedTagIds, setSelectedTagIds} = selectedTagIdsState;
   const { data, refetch, isLoading } = useSearchTags(searchKeyword);
 
-  const loadOptions = () => {
+  useEffect(() => {
     if (!isLoading && data) {
       const tags = data as Tag[];
-      return tags.map((tag) => ({
-        value: tag.id,
-        label: tag.name,
-      }));
+      setOptions(
+        tags.map((tag) => ({
+          value: tag.id,
+          label: tag.name,
+        }))
+      )
     }
-    return []
-  };
-
-  const loadSelected = () => {
-    return options.filter(o => selectedTagIds.includes(o.value))
-  }
-  
-  useEffect(() => {
-    setOptions(loadOptions())
-  }, [])
+  }, [data]);
 
   useEffect(() => {
     refetch();
@@ -62,7 +55,7 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
       <Select
         isMulti
         options={options}
-        value={loadSelected()}
+        value={options.filter(o => selectedTagIds.includes(o.value))}
         onInputChange={(keyword) => setSearchKeyword(keyword as string)}
         onChange={onChange} 
       />
