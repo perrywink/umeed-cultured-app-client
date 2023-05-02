@@ -13,24 +13,32 @@ interface Props {
   }
 }
 
+type SelectOption = {
+  value: number;
+  label: string;
+}
+
 const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) => {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [options, setOptions] = useState<SelectOption[]>([]);
   const {selectedTagIds, setSelectedTagIds} = selectedTagIdsState;
   const { data, refetch, isLoading } = useSearchTags(searchKeyword);
 
   useEffect(() => {
-    refetch();
-  }, [searchKeyword]);
-
-  const loadOptions = () => {
     if (!isLoading && data) {
       const tags = data as Tag[];
-      return tags.map((tag) => ({
-        value: tag.id,
-        label: tag.name,
-      }));
+      setOptions(
+        tags.map((tag) => ({
+          value: tag.id,
+          label: tag.name,
+        }))
+      )
     }
-  };
+  }, [data]);
+
+  useEffect(() => {
+    refetch();
+  }, [searchKeyword]);
 
   const onChange = (selectedOptions: MultiValue<{
     value: number;
@@ -46,9 +54,10 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
       Interests
       <Select
         isMulti
-        options={loadOptions()}
+        options={options}
+        value={options.filter(o => selectedTagIds.includes(o.value))}
         onInputChange={(keyword) => setSearchKeyword(keyword as string)}
-        onChange={onChange}
+        onChange={onChange} 
       />
       <Button onClick={handleSubmit} styles="mt-5 text-lg">
         {loading ? <Spinner /> : "Get Started"}
