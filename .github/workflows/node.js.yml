@@ -38,6 +38,10 @@ jobs:
     
     - name: Run Unit tests
       run: npm run test
+
+    if: ${{ matrix.node-version = '[16]'}}
+    - name: Run e2e tests
+      run: npm run test:e2e
   
   deploy_staging: 
 
