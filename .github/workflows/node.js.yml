@@ -43,7 +43,7 @@ jobs:
       run: npx playwright install
 
     - name: Run e2e tests
-      if: ${{ matrix.node-version }} == '16'
+      if: ${{ matrix.node-version }} = '16'
       run: npm run test:e2e
   
   deploy_staging: 
