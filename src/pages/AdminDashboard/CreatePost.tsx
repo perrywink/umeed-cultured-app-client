@@ -1,63 +1,51 @@
 import { auth, storage } from "../../config/firebase";
-// import { useNavigate } from "react-router-dom";
-import { Button, Input } from "../../components";
-import { useEffect, useState } from "react";
-import {
-    ref,
-    uploadBytes,
-    getDownloadURL,
-    listAll,
-    list,
-} from "firebase/storage";
-import React from "react";
+import { Button } from "../../components";
+import {useState } from "react";
+import {getDownloadURL, ref,uploadBytes} from "firebase/storage";
+import { toast } from "react-toastify";
+import { useCreateMedia } from "../../api/post";
+import { Media, Post } from "../../types/Post";
 
 const CreatePost = () => {
-    // const navigate = useNavigate();
 
-    const [mediaUpload, setMediaUpload] = useState<File | undefined>();
-    const [mediaUrl, setMediaUrls] = useState<string[]>([])
+    const [mediaUpload, setMediaUpload] = useState<FileList | null>();
+    const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-    const mediaListRef = ref(storage, `${auth.currentUser?.uid}/`);
+    const {mutate: createMedia} = useCreateMedia();
 
-    const selectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { files } = event.target;
-        const selectedFiles = files as FileList;
-        setMediaUpload(selectedFiles?.[0]);
-        console.log(event.target.files);
-    };
 
+    const handleSuccess = (mediaUrl:string) => {
+       
+    }
 
     const uploadFile = () => {
-        if (mediaUpload !== undefined) {
-            const mediaRef = ref(storage, `${auth.currentUser?.uid}/${mediaUpload.name}`);
-            uploadBytes(mediaRef, mediaUpload).then((snapshot) => {
+    
+        if (mediaUpload !== undefined && mediaUpload?.length) {
+            for (let i = 0; i < mediaUpload?.length; i++) {
+                const mediaRef = ref(storage, `${auth.currentUser?.uid}/${mediaUpload[i].name}`);
+                uploadBytes(mediaRef, mediaUpload[i]).then((snapshot) => {
                 getDownloadURL(snapshot.ref).then((url) => {
-                    setMediaUrls((prev) => [...prev, url]);
+                  setImageUrls((prev) => [...prev, url]);
+                  console.log(imageUrls);
                 });
             });
+            
+            }
+            
         };
     };
-
-    useEffect(() => {
-        listAll(mediaListRef).then((response) => {
-            response.items.forEach((item) => {
-                getDownloadURL(item).then((url) => {
-                    setMediaUrls((prev) => [...prev, url]);
-                });
-            });
-        });
-    }, []);
 
 
     return (
         <div className='min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12'>
             <div className='p-10 xs:p-0 mx-auto md:w-full md:max-w-md'>
-    
+
                 <input
                     type="file"
-                    onChange={(e) => { console.log(e.target.files)}}
+                    multiple
+                    onChange={(e) => { setMediaUpload(e.target.files) }}
                 />
-                <Button >Upload</Button>
+                <Button onClick={uploadFile} >Upload</Button>
             </div>
         </div>
     );
