@@ -1,5 +1,5 @@
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
 } from "react-router-dom";
 import { auth } from "./config/firebase";
 import { useEffect, useState } from "react";

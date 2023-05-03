@@ -81,7 +81,38 @@ export const useGetUser = (staleTime = 3000) => {
   );
 };
 
+export const useGetUserEContact = () => {
+  const firebaseUid = auth.currentUser?.uid
+
+  return useQuery(
+    ['user-econtact', firebaseUid],
+    async () => {
+      return request({ url: `${userEndpoint}/get-econtact` }).then((response) => {
+        return response.data;
+      });
+    }, {
+      enabled: typeof firebaseUid !== 'undefined',
+    }
+  );
+}
+
+export const useGetUserTags = () => {
+  const firebaseUid = auth.currentUser?.uid
+
+  return useQuery(
+    ['user-tags', firebaseUid],
+    async () => {
+      return request({ url: `${userEndpoint}/get-tags` }).then((response) => {
+        return response.data;
+      });
+    }, {
+      enabled: typeof firebaseUid !== 'undefined',
+    }
+  );
+}
+
 const updateUser = async (data: Partial<PGUser>) => {
+  console.log("Triggering Update User")
   const r = {
     url: userEndpoint + '/update',
     method: "PUT",
@@ -92,7 +123,7 @@ const updateUser = async (data: Partial<PGUser>) => {
   return response;
 };
 
-export const useUpdateUser = (options?: any) => {
+export const useUpdateUser = () => {
   const queryClient = useQueryClient();
   const firebaseUid = auth.currentUser?.uid
 
@@ -104,7 +135,6 @@ export const useUpdateUser = (options?: any) => {
       console.error(e)
       toast.error(e.data)
     },
-    ...options
   })
 }
 
@@ -130,6 +160,6 @@ export const useAssignUserTags = () => {
     onError: (e: any) => {
       const errorData: string = e?.data
       toast.error(errorData)
-    }
+    },
   });
 };
