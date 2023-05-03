@@ -38,6 +38,14 @@ jobs:
     
     - name: Run Unit tests
       run: npm run test
+
+    - name: Install playwright
+      if: ${{ matrix.node-version == '16'}}
+      run: npx playwright install
+
+    - name: Run e2e tests
+      if: ${{ matrix.node-version == '16'}}
+      run: npm run test:e2e
   
   deploy_staging: 
 
