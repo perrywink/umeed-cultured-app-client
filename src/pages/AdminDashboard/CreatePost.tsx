@@ -16,7 +16,7 @@ import {v4 as uuidv4} from 'uuid';
 const CreatePost = () => {
 
     const [mediaUpload, setMediaUpload] = useState<File[]>([]);
-    const [imageUrls, setImageUrls] = useState<string[]>([]);
+    const [imageUrls, setImageUrls] = useState<string>("");
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const { data, refetch, isLoading } = useSearchTags(searchKeyword);
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
@@ -26,7 +26,6 @@ const CreatePost = () => {
     const [desc, setDesc] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [postId, setPostId] = useState<number>(0);
-    const [isMediaSent, setIsMediaSent] = useState<boolean>(false);
     const { checkEmptyFields } = useFormValidator();
 
 
@@ -58,10 +57,10 @@ const CreatePost = () => {
     }, [mediaUpload])
 
     useEffect(() => {
-        if(isMediaSent){
+        if(imageUrls != ""){
             sendMediaData()
         }
-    },[isMediaSent, setImageUrls])
+    },[imageUrls])
 
 
     const validateForm = () => {
@@ -73,7 +72,7 @@ const CreatePost = () => {
     };
 
 
-    const handleSubmit = async() => {
+    const handleSubmit = () => {
         if (!validateForm()) return;
         setLoading(true);
 
@@ -83,7 +82,7 @@ const CreatePost = () => {
             desc: desc,
             status: "APPROVED"
         }
-        await createPost(newPost)
+        createPost(newPost)
         .then((res) => {
             setPostId(res.data.id)
             uploadFile();
@@ -111,27 +110,14 @@ const CreatePost = () => {
     }
 
     const sendMediaData = () => {
-        let mediaList: Media[] = [];
-        for (let i = 0; i < imageUrls.length; i++) {
-            if (i == 0) {
-                let media: Media = {
-                    mediaUrl: imageUrls[i],
-                    postId: postId,
-                    isThumbnail: true
-                };
-                mediaList.push(media)
-            }else{
-                let media: Media = {
-                    mediaUrl: imageUrls[i],
-                    postId: postId,
-                    isThumbnail: false
-                };
-                mediaList.push(media)
-            }
-           
-        }
-        console.log("mediaList", mediaList)
-        createMedia(mediaList);
+        console.log("sendMediaData",imageUrls);
+        console.log("sendMediaData",postId);
+        let media: Media = {
+            mediaUrl: imageUrls,
+            postId: postId,
+            isThumbnail: false
+        };
+        createMedia(media);
     }
 
     const uploadFile = async() => {
@@ -139,15 +125,12 @@ const CreatePost = () => {
         if (mediaUpload !== undefined && mediaUpload?.length) {
             for (let i = 0; i < mediaUpload?.length; i++) {
                 const mediaRef = ref(storage, `${auth.currentUser?.uid}/${mediaUpload[i].name}`+ uuidv4());
-                uploadBytes(mediaRef, mediaUpload[i]).then(async (snapshot) => {
-                    await getDownloadURL(snapshot.ref).then( (url) => {
-                        setImageUrls((prev) => [...prev, url]);
-                        setIsMediaSent(true);
-                        console.log(isMediaSent);
+                uploadBytes(mediaRef, mediaUpload[i]).then((snapshot) => {
+                    getDownloadURL(snapshot.ref).then((url) => {
+                        setImageUrls(url);
                     });
                 });
             }
-            await sendMediaData()
         };
     };
 
@@ -163,8 +146,6 @@ const CreatePost = () => {
     return (
         <div className="min-h-screen bg-gray-50 grid md:grid-cols-2">
             <div className="md:block justify-center md:py-24 py-10 px-7 h-2/4 md:h-full h-auto">
-                {/* <img src={AllHandsIn} alt="all hands in" className="object-cover w-full h-full" /> */}
-                {/* <article className=" h-full focus:outline-none elative cursor-pointer relative "> */}
 
                 <div id="overlay" className="py-3 md:h-full mx-0 md:mx-auto md:w-full md:max-w-xl flex flex-col items-center justify-center rounded-md border-dashed border-2 border-gray-400">
                     {preview.length > 0 && (

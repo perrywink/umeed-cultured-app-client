@@ -32,7 +32,7 @@ export const useCreatePost = () => {
   });
 };
 
-export const createMedia = async (data: Media[]) => {
+export const createMedia = async (data: Media) => {
     const r = {
       url: postEndpoint + '/create-media',
       method: "POST",
