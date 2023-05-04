@@ -1,45 +1,58 @@
-import { useState } from "react";
-import IonIcon from "@reacticons/ionicons";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { INavListItem, NavItem } from "./NavItem";
+import { UserCircleIcon, ArrowLeftOnRectangleIcon, Bars3Icon } from "@heroicons/react/24/solid";
 import MobileNav from './MobileNav'
+import LogoBlue from "../../assets/cup-logo-blue.png";
+import Search from "../Search/Search";
+
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [mobile, setMobile] = useState(false);
   const navigate = useNavigate();
 
   const navListItems: INavListItem[] = [
     {
       label: "Profile",
       link: "/profile",
-      icon: <IonIcon name="person-circle-outline" />,
+      icon: <UserCircleIcon className="h-6 w-6"/>,
     },
     {
       label: "Sign out",
       link: "/signout",
-      icon: <IonIcon name="log-out-outline" />,
+      icon: <ArrowLeftOnRectangleIcon className="h-6 w-6"/>,
     },
   ];
 
+  const MobileMenuButton = () => (
+    <div
+      className="flex justify-end md:hidden cursor-pointer"
+      onClick={() => setOpen(true)}
+    >
+      <Bars3Icon
+        className="hover:scale-110 w-7 h-7 transition-all text-gray-500"
+      />
+    </div>
+  )
+
   return (
     <>
-      <nav className="p-4 w-full flex justify-center items-center">
-        <div
-          className="flex justify-end md:hidden cursor-pointer w-full"
-          onClick={() => setOpen(true)}
-        >
-          <IonIcon
-            name="menu-outline"
-            className="hover:scale-110 w-7 h-7 transition-all"
-          />
+      <nav className="p-4 w-full flex justify-between items-center gap-5">
+        <div className="md:flex">
+          <img src={LogoBlue} className="w-12 h-9 rounded-lg object-cover"/>
+        </div>
+        <div className="md:flex justify-center w-full">
+          <Search/>
         </div>
         <div className="hidden md:flex">
           {navListItems.map((item) => {
-            return <NavItem key={item.label} navListItem={item} styles="px-5" />;
+            return <NavItem key={item.label} navListItem={item} styles="mx-2"/>;
           })}
         </div>
-        {open && <MobileNav navListItems={navListItems} close={() => setOpen(false)}/>}
+        <MobileMenuButton/>
       </nav>
+      {open && <MobileNav navListItems={navListItems} close={() => setOpen(false)}/>}
     </>
   );
 }
