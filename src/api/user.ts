@@ -116,6 +116,19 @@ export const useGetUserTags = () => {
   );
 }
 
+export const useGetUserName = (userId: number) => {
+  return useQuery(
+    ['user-name', userId],
+    async () => {
+      return request({ url: `${userEndpoint}/get-name`, params: {userId} }).then((response) => {
+        return response.data;
+      });
+    }, {
+      enabled: !!userId,
+    }
+  );
+}
+
 const updateUser = async (data: Partial<PGUser>) => {
   console.log("Triggering Update User")
   const r = {
