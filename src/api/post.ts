@@ -32,7 +32,7 @@ export const useCreatePost = () => {
   });
 };
 
-export const createMedia = async (data: Media) => {
+export const createMedia = async (data: Media[]) => {
     const r = {
       url: postEndpoint + '/create-media',
       method: "POST",
@@ -47,9 +47,9 @@ export const useCreateMedia = () => {
     const queryClient = useQueryClient();
   
     return useMutation(createMedia, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         queryClient.invalidateQueries(["media"]);
-        toast.success("Media uploaded");
+        console.log(data);
       },
       onError: (e: any) => {
         console.error(e)

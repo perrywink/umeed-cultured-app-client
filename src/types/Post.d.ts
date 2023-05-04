@@ -1,7 +1,7 @@
 export type Post = {
     title: string,
     author: string,
-    userId: number,
+    desc: string,
     status?: PostStatus,
     rejectDsc?: string
 };
