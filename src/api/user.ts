@@ -67,6 +67,7 @@ export const useCreateEContact = () => {
 
 export const useGetUser = (staleTime = 3000) => {
   const firebaseUid = auth.currentUser?.uid
+  const navigate = useNavigate()
 
   return useQuery(
     ['user', firebaseUid],
@@ -75,6 +76,10 @@ export const useGetUser = (staleTime = 3000) => {
         return response.data;
       });
     }, {
+      onError: (e) => {
+        console.error(e)
+        navigate('/signout') //to prevent any unecessary calls
+      },
       enabled: typeof firebaseUid !== 'undefined',
       staleTime
     }

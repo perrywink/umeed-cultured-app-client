@@ -23,7 +23,7 @@ function App() {
       if (userCred){
         userCred.getIdToken()
           .then((token) => {
-            // console.log('TOKEN', token)
+            console.log('TOKEN', token)
             sessionStorage.setItem("auth_token", encryptData(token, import.meta.env.VITE_SALT))
             setAuthToken(token)
           })
