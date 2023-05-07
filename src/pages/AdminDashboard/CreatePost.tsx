@@ -2,7 +2,7 @@ import { auth, storage } from "../../config/firebase";
 import { Button, Input, Spinner, TextareaInput, FileInput } from "../../components";
 import { useEffect, useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useCreateMedia, useCreatePost } from "../../api/post";
+import { useAssignPostTags, useCreateMedia, useCreatePost } from "../../api/post";
 import { Media, Post } from "../../types/Post";
 import { useSearchTags } from "../../api/tag";
 import { Tag } from "../../types/Tag";
@@ -10,17 +10,17 @@ import Select, { MultiValue } from "react-select";
 import React from "react";
 import { useFormValidator } from "../../hooks";
 import { toast } from "react-toastify";
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 
 const CreatePost = () => {
 
     const [mediaUpload, setMediaUpload] = useState<File[]>([]);
-    const [imageUrls, setImageUrls] = useState<string>("");
+    const [imageUrls, setImageUrls] = useState<[string, boolean]>(["", false]);
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const { data, refetch, isLoading } = useSearchTags(searchKeyword);
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
-    const [preview, setPreview] = useState<string[]>([]);
+    const [preview, setPreview] = useState<[string, string, string][]>([]);
     const [title, setTitle] = useState<string>("");
     const [author, setAuthor] = useState<string>("");
     const [desc, setDesc] = useState<string>("");
@@ -33,40 +33,52 @@ const CreatePost = () => {
 
 
     const { mutate: createMedia } = useCreateMedia();
-    const {mutateAsync: createPost} = useCreatePost();
+    const { mutateAsync: createPost } = useCreatePost();
+    const { mutate: assignPostTags } = useAssignPostTags();
 
-    
+
 
     useEffect(() => {
         refetch();
     }, [searchKeyword]);
 
+    // useEffect(() => {
+    //     if (postSuccess) {
+    //         const postTags = {
+    //             tagIds: selectedTagIds,
+    //             postId: postId
+    //         }
+    //         assignPostTags(postTags)
+    //     }
+
+    // }, [postId])
+
     useEffect(() => {
         if (mediaUpload) {
-            let array: string[] = [];
+            let array: [string, string, string][] = [];
 
             for (let i = 0; i < mediaUpload.length; i++) {
                 let url = URL.createObjectURL(mediaUpload[i]);
-                array.push(url);
+                array.push([url, mediaUpload[i].name, mediaUpload[i].type]);
                 //URL.revokeObjectURL(objectUrl)
             }
-            setPreview(array)
-
+            setPreview(array);
+            console.log("preview", preview);
         }
 
     }, [mediaUpload])
 
     useEffect(() => {
-        if(imageUrls != ""){
+        if (imageUrls[0] != "") {
             sendMediaData()
         }
-    },[imageUrls])
+    }, [imageUrls])
 
 
     const validateForm = () => {
         if (!checkEmptyFields([title, author, desc]) || mediaUpload.length == 0) {
-          toast.error("All required fields are not filled up.");
-          return false;
+            toast.error("All required fields are not filled up.");
+            return false;
         }
         return true;
     };
@@ -82,13 +94,18 @@ const CreatePost = () => {
             desc: desc,
             status: "APPROVED"
         }
-        createPost(newPost)
-        .then((res) => {
-            setPostId(res.data.id)
-            uploadFile();
-        })
-        .finally(() => { setLoading(false)})
-    
+        try {
+            createPost(newPost)
+                .then((res) => {
+                    setPostId(res.data.id);
+                    assignPostTags({ tagIds: selectedTagIds, postId: res.data.id });
+                    uploadFile();
+                })
+                .finally(() => { setLoading(false) })
+        } catch (err) {
+            console.log(err);
+        }
+
     }
 
     const loadOptions = () => {
@@ -110,24 +127,29 @@ const CreatePost = () => {
     }
 
     const sendMediaData = () => {
-        console.log("sendMediaData",imageUrls);
-        console.log("sendMediaData",postId);
+        console.log("sendMediaData", imageUrls);
+        console.log("sendMediaData", postId);
         let media: Media = {
-            mediaUrl: imageUrls,
+            mediaUrl: imageUrls[0],
             postId: postId,
-            isThumbnail: false
+            isThumbnail: imageUrls[1]
         };
         createMedia(media);
     }
 
-    const uploadFile = async() => {
+    const uploadFile = async () => {
 
         if (mediaUpload !== undefined && mediaUpload?.length) {
             for (let i = 0; i < mediaUpload?.length; i++) {
-                const mediaRef = ref(storage, `${auth.currentUser?.uid}/${mediaUpload[i].name}`+ uuidv4());
+                const mediaRef = ref(storage, `${auth.currentUser?.uid}/${mediaUpload[i].name}` + uuidv4());
                 uploadBytes(mediaRef, mediaUpload[i]).then((snapshot) => {
                     getDownloadURL(snapshot.ref).then((url) => {
-                        setImageUrls(url);
+                        if (i == 0) {
+                            setImageUrls([url, true]);
+                        } else {
+                            setImageUrls([url, false]);
+                        }
+
                     });
                 });
             }
@@ -142,22 +164,20 @@ const CreatePost = () => {
 
     }
 
+    const removeImage = (url: string, filename: string) => {
+        setPreview(preview.filter(x => x[0] !== url));
+        setMediaUpload(mediaUpload.filter(x => x.name !== filename));
+
+    }
+
 
     return (
         <div className="min-h-screen bg-gray-50 grid md:grid-cols-2">
             <div className="md:block justify-center md:py-24 py-10 px-7 h-2/4 md:h-full h-auto">
 
                 <div id="overlay" className="py-3 md:h-full mx-0 md:mx-auto md:w-full md:max-w-xl flex flex-col items-center justify-center rounded-md border-dashed border-2 border-gray-400">
-                    {preview.length > 0 && (
-                       
-                        <div className="grid md:grid-cols-2 grid-cols-1 ">
-                            {preview.map((img) => (
-                                <img src={img} alt="" className=" px-3 rounded-lg md:object-fill object-center md:w-72 md:h-72 object-contain w-64 h-64" />
-                            ))}
-                        </div>
-                                
-                    )}
-                    {preview.length ==0 && (
+
+                    {preview.length == 0 && (
                         <div className="flex flex-col items-center justify-center">
                             <i>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"
@@ -167,18 +187,66 @@ const CreatePost = () => {
                             <p className="text-sm text-gray-600 ">Browse and choose files from your device</p>
                         </div>
                     )}
-                    <FileInput
-                        ref={refer}
-                        type="file"
-                        onChange={selectFiles}
-                        hidden
-                    />
-                    <Button
-                        styles="mt-5 w-fit rounded-md"
-                        onClick={() => refer.current?.click()}
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    </Button>
+
+                    {preview.length > 0 && (
+
+                        <div className="grid grid-cols-2 p-5 gap-2 place-items-center">
+                            {preview.map((img, key) => (
+                                <div key={key} className="w-full h-full relative">
+
+                                    <div className="w-full h-full relative">
+                                        <i className="absolute right-0 top-0" onClick={() => { removeImage(img[0], img[1]) }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="#FFFFFF" className="w-6 h-6">
+                                                <path fillRule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clipRule="evenodd" />
+                                            </svg>
+                                        </i>
+                                        <img src={img[0]} alt="" className=" w-full h-full rounded" />
+                                    </div>
+
+                                </div>
+                            ))}
+
+                            {preview.length < 4 && (
+                                <div>
+                                    <FileInput
+                                        ref={refer}
+                                        type="file"
+                                        onChange={selectFiles}
+                                        hidden
+                                        accept="image/*"
+                                    />
+                                    <Button
+                                        styles="mt-5 w-fit rounded-md"
+                                        onClick={() => refer.current?.click()}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    </Button>
+                                </div>
+                            )}
+
+
+                        </div>
+
+                    )}
+
+                    {preview.length == 0 && (
+                        <div>
+                            <FileInput
+                                ref={refer}
+                                type="file"
+                                onChange={selectFiles}
+                                hidden
+                                accept="image/*"
+                            />
+                            <Button
+                                styles="mt-5 w-fit rounded-md"
+                                onClick={() => refer.current?.click()}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </Button>
+                        </div>
+                    )}
+
 
                 </div>
 
@@ -219,7 +287,7 @@ const CreatePost = () => {
                         styles="mt-5 w-full text-lg"
                         onClick={handleSubmit}
                     >
-                        {loading ? <Spinner /> :"Post"}
+                        {loading ? <Spinner /> : "Post"}
                     </Button>
                 </div>
             </div>
