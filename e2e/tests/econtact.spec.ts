@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-const E2E_EMAIL = "teste2euser@gmail.com"
-const E2E_USERNAME = "teste2euser"
-const E2E_PASSWORD = "teste2euser"
+const E2E_EMAIL = "teste2eusergit@gmail.com"
+const E2E_USERNAME = "teste2eusergit"
+const E2E_PASSWORD = "teste2eusergit"
 const E2E_CONTACT = "0422222222"
 
 test.describe('Econtact Page', () => {
