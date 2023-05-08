@@ -110,9 +110,9 @@ test.describe('Register Page', () => {
 
     await page.getByRole('button', { name: 'Register' }).click();
 
-    //await page.screenshot({ path: `screenshot-.png` });;
+    await page.waitForURL('/login#/onboarding');
 
-    await expect(page).toHaveURL('/login#/onboarding',{ timeout: 10000 });
+    await expect(page).toHaveURL('/login#/onboarding');
 
   });
 });
