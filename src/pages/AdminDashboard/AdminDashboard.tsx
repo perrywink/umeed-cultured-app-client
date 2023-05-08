@@ -8,16 +8,29 @@ import { Post } from "../../types/Post";
 import { title } from "process";
 import AdminTabs from "../AdminDashboard/Components/AdminTabs";
 
+const TableData = (params: any) => {
+  let content = params.tabData || [];
+
+  console.log("#####################", JSON.stringify(content));
+  return (
+    <div>
+      {content.map((product: any) => (
+        <div>
+          <h3> {product.title}</h3>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { data, isLoading, refetch } = useGetPosts();
-  const [tableData, setTableData] = useState<string>("");
-
-  let renderData = "";
+  const [postType, setPostType] = useState<string>("user posts");
+  const { data, isLoading, refetch } = useGetPosts(postType);
 
   if (!isLoading && data) {
     console.log("^^^^^^^^^^^^^^^^^^^^^^", JSON.stringify(data));
-    renderData = "data";
+    // setTableData(data);
   }
 
   const handleSignout = () => {
@@ -27,16 +40,26 @@ const AdminDashboard = () => {
   };
 
   const handleUserPosts = () => {
-    setTableData("user posts");
+    setPostType("user posts");
+    refetch();
   };
 
   const handleMyPosts = () => {
-    setTableData("my posts");
+    setPostType("my posts");
+    refetch();
   };
 
-  const TableData = () => {
-    return <div>{tableData}</div>;
-  };
+  // const TableData = () => {
+  //   return (
+  //     <div>
+  //       {(data || []).map((product: any) => (
+  //         <div>
+  //           <h3> {product.title}</h3>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className='min-h-screen mx-20'>
@@ -74,7 +97,7 @@ const AdminDashboard = () => {
           placeholder='Search by titles...'></input>
       </div>
 
-      <TableData />
+      <TableData tabData={data} />
     </div>
   );
 };

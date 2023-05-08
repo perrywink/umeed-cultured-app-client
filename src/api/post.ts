@@ -83,7 +83,7 @@ export const useAssignPostTags = () => {
   });
 };
 
-export const useGetPosts = () => {
+export const useGetPosts = (postType: string) => {
   return useQuery(
     ['post'],
     async () => {
