@@ -44,6 +44,7 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
     value: number;
     label: string;
 }>) => {
+    console.log(selectedOptions)
     setSelectedTagIds(selectedOptions.map(option => {
       return option.value
     }))
@@ -55,9 +56,9 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
       <Select
         isMulti
         options={options}
-        value={options.filter(o => selectedTagIds.includes(o.value))}
+        // value={options.filter(o => selectedTagIds.includes(o.value))}
         onInputChange={(keyword) => setSearchKeyword(keyword as string)}
-        onChange={onChange} 
+        onChange={(selected) => onChange(selected)} 
       />
       <Button onClick={handleSubmit} styles="mt-5 text-lg">
         {loading ? <Spinner /> : "Get Started"}

@@ -4,14 +4,14 @@ import { request } from "./request";
 
 export const useSearchPosts = (keyword: string, tagIds: number[]) => {
   return useQuery(
-    ['posts'],
+    ['posts', tagIds],
     async () => {
       return request({ url: `${postEndpoint}/search`, params: { keyword, tagIds } }).then((response) => {
         return response.data;
       });
     },
     {
-      enabled: tagIds.length > 0
+      enabled: !!tagIds && tagIds.length > 0
     }
   );
 };

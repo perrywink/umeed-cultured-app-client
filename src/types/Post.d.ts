@@ -1,8 +1,15 @@
-export interface IPost {
+export interface IMedia {
+  id: number
+  isThumbnail: boolean
+  mediaUrl: string
+  postId: number
+}
+
+export interface IPostWithMedia {
   id: number
   title: string
-  description?: string
+  desc?: string
   authorId: number
   updatedAt: Date
-  mediaUrl: string
+  media: IMedia[]
 }

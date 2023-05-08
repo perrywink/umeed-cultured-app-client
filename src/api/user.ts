@@ -130,7 +130,6 @@ export const useGetUserName = (userId: number) => {
 }
 
 const updateUser = async (data: Partial<PGUser>) => {
-  console.log("Triggering Update User")
   const r = {
     url: userEndpoint + '/update',
     method: "PUT",

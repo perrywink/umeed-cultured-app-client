@@ -1,42 +1,69 @@
 import Nav from "../../components/Nav/Nav";
 
-import { mockPosts } from "../../api/postsMock";
-import { PostItem } from "../../components";
+import { PostItem, Spinner } from "../../components";
 import { useGetUserTags } from "../../api/user";
 import { useSearchPosts } from "../../api/post";
 import { useEffect, useState } from "react";
 import { IUserOnTags } from "../../types/UsersOnTags";
-import { IPost } from "../../types/Post";
+import { IPostWithMedia } from "../../types/Post";
+import { Tag } from "../../types/Tag";
+import { FaceFrownIcon } from "@heroicons/react/24/solid";
+import { useGetTagWithId } from "../../api/tag";
 
 const Dashboard = () => {
-  const { data: tags, isSuccess: getTagsSuccess } = useGetUserTags();
-  const [ tagsState, setTagsState ] = useState<number[]>([]);
+  const { data: userOnTags, isSuccess: getUserOnTagsSuccess } =
+    useGetUserTags();
+  const [tagIds, setTagIds] = useState<number[]>([]);
+
+  const { data: tags, isSuccess: getTagsSuccess } = useGetTagWithId(tagIds);
 
   const parseTags = () => {
-    let result: number[]
-    if (tags) {
-      let result = (tags as IUserOnTags[]).map(tag => {
-        return tag.tagId
+    let result: number[];
+    console.log("Success return for user on tags:", userOnTags)
+    if (userOnTags) {
+      let result = (userOnTags as IUserOnTags[]).map((tag) => {
+        return tag.tagId;
       });
-      setTagsState(result)
+      setTagIds(result);
     }
-  }
-  const { data: posts, isSuccess: getPostsSuccess, refetch: refetchPosts } = useSearchPosts("", tagsState);
+  };
+  const { data: posts, isSuccess: getPostsSuccess } = useSearchPosts(
+    "",
+    tagIds
+  );
 
-  useEffect(() => parseTags(), [getTagsSuccess])
+  useEffect(() => parseTags(), [getUserOnTagsSuccess]);
 
   return (
     <div className="min-h-screen">
-      <Nav/>
-      <div className="bg-white flex flex-col justify-center mt-2 mx-4">
-        <div className="columns-2 md:columns-4 max-w-7xl mx-auto space-y-4">
-          {posts && posts.map((post: IPost) => {
-            return (
-              <PostItem key={post.id} post={post}/>
-            )
-          })}
+      <Nav />
+      <div className="bg-white flex flex-col mt-2 mx-8">
+        <div className="flex gap-2 my-4 items-end">
+          <div className="text-gray-600 text-xs">Showing results for: </div>
+          {getTagsSuccess &&
+            tags.map((tag: Tag) => (
+              <div key={tag.id} className="text-gray-600 bg-gray-100 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                {tag.name}
+              </div>
+            ))}
+        </div>
+        <div className="columns-2 md:columns-4 space-y-4">
+          {getPostsSuccess &&
+            posts &&
+            posts.map((post: IPostWithMedia) => {
+              return <PostItem key={post.id} post={post} />;
+            })}
         </div>
       </div>
+      {getUserOnTagsSuccess && userOnTags?.length === 0 && (
+        <div className="flex flex-col align-middle w-full h-full text-gray-400 mt-5 gap-2">
+          <FaceFrownIcon className="w-7 h-7 mx-3 md:mx-auto" />
+          <div className="mx-3 md:mx-auto">
+            We customized your feed according to your interests. But ended up
+            with nothing...
+          </div>
+        </div>
+      )}
     </div>
   );
 };

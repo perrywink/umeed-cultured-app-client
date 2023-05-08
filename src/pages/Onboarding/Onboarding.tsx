@@ -11,6 +11,8 @@ import {
 } from "../../api/user";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { auth } from "../../config/firebase";
 
 const Onboarding = () => {
   const [pageNum, setPageNum] = useState<number>(0);
@@ -21,6 +23,7 @@ const Onboarding = () => {
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { mutateAsync: registerEContact } = useCreateEContact();
   const { mutateAsync: assignUserTags } = useAssignUserTags();
@@ -42,6 +45,8 @@ const Onboarding = () => {
       });
       toast.success("You're onboarded!");
       navigate("/");
+      // needs to be invalidated for dashboard to load properly
+      queryClient.invalidateQueries(["user-tags", auth.currentUser?.uid])
     } catch (err: any) {
       toast.error(err);
     } finally {
@@ -60,7 +65,6 @@ const Onboarding = () => {
   useEffect(() => {
     if (getTagsSuccess && tags) {
       const tmp = tags.map((t:any) => t.tagId)
-      console.log("TAGS", tmp)
       setSelectedTagIds(tmp)
     }
   }, [getTagsSuccess])

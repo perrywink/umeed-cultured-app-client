@@ -1,9 +1,9 @@
 import moment from "moment";
 import { useGetUserName } from "../../api/user";
-import { IPost } from "../../types/Post";
+import { IPostWithMedia } from "../../types/Post";
 
 interface IProps {
-  post: IPost
+  post: IPostWithMedia
 }
 
 const PostSubtitle = ({post}: IProps) => {
@@ -16,13 +16,23 @@ const PostSubtitle = ({post}: IProps) => {
 }
 
 const PostItem = ({post}: IProps) => {
+
+  const retrieveThumbnailMediaUrl = (post: IPostWithMedia) => {
+    const thumbnailMedia = post.media.find((m) => m.isThumbnail)
+    if (thumbnailMedia)
+      return thumbnailMedia.mediaUrl
+    return ""
+  }
+
   return ( 
     <div className="flex flex-col overflow-hidden">
-      <img className="w-full h-full object-contain rounded-lg" src={post.mediaUrl} alt={post.title}/>
-      <div className="text-md text-gray-700 text-ellipse line-clamp-2">
-        {post.title} 
+      <img className="w-full h-full object-contain rounded-lg" src={retrieveThumbnailMediaUrl(post)} alt={post.title}/>
+      <div className="p-2">
+        <div className="text-md text-gray-700 text-ellipse line-clamp-2">
+          {post.title} 
+        </div>
+        <PostSubtitle post={post}/>
       </div>
-      <PostSubtitle post={post}/>
     </div> 
   );
 }

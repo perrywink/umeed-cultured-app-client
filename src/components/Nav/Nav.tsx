@@ -38,7 +38,7 @@ export default function Nav() {
 
   return (
     <>
-      <nav className="p-4 w-full flex justify-between items-center gap-5">
+      <nav className="p-4 px-8 w-full flex justify-between items-center gap-5">
         <div className="md:flex">
           <img src={LogoBlue} className="w-12 h-9 rounded-lg object-cover"/>
         </div>
