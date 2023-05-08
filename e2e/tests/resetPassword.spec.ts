@@ -1,8 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-const E2E_EMAIL = "test@gmail.com"
-const E2E_PASSWORD = "test@1234"
-
 test.describe('Reset Password Page', () => {
   test.describe.configure({ mode: 'serial' });
 

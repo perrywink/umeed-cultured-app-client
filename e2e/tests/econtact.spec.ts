@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-const E2E_EMAIL = "teste2eusergit@gmail.com"
-const E2E_USERNAME = "teste2eusergit"
-const E2E_PASSWORD = "teste2eusergit"
-const E2E_CONTACT = "0422222222"
+const e2e_econtact_email = "teste2eusergit@gmail.com"
+const e2e_econtact_username = "teste2eusergit"
+const e2e_econtact_password = "teste2eusergit"
+const e2e_econtct_contactno = "0422222222"
 
 test.describe('Econtact Page', () => {
     test.describe.configure({ mode: 'serial' });
@@ -15,15 +15,18 @@ test.describe('Econtact Page', () => {
         await expect(page.getByRole('img', { name: 'Cultured Up All Logo' })).toBeVisible();
 
         //fill in all the details on the register page
-        await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
-        await page.getByPlaceholder('john doe').fill(E2E_USERNAME);
-        await page.getByPlaceholder('0412346789').fill(E2E_CONTACT);
-        await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
-        await page.getByPlaceholder('Make sure it matches!').fill(E2E_PASSWORD);
+        await page.getByPlaceholder('john@doe.com').fill(e2e_econtact_email);
+        await page.getByPlaceholder('john doe').fill(e2e_econtact_username);
+        await page.getByPlaceholder('0412346789').fill(e2e_econtct_contactno);
+        await page.getByPlaceholder('Minimum 6 characters.').fill(e2e_econtact_password);
+        await page.getByPlaceholder('Make sure it matches!').fill(e2e_econtact_password);
         await page.getByRole('checkbox').click();
 
         //click on register
         await page.getByRole('button', { name: 'Register' }).click();
+
+        //check if the E-contact page is loaded
+        await expect(page.getByText("A loved one's number")).toBeVisible();
 
         //navigate to the econtact page
         await expect(page).toHaveURL('login#/onboarding');
