@@ -30,7 +30,7 @@ test.describe('Forgot Password Page', () => {
    test('should go back to login page', async ({ page }) => {
      await page.getByText('Back to Login').click();
 
-     await expect(page).toHaveURL('/login');
+     await expect(page).toHaveURL('#/login');
   });
 
    test('should send mail on the press of send button', async ({ page }) => {
