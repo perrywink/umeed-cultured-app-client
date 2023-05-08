@@ -5,7 +5,7 @@ const E2E_USERNAME = "teste2euser"
 const E2E_PASSWORD = "teste2euser"
 const E2E_CONTACT = "0422222222"
 
-test.describe('Reset Password Page', () => {
+test.describe('Econtact Page', () => {
     test.describe.configure({ mode: 'serial' });
   
     test.beforeEach(async ({ page }) => {
