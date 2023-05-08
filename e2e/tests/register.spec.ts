@@ -5,6 +5,8 @@ const E2E_EMAIL = "testuser@gmail.com"
 const E2E_USERNAME = "testuser"
 const E2E_PASSWORD = "test@1234"
 const E2E_SMALL_PASSWORD = "abc"
+const datetime=Date.now();
+console.log(datetime)
 
 test.describe('Register Page', () => {
   test.describe.configure({ mode: 'serial' });
@@ -94,20 +96,23 @@ test.describe('Register Page', () => {
 
   test('should register with proper credentials', async ({ page }) => {
 
-    await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
+    await page.getByPlaceholder('john@doe.com').fill(E2E_USERNAME+datetime+"@gmail.com");
 
-    await page.getByPlaceholder('john doe').fill(E2E_USERNAME);
+    await page.getByPlaceholder('john doe').fill(E2E_USERNAME+datetime);
 
     await page.getByPlaceholder("0412346789").fill("0412346789");
 
-    await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
+    await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD+datetime);
 
-    await page.getByPlaceholder('Make sure it matches!').fill(E2E_PASSWORD);
+    await page.getByPlaceholder('Make sure it matches!').fill(E2E_PASSWORD+datetime);
 
     await page.getByRole('checkbox').click();
 
     await page.getByRole('button', { name: 'Register' }).click();
 
-    await expect(page).toHaveURL('/login#/onboarding', { timeout: 10000 });
+    //await page.screenshot({ path: `screenshot-.png` });;
+
+    await expect(page).toHaveURL('/login#/onboarding',{ timeout: 10000 });
+
   });
 });
