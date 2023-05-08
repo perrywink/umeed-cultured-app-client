@@ -17,7 +17,7 @@ const AdminDashboard = () => {
         <div className='px-5 py-7'>
           Hello there! You're logged in as an admin!
         </div>
-        <Button onClick={handleSignout}>Sign out</Button>
+        <Button onClick={handleSignout} styles={"w-full"}>Sign out</Button>
       </div>
     </div>
   );
