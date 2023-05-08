@@ -23,6 +23,8 @@
     "crypto-js": "^4.1.1",
     "crypto-ts": "^1.0.2",
     "firebase": "^9.18.0",
+    "flowbite": "^1.6.5",
+    "flowbite-react": "^0.4.4",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.5.0",
     "react": "^18.2.0",
