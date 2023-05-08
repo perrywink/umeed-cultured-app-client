@@ -83,3 +83,14 @@ export const useAssignPostTags = () => {
   });
 };
 
+export const useGetPosts = () => {
+  return useQuery(
+    ['post'],
+    async () => {
+      return request({ url: `${postEndpoint}/get-all` }).then((response) => {
+        return response.data;
+      });
+    }
+  );
+};
+
