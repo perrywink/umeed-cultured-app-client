@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 const E2E_WRONG_EMAIL= "test"
-const E2E_EMAIL = "test@gmail.com"
+const E2E_EMAIL = "testuser@gmail.com"
 const E2E_USERNAME = "testuser"
 const E2E_PASSWORD = "test@1234"
 const E2E_SMALL_PASSWORD = "abc"
@@ -44,53 +44,53 @@ test.describe('Register Page', () => {
      await expect(page).toHaveURL('/login#/login');
   });
 
-//  test('should throw error on entering wrong email', async ({ page }) => {
-//     await page.getByPlaceholder('john@doe.com').fill(E2E_WRONG_EMAIL);
+ test.skip('should throw error on entering wrong email', async ({ page }) => {
+    await page.getByPlaceholder('john@doe.com').fill(E2E_WRONG_EMAIL);
 
-//     await page.getByPlaceholder('john doe').fill(E2E_USERNAME);
+    await page.getByPlaceholder('john doe').fill(E2E_USERNAME);
 
-//     await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
+    await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
 
-//     await page.getByPlaceholder('Make sure it matches!').fill(E2E_PASSWORD);
+    await page.getByPlaceholder('Make sure it matches!').fill(E2E_PASSWORD);
 
-//     await page.getByRole('checkbox').click();
+    await page.getByRole('checkbox').click();
 
-//     await page.getByRole('button', { name: 'Register' }).click();
+    await page.getByRole('button', { name: 'Register' }).click();
 
-//     await expect(page.getByText('Please check your email')).toBeVisible();
-//   });
+    await expect(page.getByText('Please check your email')).toBeVisible();
+  });
 
-//   test('should throw error on entering unmatched passwords', async ({ page }) => {
-//      await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
+  test.skip('should throw error on entering unmatched passwords', async ({ page }) => {
+     await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
 
-//     await page.getByPlaceholder('john doe').fill(E2E_USERNAME);
+    await page.getByPlaceholder('john doe').fill(E2E_USERNAME);
 
-//     await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
+    await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
 
-//     await page.getByPlaceholder('Make sure it matches!').fill(E2E_PASSWORD + " ");
+    await page.getByPlaceholder('Make sure it matches!').fill(E2E_PASSWORD + " ");
 
-//     await page.getByRole('checkbox').click();
+    await page.getByRole('checkbox').click();
 
-//     await page.getByRole('button', { name: 'Register' }).click();
+    await page.getByRole('button', { name: 'Register' }).click();
 
-//     await expect(page.getByText('Make sure your password match up!')).toBeVisible();
-//   });
+    await expect(page.getByText('Make sure your password match up!')).toBeVisible();
+  });
 
-//   test('should throw error on entering passwords that is less than 6 characters', async ({ page }) => {
-//     await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
+  test.skip('should throw error on entering passwords that is less than 6 characters', async ({ page }) => {
+    await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
 
-//     await page.getByPlaceholder('john doe').fill(E2E_USERNAME);
+    await page.getByPlaceholder('john doe').fill(E2E_USERNAME);
 
-//     await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_SMALL_PASSWORD);
+    await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_SMALL_PASSWORD);
 
-//     await page.getByPlaceholder('Make sure it matches!').fill(E2E_SMALL_PASSWORD);
+    await page.getByPlaceholder('Make sure it matches!').fill(E2E_SMALL_PASSWORD);
 
-//     await page.getByRole('checkbox').click();
+    await page.getByRole('checkbox').click();
 
-//     await page.getByRole('button', { name: 'Register' }).click();
+    await page.getByRole('button', { name: 'Register' }).click();
 
-//     await expect(page.getByText('Your password should at least be 6 characters long')).toBeVisible();
-//   });
+    await expect(page.getByText('Your password should at least be 6 characters long')).toBeVisible();
+  });
 
   test('should register with proper credentials', async ({ page }) => {
 
