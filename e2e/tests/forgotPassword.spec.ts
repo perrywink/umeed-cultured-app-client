@@ -3,14 +3,14 @@ import { test, expect } from '@playwright/test';
 const E2E_EMAIL = "test@gmail.com"
 const E2E_PASSWORD = "test@1234"
 
-test.describe.skip('Forgot Password Page', () => {
+test.describe('Forgot Password Page', () => {
   test.describe.configure({ mode: 'serial' });
 
   test.beforeEach(async ({ page }) => {
       await page.goto('/login');
       await expect(page.getByRole('img', { name: 'Cultured Up All Logo' })).toBeVisible();
       await page.getByText('Forgot Password?').click();
-      await expect(page).toHaveURL('/reset-password');
+      await expect(page).toHaveURL('#/reset-password');
   });
 
    test('should render forget password page', async ({ page }) => {
