@@ -110,7 +110,11 @@ test.describe('Register Page', () => {
 
     await page.getByRole('button', { name: 'Register' }).click();
 
-    await page.waitForURL('http://127.0.0.1:5173/login#/onboarding');
+   // await page.waitForNavigation();
+
+    await page.waitForTimeout(10000);
+
+    //await page.waitForURL('http://127.0.0.1:5173/login#/onboarding');
 
     await expect(page).toHaveURL('/login#/onboarding');
 
