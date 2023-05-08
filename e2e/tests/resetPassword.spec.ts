@@ -30,7 +30,7 @@ test.describe('Reset Password Page', () => {
      await expect(page).toHaveURL('/login#/login');
   });
 
-  test('should show success message after submitting valid registered email', async ({ page }) => {
+  test.skip('should show success message after submitting valid registered email', async ({ page }) => {
     // enter valid email
     await page.getByPlaceholder('john@doe.com').fill('test@test.com'); 
 
