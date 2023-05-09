@@ -29,7 +29,7 @@ test.describe('Econtact Page', () => {
     
         await page.getByRole('button', { name: 'Register' }).click();
     
-        await expect(page).toHaveURL('#/register', { timeout: 10000 });
+        await expect(page).toHaveURL('#/onboarding', { timeout: 10000 });
     });
 
 
