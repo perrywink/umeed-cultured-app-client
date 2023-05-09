@@ -44,7 +44,7 @@ function App() {
           <Root/>
         </Router>
       </AuthContext.Provider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   )
 }

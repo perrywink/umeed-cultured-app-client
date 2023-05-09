@@ -19,7 +19,6 @@ const Dashboard = () => {
 
   const parseTags = () => {
     let result: number[];
-    console.log("Success return for user on tags:", userOnTags)
     if (userOnTags) {
       let result = (userOnTags as IUserOnTags[]).map((tag) => {
         return tag.tagId;

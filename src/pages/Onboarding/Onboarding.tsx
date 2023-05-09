@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { auth } from "../../config/firebase";
+import { SelectOption } from "./InterestsStep";
+import { useGetTagWithId } from "../../api/tag";
 
 const Onboarding = () => {
   const [pageNum, setPageNum] = useState<number>(0);
@@ -20,7 +22,7 @@ const Onboarding = () => {
   //input field states are managed here to disguise a single form as 2 pages
   const [name, setName] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+  const [selectedTags, setSelectedTags] = useState<SelectOption[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -30,7 +32,9 @@ const Onboarding = () => {
   const { mutateAsync: updateUser } = useUpdateUser();
 
   const { data: eContact, isSuccess: getEContactSuccess } = useGetUserEContact();
-  const { data: tags, isSuccess: getTagsSuccess } = useGetUserTags();
+  const { data: userTags } = useGetUserTags();
+  const { data: tags, isSuccess: getTagsSuccess } = useGetTagWithId(userTags?.map((ut:{tagId: number}) => ut.tagId));
+
 
   const handleSubmit = async () => {
     try {
@@ -39,7 +43,7 @@ const Onboarding = () => {
         name: name,
         phoneNumber: phoneNumber,
       });
-      await assignUserTags(selectedTagIds);
+      await assignUserTags(selectedTags.map(o => o.value));
       await updateUser({
         onboarded: true,
       });
@@ -47,6 +51,8 @@ const Onboarding = () => {
       navigate("/");
       // needs to be invalidated for dashboard to load properly
       queryClient.invalidateQueries(["user-tags", auth.currentUser?.uid])
+      queryClient.invalidateQueries(["tags", userTags?.map((ut:{tagId: number}) => ut.tagId)])
+
     } catch (err: any) {
       toast.error(err);
     } finally {
@@ -64,8 +70,8 @@ const Onboarding = () => {
 
   useEffect(() => {
     if (getTagsSuccess && tags) {
-      const tmp = tags.map((t:any) => t.tagId)
-      setSelectedTagIds(tmp)
+      console.log("TAGS", tags)
+      setSelectedTags(tags.map((t:{id:number, name:string}) => ({value: t.id, label: t.name})))
     }
   }, [getTagsSuccess])
 
@@ -85,7 +91,7 @@ const Onboarding = () => {
         <InterestsStep
           handleSubmit={handleSubmit}
           loading={loading}
-          selectedTagIdsState={{ selectedTagIds, setSelectedTagIds }}
+          selectedTagsState={{ selectedTags, setSelectedTags }}
         />
       ),
       label: "Interests",
