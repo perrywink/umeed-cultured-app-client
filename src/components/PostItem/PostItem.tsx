@@ -18,14 +18,14 @@ const PostSubtitle = ({post}: IProps) => {
 const PostItem = ({post}: IProps) => {
 
   const retrieveThumbnailMediaUrl = (post: IPostWithMedia) => {
-    const thumbnailMedia = post.media.find((m) => m.isThumbnail)
+    const thumbnailMedia = post.media?.find((m) => m.isThumbnail)
     if (thumbnailMedia)
       return thumbnailMedia.mediaUrl
     return ""
   }
 
   return ( 
-    <div className="flex flex-col overflow-hidden animate-slide-in">
+    <div className="flex flex-initial flex-col overflow-hidden animate-slide-in">
       <img className="w-full h-full object-contain rounded-lg" src={retrieveThumbnailMediaUrl(post)} alt={post.title}/>
       <div className="p-2">
         <div className="text-md text-gray-700 text-ellipse line-clamp-2">

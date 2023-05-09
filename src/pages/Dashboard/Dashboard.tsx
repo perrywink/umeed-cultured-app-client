@@ -7,8 +7,11 @@ import { useEffect, useState } from "react";
 import { IUserOnTags } from "../../types/UsersOnTags";
 import { IPostWithMedia } from "../../types/Post";
 import { Tag } from "../../types/Tag";
-import { FaceFrownIcon } from "@heroicons/react/24/solid";
+import { FaceFrownIcon } from "@heroicons/react/24/outline";
 import { useGetTagWithId } from "../../api/tag";
+import { useInView } from "react-intersection-observer";
+import React from "react";
+import { Masonry } from "@mui/lab";
 
 const Dashboard = () => {
   const { data: userOnTags, isSuccess: getUserOnTagsSuccess } =
@@ -16,6 +19,8 @@ const Dashboard = () => {
   const [tagIds, setTagIds] = useState<number[]>([]);
 
   const { data: tags, isSuccess: getTagsSuccess } = useGetTagWithId(tagIds);
+
+  const { ref, inView } = useInView();
 
   const parseTags = () => {
     let result: number[];
@@ -26,12 +31,21 @@ const Dashboard = () => {
       setTagIds(result);
     }
   };
-  const { data: posts, isSuccess: getPostsSuccess } = useSearchPosts(
-    "",
-    tagIds
-  );
+  const {
+    data: posts,
+    isSuccess: getPostsSuccess,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useSearchPosts("", tagIds);
 
   useEffect(() => parseTags(), [getUserOnTagsSuccess]);
+
+  useEffect(() => {
+    if (inView && tagIds && tagIds.length > 0) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   return (
     <div className="min-h-screen">
@@ -40,18 +54,26 @@ const Dashboard = () => {
         <div className="flex gap-2 my-4 items-end overflow-scroll scrollbar-hide">
           {getTagsSuccess &&
             tags.map((tag: Tag) => (
-              <div key={tag.id} className="text-gray-600 bg-gray-100 text-xs font-medium mr-2 px-2.5 py-0.5 rounded mb-2">
+              <div
+                key={tag.id}
+                className="text-gray-600 bg-gray-100 text-xs font-medium mr-2 px-2.5 py-0.5 rounded mb-2"
+              >
                 {tag.name}
               </div>
-          ))}
+            ))}
         </div>
-        <div className="columns-2 md:columns-4 space-y-4">
+        <Masonry columns={4} spacing={2}>
           {getPostsSuccess &&
             posts &&
-            posts.map((post: IPostWithMedia) => {
-              return <PostItem key={post.id} post={post} />;
-            })}
-        </div>
+            posts.pages.map((page) => { 
+              return (
+              <React.Fragment key={page.pageBookmark}>
+                {page.data.map((post: IPostWithMedia) => {
+                  return <PostItem key={post.id} post={post} />;
+                })}
+              </React.Fragment>
+            )})}
+        </Masonry>
       </div>
       {getUserOnTagsSuccess && userOnTags?.length === 0 && (
         <div className="flex flex-col align-middle w-full h-full text-gray-400 mt-5 gap-2">
@@ -62,6 +84,20 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+      <div className="w-full flex">
+        <button
+          ref={ref}
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+          className="bg-gray-100 rounded-md p-4 mx-auto animate-slide-in"
+        >
+          {isFetchingNextPage
+            ? "Loading more..."
+            : hasNextPage
+            ? "Load Newer"
+            : "Nothing more to load"}
+        </button>
+      </div>
     </div>
   );
 };
