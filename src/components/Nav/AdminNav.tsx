@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { INavListItem, NavItem } from "./NavItem";
-import { UserCircleIcon, ArrowLeftOnRectangleIcon, Bars3Icon } from "@heroicons/react/24/solid";
+import { ArrowLeftOnRectangleIcon, Bars3Icon, UserPlusIcon, RectangleGroupIcon, ArrowUpOnSquareStackIcon } from "@heroicons/react/24/outline";
 import MobileNav from './MobileNav'
 import UmeedLogo from "../../assets/umeed-psych-logo.png";
 
@@ -13,19 +13,19 @@ export default function Nav() {
 
   const navListItems: INavListItem[] = [
     {
-      label: "Admin",
+      label: "Dashboard",
       link: "/admin",
-      icon: <UserCircleIcon className="h-6 w-6"/>,
+      icon: <RectangleGroupIcon className="h-6 w-6"/>,
     },
     {
-      label: "Post",
+      label: "Create Post",
       link: "/admin/post",
-      icon: <ArrowLeftOnRectangleIcon className="h-6 w-6"/>,
+      icon: <ArrowUpOnSquareStackIcon className="h-6 w-6"/>,
     },
     {
-      label: "Create",
+      label: "Create Admin",
       link: "/admin/create",
-      icon: <ArrowLeftOnRectangleIcon className="h-6 w-6"/>,
+      icon: <UserPlusIcon className="h-6 w-6"/>,
     },
     {
       label: "Sign out",
@@ -53,7 +53,7 @@ export default function Nav() {
         </div>
         <div className="hidden md:flex">
           {navListItems.map((item) => {
-            return <NavItem key={item.label} navListItem={item} styles="mx-2"/>;
+            return <NavItem key={item.label} navListItem={item} styles="mx-4" displayLabel/>;
           })}
         </div>
         <MobileMenuButton/>
