@@ -21,7 +21,7 @@ const ResetPassword = () => {
 
     sendPasswordResetEmail(auth, email)
       .then(() => toast.success("Instructions sent to your inbox!"))
-      .catch((e) => handleFirebaseResetPasswordError(e))
+      .catch((e) => toast.error(handleFirebaseResetPasswordError(e)))
       .finally(() => setLoading(false))
   }
 
