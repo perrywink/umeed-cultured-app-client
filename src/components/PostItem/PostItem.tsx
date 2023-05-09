@@ -25,7 +25,7 @@ const PostItem = ({post}: IProps) => {
   }
 
   return ( 
-    <div className="flex flex-col overflow-hidden">
+    <div className="flex flex-col overflow-hidden animate-slide-in">
       <img className="w-full h-full object-contain rounded-lg" src={retrieveThumbnailMediaUrl(post)} alt={post.title}/>
       <div className="p-2">
         <div className="text-md text-gray-700 text-ellipse line-clamp-2">

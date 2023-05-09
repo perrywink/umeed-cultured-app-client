@@ -37,14 +37,13 @@ const Dashboard = () => {
     <div className="min-h-screen">
       <Nav />
       <div className="bg-white flex flex-col mt-2 mx-8">
-        <div className="flex gap-2 my-4 items-end">
-          <div className="text-gray-600 text-xs">Showing results for: </div>
+        <div className="flex gap-2 my-4 items-end overflow-scroll scrollbar-hide">
           {getTagsSuccess &&
             tags.map((tag: Tag) => (
-              <div key={tag.id} className="text-gray-600 bg-gray-100 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+              <div key={tag.id} className="text-gray-600 bg-gray-100 text-xs font-medium mr-2 px-2.5 py-0.5 rounded mb-2">
                 {tag.name}
               </div>
-            ))}
+          ))}
         </div>
         <div className="columns-2 md:columns-4 space-y-4">
           {getPostsSuccess &&

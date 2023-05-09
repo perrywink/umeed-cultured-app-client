@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { INavListItem, NavItem } from "./NavItem";
 import { UserCircleIcon, ArrowLeftOnRectangleIcon, Bars3Icon } from "@heroicons/react/24/solid";
 import MobileNav from './MobileNav'
-import LogoBlue from "../../assets/cup-logo-blue.png";
+import UmeedLogo from "../../assets/umeed-psych-logo.png";
 import Search from "../Search/Search";
 
 
@@ -40,7 +40,7 @@ export default function Nav() {
     <>
       <nav className="p-4 px-8 w-full flex justify-between items-center gap-5">
         <div className="md:flex">
-          <img src={LogoBlue} className="w-12 h-9 rounded-lg object-cover"/>
+          <img src={UmeedLogo} className="w-20 h-10 rounded-lg object-cover"/>
         </div>
         <div className="md:flex justify-center w-full">
           <Search/>
