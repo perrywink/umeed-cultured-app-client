@@ -23,10 +23,6 @@ export const PostStatus: {
     IN_REVIEW: IN_REVIEW
 };
 
-export const PostType: {
-    MY_POST: MY_POST
-    USER_POST: USER_POST
-}
+export type PostType = 'MY_POST' | 'USER_POST'
 
 export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
-export type PostType = (typeof PostType)[keyof typeof PostType]

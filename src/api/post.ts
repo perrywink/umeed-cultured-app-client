@@ -84,18 +84,16 @@ export const useAssignPostTags = () => {
   });
 };
 
-export const useGetPosts = (postType: PostType) => {
+export const useGetRelevantPosts = (postType: PostType) => {
 const firebaseUid = auth.currentUser?.uid
 
-if(postType == PostType.USER_POST){
+if(postType == 'USER_POST'){
   return useQuery(
     ['post'],
     async () => {
       return request({ url: `${postEndpoint}/get-user-posts` }).then((response) => {
         return response.data;
       });
-    }, {
-      enabled: typeof firebaseUid !== 'undefined',
     }
   );
   }

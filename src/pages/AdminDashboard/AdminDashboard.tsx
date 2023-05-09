@@ -2,7 +2,7 @@ import { auth } from "../../config/firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components";
-import { useGetPosts } from "../../api/post";
+import { useGetRelevantPosts } from "../../api/post";
 import { useEffect, useState } from "react";
 import { Post, PostType } from "../../types/Post";
 import { title } from "process";
@@ -25,8 +25,8 @@ const TableData = (params: any) => {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [postType, setPostType] = useState<PostType>(PostType.MY_POST);
-  const { data, isLoading, refetch } = useGetPosts(postType);
+  const [postType, setPostType] = useState<PostType>("MY_POST");
+  const { data, isLoading, refetch } = useGetRelevantPosts(postType);
 
   if (!isLoading && data) {
     console.log("^^^^^^^^^^^^^^^^^^^^^^", JSON.stringify(data));
@@ -40,26 +40,14 @@ const AdminDashboard = () => {
   };
 
   const handleUserPosts = () => {
-    setPostType(PostType.USER_POST);
+    setPostType("USER_POST");
     refetch();
   };
 
   const handleMyPosts = () => {
-    setPostType(PostType.MY_POST);
+    setPostType("MY_POST");
     refetch();
   };
-
-  // const TableData = () => {
-  //   return (
-  //     <div>
-  //       {(data || []).map((product: any) => (
-  //         <div>
-  //           <h3> {product.title}</h3>
-  //         </div>
-  //       ))}
-  //     </div>
-  //   );
-  // };
 
   return (
     <div className='min-h-screen mx-20'>
