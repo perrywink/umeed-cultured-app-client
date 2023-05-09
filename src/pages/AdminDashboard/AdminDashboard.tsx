@@ -7,21 +7,7 @@ import { useEffect, useState } from "react";
 import { Post, PostType } from "../../types/Post";
 import { title } from "process";
 import AdminTabs from "../AdminDashboard/Components/AdminTabs";
-
-const TableData = (params: any) => {
-  let content = params.tabData || [];
-
-  console.log("#####################", JSON.stringify(content));
-  return (
-    <div>
-      {content.map((product: any) => (
-        <div>
-          <h3> {product.title}</h3>
-        </div>
-      ))}
-    </div>
-  );
-};
+import AdminTable from "./Components/AdminTable";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -85,7 +71,7 @@ const AdminDashboard = () => {
           placeholder='Search by titles...'></input>
       </div>
 
-      <TableData tabData={data} />
+      <AdminTable tabData={data} />
     </div>
   );
 };
