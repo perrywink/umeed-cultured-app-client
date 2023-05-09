@@ -115,7 +115,7 @@ const AuthForm = () => {
               Forgot Password?
             </LinkButton>
           </div>
-          <Button onClick={handleSubmit} styles="mt-5 text-lg">
+          <Button onClick={handleSubmit} styles="mt-5 text-lg w-full">
             {loading ? <Spinner /> : "Login"}
           </Button>
         </div>

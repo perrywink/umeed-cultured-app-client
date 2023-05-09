@@ -47,7 +47,7 @@ const ResetPassword = () => {
             
             <Button
               onClick={handleSubmit}
-              styles="mt-5 text-lg"
+              styles="mt-5 text-lg w-full"
             >
               {loading ? <Spinner /> : "Send"}
             </Button>

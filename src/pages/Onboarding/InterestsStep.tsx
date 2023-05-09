@@ -59,7 +59,7 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
         onInputChange={(keyword) => setSearchKeyword(keyword as string)}
         onChange={onChange} 
       />
-      <Button onClick={handleSubmit} styles="mt-5 text-lg">
+      <Button onClick={handleSubmit} styles="mt-5 text-lg w-full">
         {loading ? <Spinner /> : "Get Started"}
       </Button>
     </div>

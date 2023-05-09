@@ -42,7 +42,7 @@ const EContactStep = ({setPageNum, nameState, phoneNumberState}: Props) => {
         />
         <Button
           onClick={() => setPageNum((pageNum) => pageNum + 1)}
-          styles="mt-5 text-lg"
+          styles="mt-5 text-lg w-full"
         >
           Next
         </Button>
