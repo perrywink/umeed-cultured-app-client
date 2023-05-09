@@ -9,16 +9,16 @@ const AdminTabs = ({ onUserPostClick, onMyPostClick }: Props) => {
       <ul className='flex flex-wrap -mb-px'>
         <li className='mr-2'>
           <button
-            onClick={onUserPostClick}
+            onClick={onMyPostClick}
             className='inline-block px-12 pb-2 border-b-2 rounded-t-lg hover:text-gray-400 active dark:text-slate-950 dark:border-umeed-tangerine-300'>
-            User Posts
+            My Posts
           </button>
         </li>
         <li className='mr-2'>
           <button
-            onClick={onMyPostClick}
+            onClick={onUserPostClick}
             className='inline-block px-12 pb-2 border-b-2 rounded-t-lg hover:text-gray-400 active dark:text-slate-950 dark:border-umeed-tangerine-300'>
-            My Posts
+            User Posts
           </button>
         </li>
       </ul>

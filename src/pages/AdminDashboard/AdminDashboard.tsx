@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components";
 import { useGetPosts } from "../../api/post";
 import { useEffect, useState } from "react";
-import { Post } from "../../types/Post";
+import { Post, PostType } from "../../types/Post";
 import { title } from "process";
 import AdminTabs from "../AdminDashboard/Components/AdminTabs";
 
@@ -25,7 +25,7 @@ const TableData = (params: any) => {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [postType, setPostType] = useState<string>("user posts");
+  const [postType, setPostType] = useState<PostType>(PostType.MY_POST);
   const { data, isLoading, refetch } = useGetPosts(postType);
 
   if (!isLoading && data) {
@@ -40,12 +40,12 @@ const AdminDashboard = () => {
   };
 
   const handleUserPosts = () => {
-    setPostType("user posts");
+    setPostType(PostType.USER_POST);
     refetch();
   };
 
   const handleMyPosts = () => {
-    setPostType("my posts");
+    setPostType(PostType.MY_POST);
     refetch();
   };
 

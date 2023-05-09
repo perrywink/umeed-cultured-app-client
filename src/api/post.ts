@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {Media, Post, PostTags } from "../types/Post";
+import {Media, Post, PostTags, PostType } from "../types/Post";
 import { postEndpoint } from "./endpoints";
 import { request } from "./request";
 import { toast } from "react-toastify";
+import { auth } from "../config/firebase";
 
 
 const createPost = async (data: Post) => {
@@ -83,14 +84,32 @@ export const useAssignPostTags = () => {
   });
 };
 
-export const useGetPosts = (postType: string) => {
+export const useGetPosts = (postType: PostType) => {
+const firebaseUid = auth.currentUser?.uid
+
+if(postType == PostType.USER_POST){
   return useQuery(
     ['post'],
     async () => {
-      return request({ url: `${postEndpoint}/get-all` }).then((response) => {
+      return request({ url: `${postEndpoint}/get-user-posts` }).then((response) => {
         return response.data;
       });
+    }, {
+      enabled: typeof firebaseUid !== 'undefined',
     }
   );
+  }
+  else{
+    return useQuery(
+    ['post', firebaseUid],
+    async () => {
+      return request({ url: `${postEndpoint}/get-by-uid` }).then((response) => {
+        return response.data;
+      });
+    }, {
+      enabled: typeof firebaseUid !== 'undefined',
+    }
+  );
+  }
 };
 
