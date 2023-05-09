@@ -9,9 +9,9 @@ test.describe('Econtact Page', () => {
     test.describe.configure({ mode: 'serial' });
   
     test.beforeEach(async ({ page }) => {
-        await page.goto('/login');
+        await page.goto('#/login');
         await page.getByText('Register now').click();
-        await expect(page).toHaveURL('/login#/register');
+        await expect(page).toHaveURL('#/register');
         await expect(page.getByRole('img', { name: 'Cultured Up All Logo' })).toBeVisible();
 
         //fill in all the details on the register page
@@ -29,7 +29,7 @@ test.describe('Econtact Page', () => {
     
         await page.getByRole('button', { name: 'Register' }).click();
     
-        await expect(page).toHaveURL('/login#/onboarding', { timeout: 10000 });
+        await expect(page).toHaveURL('#/onboarding', { timeout: 10000 });
     });
 
 

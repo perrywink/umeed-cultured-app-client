@@ -12,9 +12,9 @@ test.describe('Register Page', () => {
   test.describe.configure({ mode: 'serial' });
 
   test.beforeEach(async ({ page }) => {
-      await page.goto('/login');
+      await page.goto('#/login');
       await page.getByText('Register now').click();
-      await expect(page).toHaveURL('/login#/register');
+      await expect(page).toHaveURL('#/register');
       await expect(page.getByRole('img', { name: 'Cultured Up All Logo' })).toBeVisible();
   });
 
@@ -43,7 +43,7 @@ test.describe('Register Page', () => {
   test('should redirect to login page', async ({ page }) => {
      await page.getByText('Login').click();
 
-     await expect(page).toHaveURL('/login#/login');
+     await expect(page).toHaveURL('#/login');
   });
 
  test.skip('should throw error on entering wrong email', async ({ page }) => {
@@ -116,7 +116,7 @@ test.describe('Register Page', () => {
 
     //await page.waitForURL('http://127.0.0.1:5173/login#/onboarding');
 
-    await expect(page).toHaveURL('/login#/onboarding');
+    await expect(page).toHaveURL('#/onboarding');
 
   });
 });

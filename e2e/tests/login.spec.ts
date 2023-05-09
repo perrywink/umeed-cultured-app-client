@@ -8,7 +8,7 @@ test.describe('Login Page', () => {
   test.describe.configure({ mode: 'serial' });
 
   test.beforeEach(async ({ page }) => {
-      await page.goto('/login');
+      await page.goto('#/login');
       await expect(page.getByRole('img', { name: 'Cultured Up All Logo' })).toBeVisible();
   });
 
