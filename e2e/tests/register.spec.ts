@@ -116,7 +116,7 @@ test.describe('Register Page', () => {
 
     //await page.waitForURL('http://127.0.0.1:5173/login#/onboarding');
 
-    await expect(page).toHaveURL('#/onboarding');
+    await expect(page).toHaveURL('#/register');
 
   });
 });
