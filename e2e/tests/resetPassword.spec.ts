@@ -4,10 +4,10 @@ test.describe('Reset Password Page', () => {
   test.describe.configure({ mode: 'serial' });
 
   test.beforeEach(async ({ page }) => {
-      await page.goto('/login');
+      await page.goto('#/login');
       await expect(page.getByRole('img', { name: 'Cultured Up All Logo' })).toBeVisible();
       await page.getByText('Forgot Password?').click();
-      await expect(page).toHaveURL('/login#/reset-password');
+      await expect(page).toHaveURL('#/reset-password');
   });
 
    test('should render forget password page', async ({ page }) => {
@@ -27,7 +27,7 @@ test.describe('Reset Password Page', () => {
    test('should go back to login page', async ({ page }) => {
      await page.getByText('Back to Login').click();
 
-     await expect(page).toHaveURL('/login#/login');
+     await expect(page).toHaveURL('#/login');
   });
 
   test('should show success message after submitting valid registered email', async ({ page }) => {
