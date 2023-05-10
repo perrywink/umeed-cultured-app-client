@@ -34,7 +34,7 @@ export const NavItem = ({
 }: {
   navListItem: INavListItem,
   styles?: string,
-  displayLabel: boolean,
+  displayLabel?: boolean,
 }) => {
   const navigate = useNavigate()
     
