@@ -6,7 +6,7 @@ export const useSearchPosts = (keyword: string, tagIds: number[]) => {
   return useInfiniteQuery(
     ['posts', keyword],
     async ({pageParam = 0}) => {
-      return request({ url: `${postEndpoint}/search`, params: { keyword, tagIds, pageNum: pageParam }}).then((response) => {
+      return request({ url: `${postEndpoint}/search`, params: { keyword, tagIds, cursor: pageParam }}).then((response) => {
         return response.data;
       });
     },

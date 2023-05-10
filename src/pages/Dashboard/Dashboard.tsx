@@ -17,6 +17,7 @@ const Dashboard = () => {
   const { data: userOnTags, isSuccess: getUserOnTagsSuccess } =
     useGetUserTags();
   const [tagIds, setTagIds] = useState<number[]>([]);
+  const [numCols, setNumCols] = useState<number>(5);
 
   const { data: tags, isSuccess: getTagsSuccess } = useGetTagWithId(tagIds);
 
@@ -47,6 +48,25 @@ const Dashboard = () => {
     }
   }, [inView]);
 
+  const alterCols = () => {
+    if (window.innerWidth >= 768) {
+      setNumCols(5)
+    } else {
+      setNumCols(2)
+    }
+  }
+
+  useEffect(() => {
+    alterCols()
+    window.addEventListener("resize", () => {
+      alterCols()
+    });
+    return () => {
+      window.removeEventListener("resize", () => {});
+    };
+  }, []);
+
+
   return (
     <div className="min-h-screen">
       <Nav />
@@ -62,7 +82,7 @@ const Dashboard = () => {
               </div>
             ))}
         </div>
-        <Masonry columns={4} spacing={2}>
+        <Masonry columns={numCols} spacing={2} className="w-full">
           {getPostsSuccess &&
             posts &&
             posts.pages.map((page) => { 
