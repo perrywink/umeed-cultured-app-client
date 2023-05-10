@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { IUserOnTags } from "../../types/UsersOnTags";
 import { IPostWithMedia } from "../../types/Post";
 import { Tag } from "../../types/Tag";
-import { FaceFrownIcon } from "@heroicons/react/24/outline";
+import { ArrowDownCircleIcon, EllipsisHorizontalCircleIcon, FaceFrownIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
 import { useGetTagWithId } from "../../api/tag";
 import { useInView } from "react-intersection-observer";
 import React from "react";
@@ -89,13 +89,13 @@ const Dashboard = () => {
           ref={ref}
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
-          className="bg-gray-100 rounded-md p-4 mx-auto animate-slide-in"
+          className="bg-gray-100 p-3 mx-auto animate-slide-in mt-1 mb-3 text-gray-500"
         >
           {isFetchingNextPage
-            ? "Loading more..."
+            ? <EllipsisHorizontalCircleIcon className="animate-ping w-5 h-5"/>
             : hasNextPage
-            ? "Load Newer"
-            : "Nothing more to load"}
+            ? <ArrowDownCircleIcon className="w-5 h-5"/>
+            : <div className="flex gap-3"><NoSymbolIcon className="w-5 h-5"/> Nothing left to see here.</div>}
         </button>
       </div>
     </div>
