@@ -21,7 +21,7 @@ const ResetPassword = () => {
 
     sendPasswordResetEmail(auth, email)
       .then(() => toast.success("Instructions sent to your inbox!"))
-      .catch((e) => handleFirebaseResetPasswordError(e))
+      .catch((e) => toast.error(handleFirebaseResetPasswordError(e)))
       .finally(() => setLoading(false))
   }
 
@@ -47,7 +47,7 @@ const ResetPassword = () => {
             
             <Button
               onClick={handleSubmit}
-              styles="mt-5 text-lg"
+              styles="mt-5 text-lg w-full"
             >
               {loading ? <Spinner /> : "Send"}
             </Button>

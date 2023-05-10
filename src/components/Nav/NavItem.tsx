@@ -30,20 +30,22 @@ export const MobileNavItem = ({
 export const NavItem = ({
   navListItem,
   styles,
+  displayLabel
 }: {
   navListItem: INavListItem,
   styles?: string,
+  displayLabel: boolean,
 }) => {
   const navigate = useNavigate()
     
   return (
     <div
       onClick={() => navigate(navListItem.link)}
-      className={`text-md cursor-pointer text-gray-500 hover:text-gray-900 ${styles} flex align-center gap-2`}
+      className={`text-md cursor-pointer text-gray-500 hover:text-gray-900 ${styles} flex align-center gap-1`}
     >
       {navListItem.icon}
+      {displayLabel && navListItem.label}
     </div>
   )
 
 }
-  
