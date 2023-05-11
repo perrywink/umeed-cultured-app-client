@@ -37,6 +37,14 @@ function Root() {
           }
         />
         <Route
+          path='/post'
+          element={
+            <PrivateRoute>
+              <CreatePost />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path='/admin'
           element={
             <PrivateRoute>
