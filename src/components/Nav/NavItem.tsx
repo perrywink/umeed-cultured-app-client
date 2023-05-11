@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 export interface INavListItem {
   label: string;
@@ -14,11 +15,12 @@ export const MobileNavItem = ({
   styles?: string,
 }) => {
   const navigate = useNavigate()
+  const location = useLocation().pathname;
     
   return (
     <div
       onClick={() => navigate(navListItem.link)}
-      className={`text-md cursor-pointer text-gray-500 hover:text-gray-900 ${styles} flex align-center gap-2`}
+      className={`text-md cursor-pointer hover:text-gray-900 ${styles} flex align-center gap-2 ${location == navListItem.link ? "text-umeed-beige" :"text-gray-500"}`}
     >
       {navListItem.icon}
       {navListItem.label}
@@ -37,11 +39,12 @@ export const NavItem = ({
   displayLabel: boolean,
 }) => {
   const navigate = useNavigate()
+  const location = useLocation().pathname;
     
   return (
     <div
       onClick={() => navigate(navListItem.link)}
-      className={`text-md cursor-pointer text-gray-500 hover:text-gray-900 ${styles} flex align-center gap-1`}
+      className={`text-md cursor-pointer hover:text-umeed-beige ${styles} flex align-center gap-1 ${location == navListItem.link ? "text-umeed-beige" :"text-gray-500"}`}
     >
       {navListItem.icon}
       {displayLabel && navListItem.label}

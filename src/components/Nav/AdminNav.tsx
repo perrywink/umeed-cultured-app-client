@@ -6,6 +6,7 @@ import MobileNav from './MobileNav'
 import UmeedLogo from "../../assets/umeed-psych-logo.png";
 
 
+
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
@@ -45,6 +46,7 @@ export default function Nav() {
     </div>
   )
 
+
   return (
     <>
       <nav className="p-4 px-8 w-full flex justify-between items-center gap-5">
@@ -53,7 +55,7 @@ export default function Nav() {
         </div>
         <div className="hidden md:flex">
           {navListItems.map((item) => {
-            return <NavItem key={item.label} navListItem={item} styles="mx-4" displayLabel/>;
+            return <NavItem key={item.label} navListItem={item} styles="mx-4 " displayLabel/>;
           })}
         </div>
         <MobileMenuButton/>
