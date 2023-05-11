@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   styles?: string;
-};
+}
 
 const Button = ({ children, styles, ...rest }: Props) => {
   return (

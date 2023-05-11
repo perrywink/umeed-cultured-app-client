@@ -1,8 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {Media, Post, PostTags } from "../types/Post";
+import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
+import { Media, Post, PostTags } from "../types/Post";
 import { postEndpoint } from "./endpoints";
 import { request } from "./request";
 import { toast } from "react-toastify";
+
+export const useSearchPosts = (keyword: string, tagIds: number[]) => {
+  return useInfiniteQuery(
+    ['posts', keyword],
+    async ({pageParam = 0}) => {
+      return request({ url: `${postEndpoint}/search`, params: { keyword, tagIds, cursor: pageParam }}).then((response) => {
+        return response.data;
+      });
+    },
+    {
+      getNextPageParam: lastPage => lastPage.pageBookmark ?? undefined,
+      enabled: !!tagIds && tagIds.length > 0
+    }
+  );
+};
 
 
 const createPost = async (data: Post) => {

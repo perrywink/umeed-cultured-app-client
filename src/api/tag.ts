@@ -12,3 +12,17 @@ export const useSearchTags = (keyword: string) => {
     }
   );
 };
+
+export const useGetTagWithId = (tagIds: number[]) => {
+  return useQuery(
+    ['tags', tagIds],
+    async () => {
+      return request({ url: `${tagEndpoint}/id-get`, params: { tagIds } }).then((response) => {
+        return response.data;
+      });
+    },
+    {
+      enabled: !!tagIds && tagIds.length > 0
+    }
+  )
+}
