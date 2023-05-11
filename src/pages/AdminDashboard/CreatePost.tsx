@@ -22,6 +22,7 @@ import React from "react";
 import { useFormValidator } from "../../hooks";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
+// import InterestsStep from "../Onboarding/InterestsStep";
 
 const CreatePost = () => {
   const [mediaUpload, setMediaUpload] = useState<File[]>([]);
@@ -47,17 +48,6 @@ const CreatePost = () => {
     refetch();
   }, [searchKeyword]);
 
-  // useEffect(() => {
-  //     if (postSuccess) {
-  //         const postTags = {
-  //             tagIds: selectedTagIds,
-  //             postId: postId
-  //         }
-  //         assignPostTags(postTags)
-  //     }
-
-  // }, [postId])
-
   useEffect(() => {
     if (mediaUpload) {
       let array: [string, string, string][] = [];
@@ -65,7 +55,6 @@ const CreatePost = () => {
       for (let i = 0; i < mediaUpload.length; i++) {
         let url = URL.createObjectURL(mediaUpload[i]);
         array.push([url, mediaUpload[i].name, mediaUpload[i].type]);
-        //URL.revokeObjectURL(objectUrl)
       }
       setPreview(array);
       console.log("preview", preview);
@@ -164,11 +153,28 @@ const CreatePost = () => {
     }
   };
 
+  const checkDuplicateFile = (name:string) => mediaUpload.some(media => {
+    if (media.name === name) {
+      return true;
+    }
+    return false;
+  })
+ 
+
+
   const selectFiles = ({
     currentTarget: { files },
   }: React.ChangeEvent<HTMLInputElement>) => {
+
     if (files && files.length) {
-      setMediaUpload((existing) => [...existing, ...files]);
+      console.log("condition", checkDuplicateFile(files[0].name))
+      if (checkDuplicateFile(files[0].name)){
+        toast.error("File already Uploaded !")
+      }else{
+        console.log(files)
+        console.log(mediaUpload)
+        setMediaUpload((existing) => [...existing, ...files]);
+      }
     }
   };
 
@@ -181,7 +187,7 @@ const CreatePost = () => {
     <div className="bg-gray-50 flex flex-col min-h-screen">
       <AdminNav />
       {/* <div className="text-center font-cormorant text-5xl font-bold text-umeed-blue">
-                New Post
+                Create Post
             </div> */}
       <div className="grid md:grid-cols-2 h-full flex-1">
         <div className="md:block justify-center md:py-24 py-10 px-7 md:h-full h-auto">
