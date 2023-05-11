@@ -6,14 +6,14 @@ interface IProps {
   post: IPostWithMedia
 }
 
-const PostSubtitle = ({post}: IProps) => {
-  const {data: authorUser} = useGetUserName(post.authorId);
-  return (
-    <div className="text-sm text-gray-500">
-      {authorUser && authorUser.username} | {moment(post.updatedAt).fromNow()}
-    </div>
-  )
-}
+// const PostSubtitle = ({post}: IProps) => {
+//   const {data: authorUser} = useGetUserName(post.authorId);
+//   return (
+//     <div className="text-sm text-gray-500">
+//       {authorUser && authorUser.username} | {moment(post.updatedAt).fromNow()}
+//     </div>
+//   )
+// }
 
 const PostItem = ({post}: IProps) => {
 
@@ -31,7 +31,9 @@ const PostItem = ({post}: IProps) => {
         <div className="text-md text-gray-700 text-ellipse line-clamp-2">
           {post.title} 
         </div>
-        <PostSubtitle post={post}/>
+        <div className="text-sm text-gray-500">
+          {post.author} | {moment(post.updatedAt).fromNow()}
+        </div>
       </div>
     </div> 
   );

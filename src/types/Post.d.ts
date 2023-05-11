@@ -9,7 +9,8 @@ export interface IPostWithMedia {
   id: number
   title: string
   desc?: string
-  authorId: number
+  userId: number
+  author: string
   updatedAt: Date
   media: IMedia[]
 }
