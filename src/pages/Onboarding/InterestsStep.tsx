@@ -3,25 +3,25 @@ import { Button, Spinner } from "../../components";
 import Select, { MultiValue } from "react-select";
 import { useSearchTags } from "../../api/tag";
 import { Tag } from "../../types/Tag";
-3
-interface Props {
-  handleSubmit: () => void;
-  loading: boolean;
-  selectedTagIdsState: {
-    selectedTagIds: number[],
-    setSelectedTagIds: React.Dispatch<React.SetStateAction<number[]>>
-  }
-}
 
-type SelectOption = {
+export type SelectOption = {
   value: number;
   label: string;
 }
 
-const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) => {
+interface Props {
+  handleSubmit: () => void;
+  loading: boolean;
+  selectedTagsState: {
+    selectedTags: SelectOption[],
+    setSelectedTags: React.Dispatch<React.SetStateAction<SelectOption[]>>
+  }
+}
+
+const InterestsStep = ({ handleSubmit, loading, selectedTagsState }: Props) => {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [options, setOptions] = useState<SelectOption[]>([]);
-  const {selectedTagIds, setSelectedTagIds} = selectedTagIdsState;
+  const {selectedTags, setSelectedTags} = selectedTagsState;
   const { data, refetch, isLoading } = useSearchTags(searchKeyword);
 
   useEffect(() => {
@@ -44,9 +44,7 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
     value: number;
     label: string;
 }>) => {
-    setSelectedTagIds(selectedOptions.map(option => {
-      return option.value
-    }))
+    setSelectedTags([...selectedOptions])
   }
 
   return (
@@ -55,9 +53,9 @@ const InterestsStep = ({ handleSubmit, loading, selectedTagIdsState }: Props) =>
       <Select
         isMulti
         options={options}
-        value={options.filter(o => selectedTagIds.includes(o.value))}
+        value={[...selectedTags]}
         onInputChange={(keyword) => setSearchKeyword(keyword as string)}
-        onChange={onChange} 
+        onChange={(selected) => onChange(selected)} 
       />
       <Button onClick={handleSubmit} styles="mt-5 text-lg w-full">
         {loading ? <Spinner /> : "Get Started"}
