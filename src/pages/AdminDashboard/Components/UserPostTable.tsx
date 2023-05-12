@@ -78,6 +78,7 @@ function getCell(cell: any) {
   let columnId = cell.getContext().column.id;
   let val = cell.getValue();
   let ele;
+
   if (columnId == "title") {
     ele = (
       <a
@@ -91,6 +92,24 @@ function getCell(cell: any) {
     ele = <Button onClick={() => handleClick("Accept clicked")}>{val}</Button>;
   } else if (val == "Reject") {
     ele = <Button onClick={() => handleClick("Reject clicked")}>{val}</Button>;
+  } else if (val == "APPROVED") {
+    ele = (
+      <span className='bg-blue-100 text-umeed-blue text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
+        {val}
+      </span>
+    );
+  } else if (val == "REJECTED") {
+    ele = (
+      <span className='bg-umeed-tangerine-100 text-umeed-tangerine-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
+        {val}
+      </span>
+    );
+  } else if (val == "IN_REVIEW") {
+    ele = (
+      <span className='bg-gray-200 text-gray-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
+        {"IN REVIEW"}
+      </span>
+    );
   } else {
     ele = val;
   }
