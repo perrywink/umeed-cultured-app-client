@@ -105,7 +105,7 @@ export const useGetRelevantPosts = (postType: PostType, keyword: string) => {
     return useQuery(
       ['post'],
       async () => {
-        return request({ url: `${postEndpoint}/get-user-posts`}).then((response) => {
+        return request({ url: `${postEndpoint}/get-user-posts`, params: {keyword} }).then((response) => {
           return response.data;
         });
       }

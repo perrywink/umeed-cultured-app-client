@@ -24,11 +24,6 @@ const AdminDashboard = () => {
     searchKeyword
   );
 
-  if (!isLoading && data) {
-    // console.log("^^^^^^^^^^^^^^^^^^^^^^", JSON.stringify(data));
-    // setTableData(data);
-  }
-
   useEffect(() => {
     refetch();
   }, [searchKeyword]);
