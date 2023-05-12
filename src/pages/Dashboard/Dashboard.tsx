@@ -12,12 +12,14 @@ import { useGetTagWithId } from "../../api/tag";
 import { useInView } from "react-intersection-observer";
 import React from "react";
 import { Masonry } from "@mui/lab";
+import SearchContext from "../../context/SearchContext";
 
 const Dashboard = () => {
   const { data: userOnTags, isSuccess: getUserOnTagsSuccess } =
     useGetUserTags();
   const [tagIds, setTagIds] = useState<number[]>([]);
-  const [numCols, setNumCols] = useState<number>(5);
+  const [numCols, setNumCols] = useState<number>(window.innerWidth >= 768 ? 5 : 2);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
 
   const { data: tags, isSuccess: getTagsSuccess } = useGetTagWithId(tagIds);
 
@@ -35,12 +37,18 @@ const Dashboard = () => {
   const {
     data: posts,
     isSuccess: getPostsSuccess,
+    refetch,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useSearchPosts("", tagIds);
+  } = useSearchPosts(searchKeyword, tagIds);
 
   useEffect(() => parseTags(), [getUserOnTagsSuccess]);
+
+  useEffect(() => {
+    if (!!tagIds && tagIds.length > 0)
+      refetch()
+  }, [searchKeyword])
 
   useEffect(() => {
     if (inView && tagIds && tagIds.length > 0) {
@@ -51,25 +59,22 @@ const Dashboard = () => {
   const alterCols = () => {
     if (window.innerWidth >= 768) {
       setNumCols(5)
-    } else {
+    } 
+    if (window.innerWidth < 768)  {
       setNumCols(2)
     }
   }
 
   useEffect(() => {
-    alterCols()
-    window.addEventListener("resize", () => {
-      alterCols()
-    });
-    return () => {
-      window.removeEventListener("resize", () => {});
-    };
+    window.addEventListener("resize", alterCols);
   }, []);
 
 
   return (
     <div className="min-h-screen">
-      <Nav />
+      <SearchContext.Provider value={{searchKeyword, setSearchKeyword}}>
+        <Nav searchKeyword={searchKeyword}/>
+      </SearchContext.Provider>
       <div className="bg-white flex flex-col mt-2 mx-8">
         <div className="flex gap-2 my-4 items-end overflow-scroll scrollbar-hide">
           {getTagsSuccess &&

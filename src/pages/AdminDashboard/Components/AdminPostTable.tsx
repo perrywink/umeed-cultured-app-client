@@ -1,5 +1,5 @@
 import { Post } from "../../../types/Post";
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 // import { useTable, usePagination, Column } from 'react-table'
 import { PencilSquareIcon, TrashIcon, ArrowSmallRightIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid";
 import {
@@ -17,8 +17,10 @@ interface Props {
     tabData: Post[];
 }
 
+
 const MyPostTable = ({ tabData }: Props) => {
-    const data = useMemo(() => tabData, []);
+    const data = useMemo(() => tabData, [tabData]);
+
 
     const columns = React.useMemo<ColumnDef<Post>[]>(
         () => [

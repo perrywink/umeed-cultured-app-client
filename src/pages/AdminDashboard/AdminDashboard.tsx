@@ -10,22 +10,28 @@ import AdminTabs from "../AdminDashboard/Components/AdminTabs";
 import UserPostTable from "./Components/UserPostTable";
 import { AdminNav } from "../../components";
 import MyPostTable from "./Components/AdminPostTable";
+import Search from "../../components/Search/Search";
+import Nav from "../../components/Nav/Nav";
+import SearchContext from "../../context/SearchContext";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [postType, setPostType] = useState<PostType>("MY_POST");
-  const { data, isLoading, refetch } = useGetRelevantPosts(postType);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+
+  const { data, isLoading, refetch } = useGetRelevantPosts(
+    postType,
+    searchKeyword
+  );
 
   if (!isLoading && data) {
     // console.log("^^^^^^^^^^^^^^^^^^^^^^", JSON.stringify(data));
     // setTableData(data);
   }
 
-  const handleSignout = () => {
-    signOut(auth);
-    sessionStorage.clear();
-    navigate("/login");
-  };
+  useEffect(() => {
+    refetch();
+  }, [searchKeyword]);
 
   const handleUserPosts = () => {
     setPostType("USER_POST");
@@ -34,6 +40,7 @@ const AdminDashboard = () => {
 
   const handleMyPosts = () => {
     setPostType("MY_POST");
+    // adminPostFetch();
     refetch();
   };
 
@@ -60,19 +67,20 @@ const AdminDashboard = () => {
           onMyPostClick={handleMyPosts}
           type={postType}
         />
-
         <div className='flex flex-row my-2 p-2 shadow '>
-          <input
+          {/* <input
             type='text'
             id='title-search'
             className='text-sm rounded-lg w-2/5 pl-10 p-2.5 outline-gray-300'
-            placeholder='Search by titles...'></input>
+            placeholder='Search by titles...'></input> */}
+          <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
+            <Search />
+          </SearchContext.Provider>
         </div>
+
         <div className='w-full'>
           {postType === "USER_POST" && <UserPostTable tabData={data} />}
-          {postType === "MY_POST" && data !== undefined && (
-            <MyPostTable tabData={data} />
-          )}
+          {postType === "MY_POST" && data && <MyPostTable tabData={data} />}
         </div>
       </div>
     </div>
