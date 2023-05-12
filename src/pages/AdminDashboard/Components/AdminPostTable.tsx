@@ -77,8 +77,12 @@ const MyPostTable = ({ tabData }: Props) => {
                                             cell.getContext()
                                         )} </td>
                                 ))}
-                                <td className="border-b-2 border-gray-200 px-6"> <PencilSquareIcon className="h-6 w-6 text-gray-500" /></td>
-                                <td className="border-b-2 border-gray-200 px-6" > <TrashIcon className="h-6 w-6 text-gray-500" /></td>
+                                <td className="border-b-2 border-gray-200 px-6"> 
+                                    <button><PencilSquareIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" /></button>
+                                </td>
+                                <td className="border-b-2 border-gray-200 px-6" > 
+                                    <button><TrashIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" /></button>
+                                </td>
                             </tr>
                         );
                     })}

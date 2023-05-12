@@ -62,11 +62,11 @@ const AdminDashboard = () => {
           type = {postType}
         />
 
-        <div className='flex flex-row my-2 p-2 shadow dark:bg-gray-100'>
+        <div className='flex flex-row my-2 p-2 shadow '>
           <input
             type='text'
             id='title-search'
-            className='text-sm rounded-lg w-2/5 pl-10 p-2.5 dark:bg-white dark:border-gray-100 dark:placeholder-gray-400 dark:text-black'
+            className='text-sm rounded-lg w-2/5 pl-10 p-2.5 outline-gray-300'
             placeholder='Search by titles...'></input>
         </div>
         <div className="w-full">
