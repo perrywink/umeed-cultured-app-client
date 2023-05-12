@@ -18,10 +18,12 @@ import { useInView } from "react-intersection-observer";
 import React from "react";
 import { Masonry } from "@mui/lab";
 import { toast } from "react-toastify";
+import SearchContext from "../../context/SearchContext";
 
 const Dashboard = () => {
   const [tagIds, setTagIds] = useState<number[]>([]);
-  const [numCols, setNumCols] = useState<number>(5);
+  const [numCols, setNumCols] = useState<number>(window.innerWidth >= 768 ? 5 : 2);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
 
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
@@ -43,12 +45,12 @@ const Dashboard = () => {
   const {
     data: posts,
     isSuccess: getPostsSuccess,
-    hasNextPage,
     refetch,
+    hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
   } = useSearchPosts(
-    "",
+    searchKeyword,
     selectedTags.map((t) => t.id)
   );
 
@@ -66,6 +68,11 @@ const Dashboard = () => {
   useEffect(() => parseTags(), [getUserOnTagsSuccess]);
 
   useEffect(() => {
+    if (!!tagIds && tagIds.length > 0)
+      refetch()
+  }, [searchKeyword])
+
+  useEffect(() => {
     if (inView && tagIds && tagIds.length > 0) {
       fetchNextPage();
     }
@@ -73,20 +80,15 @@ const Dashboard = () => {
 
   const alterCols = () => {
     if (window.innerWidth >= 768) {
-      setNumCols(5);
-    } else {
-      setNumCols(2);
+      setNumCols(5)
+    } 
+    if (window.innerWidth < 768)  {
+      setNumCols(2)
     }
   };
 
   useEffect(() => {
-    alterCols();
-    window.addEventListener("resize", () => {
-      alterCols();
-    });
-    return () => {
-      window.removeEventListener("resize", () => {});
-    };
+    window.addEventListener("resize", alterCols);
   }, []);
 
   const renderEmptyState = () => {
@@ -104,7 +106,9 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen">
-      <Nav />
+      <SearchContext.Provider value={{searchKeyword, setSearchKeyword}}>
+        <Nav searchKeyword={searchKeyword}/>
+      </SearchContext.Provider>
       <div className="bg-white flex flex-col mt-2 mx-8">
         <div className="mb-3">
           <SelectTags selectedTagsState={{ selectedTags, setSelectedTags }} />

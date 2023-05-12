@@ -6,8 +6,11 @@ import MobileNav from './MobileNav'
 import UmeedLogo from "../../assets/umeed-psych-logo.png";
 import Search from "../Search/Search";
 
+interface IProps {
+  searchKeyword: string
+}
 
-export default function Nav() {
+export default function Nav({searchKeyword}: IProps) {
   const [open, setOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
   const navigate = useNavigate();
@@ -40,7 +43,7 @@ export default function Nav() {
     <>
       <nav className="p-4 px-8 w-full flex justify-between items-center gap-5">
         <div className="md:flex">
-          <img src={UmeedLogo} className="w-20 h-10 rounded-lg object-cover"/>
+          <img src={UmeedLogo} className="w-12 h-12 rounded-lg object-cover"/>
         </div>
         <div className="md:flex justify-center w-full">
           <Search/>

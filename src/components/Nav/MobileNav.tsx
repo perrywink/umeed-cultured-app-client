@@ -6,16 +6,15 @@ import { MobileNavItem } from "./NavItem";
 const MobileNav = ({navListItems, close}: {navListItems: INavListItem[],close: () => void}) => {
   const [anim, setAnim] = useState(false);
 
+  const handleResize = () => {
+    if (window.innerWidth >= 768) {
+      close()
+    }
+  }
+
   useEffect(() => {
     setAnim(true)
-    window.addEventListener("resize", () => {
-      if (window.innerWidth >= 768) {
-        close()
-      }
-    });
-    return () => {
-      window.removeEventListener("resize", () => {});
-    };
+    window.addEventListener("resize", handleResize);
   }, []);
 
   return (
