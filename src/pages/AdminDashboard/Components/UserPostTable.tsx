@@ -12,7 +12,11 @@ import {
   OnChangeFn,
   flexRender,
 } from "@tanstack/react-table";
-import { Alert, Button } from "@mui/material";
+import {
+  ArrowSmallLeftIcon,
+  ArrowSmallRightIcon,
+} from "@heroicons/react/24/solid";
+import { Button } from "../../../components";
 
 interface Props {
   tabData: PostTable[];
@@ -28,28 +32,31 @@ const UserPostTable = ({ tabData }: Props) => {
     }
   });
 
-  const columns = React.useMemo<ColumnDef<PostTable>[]>(() => [
-    {
-      accessorKey: "title",
-      header: () => "Title",
-    },
-    {
-      accessorKey: "author",
-      header: () => "Author",
-    },
-    {
-      accessorKey: "status",
-      header: "Status",
-    },
-    {
-      accessorKey: "accept",
-      header: "",
-    },
-    {
-      accessorKey: "reject",
-      header: "",
-    },
-  ]);
+  const columns = React.useMemo<ColumnDef<PostTable>[]>(
+    () => [
+      {
+        accessorKey: "title",
+        header: () => "Title",
+      },
+      {
+        accessorKey: "author",
+        header: () => "Author",
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+      },
+      {
+        accessorKey: "accept",
+        header: "",
+      },
+      {
+        accessorKey: "reject",
+        header: "",
+      },
+    ],
+    []
+  );
 
   return (
     <>
@@ -73,15 +80,19 @@ function getCell(cell: any) {
   let ele;
   if (columnId == "title") {
     ele = <Button onClick={() => handleClick(val)}>{val}</Button>;
-  } else if (columnId == "accept") {
+  } else if (val == "Accept") {
     ele = <Button onClick={() => handleClick("Accept clicked")}>{val}</Button>;
-  } else if (columnId == "reject") {
+  } else if (val == "Reject") {
     ele = <Button onClick={() => handleClick("Reject clicked")}>{val}</Button>;
   } else {
     ele = val;
   }
 
-  return <td key={cell.id}>{ele}</td>;
+  return (
+    <td className='border-b-2 border-gray-200 py-4 px-12' key={cell.id}>
+      {ele}
+    </td>
+  );
 }
 
 function Table({
@@ -98,20 +109,25 @@ function Table({
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    initialState: { pagination: { pageSize: 5 } },
     //
     debugTable: true,
   });
 
   return (
-    <div className='p-2'>
-      <div className='h-2' />
-      <table>
+    <div className='w-full text-gray-600'>
+      <table className='w-full table-auto my-10 border-collapse '>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <tr
+              className='border-b-2 border-gray-200 text-left'
+              key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th
+                    className='py-4 px-12'
+                    key={header.id}
+                    colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
                         {flexRender(
@@ -140,6 +156,63 @@ function Table({
           })}
         </tbody>
       </table>
+      <div className='flex justify-between items-center w-full '>
+        <div>
+          <Button
+            styles='ml-0'
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}>
+            <div className='flex align-center gap-1'>
+              <ArrowSmallLeftIcon className='w-6 h-6' />
+              Previous Page
+            </div>
+          </Button>
+        </div>
+        <div>
+          <span>
+            Page
+            <strong>
+              {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </strong>
+          </span>
+          <span>
+            | Go to page:
+            <input
+              type='number'
+              defaultValue={table.getState().pagination.pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                table.setPageIndex(page);
+              }}
+              className='border p-1 rounded w-16'
+            />
+          </span>
+
+          <select
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value));
+            }}
+            className='h-8 mx-2 border'>
+            {[5, 10].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <Button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}>
+            <div className='flex align-center gap-1'>
+              Next Page
+              <ArrowSmallRightIcon className='w-6 ' />
+            </div>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
