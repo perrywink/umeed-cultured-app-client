@@ -79,7 +79,14 @@ function getCell(cell: any) {
   let val = cell.getValue();
   let ele;
   if (columnId == "title") {
-    ele = <Button onClick={() => handleClick(val)}>{val}</Button>;
+    ele = (
+      <a
+        href='#'
+        className='font-regular text-slate-600 underline'
+        onClick={() => handleClick(val)}>
+        {val}
+      </a>
+    );
   } else if (val == "Accept") {
     ele = <Button onClick={() => handleClick("Accept clicked")}>{val}</Button>;
   } else if (val == "Reject") {
