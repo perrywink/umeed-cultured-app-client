@@ -36,11 +36,11 @@ const UserPostTable = ({ tabData }: Props) => {
     () => [
       {
         accessorKey: "title",
-        header: () => "Title",
+        header: "Title",
       },
       {
         accessorKey: "author",
-        header: () => "Author",
+        header: "Author",
       },
       {
         accessorKey: "status",
