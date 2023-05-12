@@ -1,5 +1,5 @@
 import React from "react";
-import { PostTable } from "../../../types/Post";
+import { Post, PostTable } from "../../../types/Post";
 import {
   Column,
   Table as ReactTable,
@@ -12,6 +12,7 @@ import {
   OnChangeFn,
   flexRender,
 } from "@tanstack/react-table";
+import { Alert, Button } from "@mui/material";
 
 interface Props {
   tabData: PostTable[];
@@ -31,27 +32,22 @@ const AdminTable = ({ tabData }: Props) => {
     {
       accessorKey: "title",
       header: () => "Title",
-      footer: (props) => props.column.id,
     },
     {
       accessorKey: "author",
       header: () => "Author",
-      footer: (props) => props.column.id,
     },
     {
       accessorKey: "status",
       header: "Status",
-      footer: (props) => props.column.id,
     },
     {
       accessorKey: "accept",
       header: "",
-      footer: (props) => props.column.id,
     },
     {
       accessorKey: "reject",
       header: "",
-      footer: (props) => props.column.id,
     },
   ]);
 
@@ -64,42 +60,29 @@ const AdminTable = ({ tabData }: Props) => {
         }}
       />
     </>
-
-    // <div>
-    //   {tableContent.map((content: Post) => (
-    //     <div className='grid md:grid-cols-5'>
-    //       <div>
-    //         <h3> {content.title}</h3>
-    //       </div>
-    //       <div>
-    //         <h3> {content.author}</h3>
-    //       </div>
-    //       <div>
-    //         <h3> {content.status}</h3>
-    //       </div>
-
-    //       {content.status == "REJECTED" && (
-    //         <div>
-    //           <button> {"Manage"}</button>
-    //         </div>
-    //       )}
-
-    //       {content.status == "IN_REVIEW" && (
-    //         <div className='grid md:grid-cols-2'>
-    //           <div>
-    //             <button> {"Accept"}</button>
-    //           </div>
-
-    //           <div>
-    //             <button> {"Reject"}</button>
-    //           </div>
-    //         </div>
-    //       )}
-    //     </div>
-    //   ))}
-    // </div>
   );
 };
+
+const handleClick = (rowData: any) => {
+  alert(JSON.stringify(rowData));
+};
+
+function getCell(cell: any) {
+  let columnId = cell.getContext().column.id;
+  let val = cell.getValue();
+  let ele;
+  if (columnId == "title") {
+    ele = <Button onClick={() => handleClick(val)}>{val}</Button>;
+  } else if (columnId == "accept") {
+    ele = <Button onClick={() => handleClick("Accept clicked")}>{val}</Button>;
+  } else if (columnId == "reject") {
+    ele = <Button onClick={() => handleClick("Reject clicked")}>{val}</Button>;
+  } else {
+    ele = val;
+  }
+
+  return <td key={cell.id}>{ele}</td>;
+}
 
 function Table({
   data,
@@ -148,16 +131,9 @@ function Table({
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => {
-                  return (
-                    <>
-                      <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    </>
-                  );
+                  {
+                    return getCell(cell);
+                  }
                 })}
               </tr>
             );
