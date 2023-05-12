@@ -75,8 +75,6 @@ const AdminDashboard = () => {
           )}
         </div>
       </div>
-
-      <UserPostTable tabData={data} />
     </div>
   );
 };
