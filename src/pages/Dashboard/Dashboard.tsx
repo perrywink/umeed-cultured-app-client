@@ -10,7 +10,6 @@ import { Tag } from "../../types/Tag";
 import {
   ArrowDownCircleIcon,
   EllipsisHorizontalCircleIcon,
-  FaceFrownIcon,
   NoSymbolIcon,
 } from "@heroicons/react/24/outline";
 import { useGetTagWithId } from "../../api/tag";
@@ -22,7 +21,9 @@ import SearchContext from "../../context/SearchContext";
 
 const Dashboard = () => {
   const [tagIds, setTagIds] = useState<number[]>([]);
-  const [numCols, setNumCols] = useState<number>(window.innerWidth >= 768 ? 5 : 2);
+  const [numCols, setNumCols] = useState<number>(
+    window.innerWidth >= 768 ? 5 : 2
+  );
   const [searchKeyword, setSearchKeyword] = useState<string>("");
 
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
@@ -68,9 +69,8 @@ const Dashboard = () => {
   useEffect(() => parseTags(), [getUserOnTagsSuccess]);
 
   useEffect(() => {
-    if (!!tagIds && tagIds.length > 0)
-      refetch()
-  }, [searchKeyword])
+    if (!!tagIds && tagIds.length > 0) refetch();
+  }, [searchKeyword]);
 
   useEffect(() => {
     if (inView && tagIds && tagIds.length > 0) {
@@ -80,10 +80,10 @@ const Dashboard = () => {
 
   const alterCols = () => {
     if (window.innerWidth >= 768) {
-      setNumCols(5)
-    } 
-    if (window.innerWidth < 768)  {
-      setNumCols(2)
+      setNumCols(5);
+    }
+    if (window.innerWidth < 768) {
+      setNumCols(2);
     }
   };
 
@@ -91,13 +91,33 @@ const Dashboard = () => {
     window.addEventListener("resize", alterCols);
   }, []);
 
-  const renderEmptyState = () => {
-    if (!!posts && posts.pages[0]?.data?.length <= 0) {
+  const renderMasonryGallery = () => {
+    if (!!posts && posts.pages[0]?.data?.length > 0) {
       return (
-        <div className="flex flex-col align-middle w-full h-full text-gray-400 mt-5 gap-2">
-          <FaceFrownIcon className="w-7 h-7 mx-3 md:mx-auto" />
-          <div className="mx-3 md:mx-auto">
-            Nothing to see here. Try adding more tags to view posts.
+        <div className="w-full mx-1 md:mx-3">
+          <Masonry columns={numCols} spacing={2}>
+            {getPostsSuccess &&
+              posts &&
+              posts.pages.map((page) => {
+                return (
+                  <React.Fragment key={page.pageBookmark}>
+                    {page.data.map((post: IPostWithMedia) => {
+                      return <PostItem key={post.id} post={post} />;
+                    })}
+                  </React.Fragment>
+                );
+              })}
+          </Masonry>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex flex-col w-full min-h-full my-5 gap-2 text-center">
+          <div className="mx-3 md:mx-auto text-gray-900 text-lg font-semibold">
+            Nothing to see here.
+          </div>
+          <div className="mx-3 md:mx-auto text-gray-600 text-sm">
+            Try adding some tags or searching differently to get results.
           </div>
         </div>
       );
@@ -105,46 +125,35 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <SearchContext.Provider value={{searchKeyword, setSearchKeyword}}>
-        <Nav searchKeyword={searchKeyword}/>
+    <div className="min-h-screen flex flex-col">
+      <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
+        <Nav searchKeyword={searchKeyword} />
       </SearchContext.Provider>
-      <div className="bg-white flex flex-col mt-2 mx-8">
+      <div className="bg-white flex flex-col mt-2 mx-2 md:mx-8">
         <div className="mb-3">
           <SelectTags selectedTagsState={{ selectedTags, setSelectedTags }} />
         </div>
-        {renderEmptyState()}
-        <Masonry columns={numCols} spacing={2} className="w-full">
-          {getPostsSuccess &&
-            posts &&
-            posts.pages.map((page) => {
-              return (
-                <React.Fragment key={page.pageBookmark}>
-                  {page.data.map((post: IPostWithMedia) => {
-                    return <PostItem key={post.id} post={post} />;
-                  })}
-                </React.Fragment>
-              );
-            })}
-        </Masonry>
       </div>
+      {renderMasonryGallery()}
       <div className="w-full flex">
-        <button
-          ref={ref}
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
-          className="bg-gray-100 p-3 mx-auto animate-slide-in mt-1 mb-3 text-gray-500"
-        >
-          {isFetchingNextPage ? (
-            <EllipsisHorizontalCircleIcon className="animate-ping w-5 h-5" />
-          ) : hasNextPage ? (
-            <ArrowDownCircleIcon className="w-5 h-5" />
-          ) : (
-            <div className="flex gap-3">
-              <NoSymbolIcon className="w-5 h-5" /> Nothing left to see here.
-            </div>
-          )}
-        </button>
+        {(!posts || (posts && posts.pages[0]?.data?.length > 0)) && (
+          <button
+            ref={ref}
+            onClick={() => fetchNextPage()}
+            disabled={!hasNextPage || isFetchingNextPage}
+            className="bg-gray-100 p-3 mx-auto animate-slide-in mt-1 mb-3 text-gray-500"
+          >
+            {isFetchingNextPage ? (
+              <EllipsisHorizontalCircleIcon className="animate-ping w-5 h-5" />
+            ) : hasNextPage ? (
+              <ArrowDownCircleIcon className="w-5 h-5" />
+            ) : (
+              <div className="flex gap-3">
+                <NoSymbolIcon className="w-5 h-5" /> Nothing left to load.
+              </div>
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
