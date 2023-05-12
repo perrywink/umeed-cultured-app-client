@@ -7,6 +7,7 @@ import {
   AdminDashboard,
   ResetPassword,
   Onboarding,
+  Signout,
   CreatePost
 } from "../pages";
 import { ToastContainer } from "react-toastify";
@@ -17,6 +18,7 @@ function Root() {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/signout' element={<Signout />} />
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route
           path='/onboarding'

@@ -49,7 +49,7 @@ const AuthForm = () => {
 
   useEffect(() => {
     if (submitClicked && getUserFetched && getUserError) {
-      toast.error("Your account does not exist. Please contact an admin.", {
+      toast.error("Internal server error occured. Please contact an admin.", {
         toastId: "login-toast",
       });
       auth.signOut();

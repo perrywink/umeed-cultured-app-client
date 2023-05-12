@@ -37,9 +37,19 @@ module.exports = {
       'cormorant': ['Cormorant Garamond', 'serif'],
       'sans': ['Roboto', 'sans-serif']
     },
-    extend: {},
+    extend: {
+      animation: {
+        "slide-in": 'slideIn 0.7s ease-in-out',
+      },
+      keyframes: theme => ({
+        slideIn: {
+          '0%': { opacity: '0%', transform: 'translateY(25%)' },
+          '100%': { opacity: '100%', transform: 'translateY(0%)' },
+        },
+      }),
+    },
   },
   plugins: [
-    require('flowbite/plugin')
+    require('tailwind-scrollbar-hide')
   ],
 }
