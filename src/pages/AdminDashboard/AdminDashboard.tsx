@@ -8,6 +8,8 @@ import { Post, PostType } from "../../types/Post";
 import { title } from "process";
 import AdminTabs from "../AdminDashboard/Components/AdminTabs";
 import UserPostTable from "./Components/UserPostTable";
+import { AdminNav } from "../../components";
+import MyPostTable from "./Components/AdminPostTable";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -15,7 +17,7 @@ const AdminDashboard = () => {
   const { data, isLoading, refetch } = useGetRelevantPosts(postType);
 
   if (!isLoading && data) {
-    console.log("^^^^^^^^^^^^^^^^^^^^^^", JSON.stringify(data));
+    // console.log("^^^^^^^^^^^^^^^^^^^^^^", JSON.stringify(data));
     // setTableData(data);
   }
 
@@ -36,9 +38,10 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className='min-h-screen mx-20'>
-      <div className='flex flex-row my-10 pb-4'>
-        <div className='w-5/6 h-10'>
+    <div className='bg-gray-50 flex flex-col min-h-screen'>
+      <AdminNav />
+      <div className='text-center my-10 pb-4'>
+        <div className='w-full h-10 justify-center'>
           <div>
             <span className='font-cormorant rounded-none p-2 font-bold text-3xl'>
               Admin Dashboard
@@ -50,25 +53,27 @@ const AdminDashboard = () => {
             </span>
           </div>
         </div>
-
-        <Button
-          className='font-manrope rounded-none p-2 font-regular mt-3 w-40 h-10 tracking-wide transition-colors duration-300 transform focus:outline-none bg-umeed-tangerine-300 text-gray-800 hover:bg-umeed-tangerine-700 hover:text-white'
-          onClick={handleSignout}>
-          Add Admin User
-        </Button>
       </div>
+      <div className='mx-10 '>
+        <AdminTabs
+          onUserPostClick={handleUserPosts}
+          onMyPostClick={handleMyPosts}
+          type={postType}
+        />
 
-      <AdminTabs
-        onUserPostClick={handleUserPosts}
-        onMyPostClick={handleMyPosts}
-      />
-
-      <div className='flex flex-row my-2 p-2 shadow dark:bg-gray-100'>
-        <input
-          type='text'
-          id='title-search'
-          className='text-sm rounded-lg w-2/5 pl-10 p-2.5 dark:bg-white dark:border-gray-100 dark:placeholder-gray-400 dark:text-black'
-          placeholder='Search by titles...'></input>
+        <div className='flex flex-row my-2 p-2 shadow '>
+          <input
+            type='text'
+            id='title-search'
+            className='text-sm rounded-lg w-2/5 pl-10 p-2.5 outline-gray-300'
+            placeholder='Search by titles...'></input>
+        </div>
+        <div className='w-full'>
+          {postType === "USER_POST" && <UserPostTable tabData={data} />}
+          {postType === "MY_POST" && data !== undefined && (
+            <MyPostTable tabData={data} />
+          )}
+        </div>
       </div>
 
       <UserPostTable tabData={data} />
