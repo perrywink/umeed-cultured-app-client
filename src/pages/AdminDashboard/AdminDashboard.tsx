@@ -21,10 +21,6 @@ const AdminDashboard = () => {
     // setTableData(data);
   }
 
-  // useEffect(() => {
-
-  // })
-
   const handleSignout = () => {
     signOut(auth);
     sessionStorage.clear();
@@ -63,6 +59,7 @@ const AdminDashboard = () => {
         <AdminTabs
           onUserPostClick={handleUserPosts}
           onMyPostClick={handleMyPosts}
+          type = {postType}
         />
 
         <div className='flex flex-row my-2 p-2 shadow dark:bg-gray-100'>
