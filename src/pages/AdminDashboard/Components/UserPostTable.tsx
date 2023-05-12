@@ -89,9 +89,21 @@ function getCell(cell: any) {
       </a>
     );
   } else if (val == "Accept") {
-    ele = <Button onClick={() => handleClick("Accept clicked")}>{val}</Button>;
+    ele = (
+      <Button
+        className='bg-blue-300 hover:bg-blue-500 text-gray-600 px-5 py-1 rounded'
+        onClick={() => handleClick("Accept clicked")}>
+        {val}
+      </Button>
+    );
   } else if (val == "Reject") {
-    ele = <Button onClick={() => handleClick("Reject clicked")}>{val}</Button>;
+    ele = (
+      <Button
+        className='bg-umeed-tangerine-300 hover:bg-umeed-tangerine-500 text-gray-600 px-5 py-1 rounded'
+        onClick={() => handleClick("Reject clicked")}>
+        {val}
+      </Button>
+    );
   } else if (val == "APPROVED") {
     ele = (
       <span className='bg-blue-100 text-umeed-blue text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
