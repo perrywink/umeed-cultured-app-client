@@ -1,9 +1,8 @@
 import { Post } from "../../../types/Post";
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 // import { useTable, usePagination, Column } from 'react-table'
-import { PencilSquareIcon, TrashIcon, ArrowSmallRightIcon, ArrowSmallLeftIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import {
-    Table as ReactTable,
     useReactTable,
     getCoreRowModel,
     getFilteredRowModel,
@@ -11,7 +10,6 @@ import {
     ColumnDef,
     flexRender,
 } from '@tanstack/react-table'
-import { Button } from "../../../components";
 import TablePagination from "./TablePagination";
 
 interface Props {
