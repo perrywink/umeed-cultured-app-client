@@ -1,5 +1,5 @@
 import React from "react";
-import { Post } from "../../../types/Post";
+import { PostTable } from "../../../types/Post";
 import {
   Column,
   Table as ReactTable,
@@ -14,13 +14,20 @@ import {
 } from "@tanstack/react-table";
 
 interface Props {
-  tabData: Post[];
+  tabData: PostTable[];
 }
 
 const AdminTable = ({ tabData }: Props) => {
   const data = tabData || [];
 
-  const columns = React.useMemo<ColumnDef<Post>[]>(() => [
+  data.forEach((rowData) => {
+    if (rowData.status === "IN_REVIEW") {
+      rowData["accept"] = "Accept";
+      rowData["reject"] = "Reject";
+    }
+  });
+
+  const columns = React.useMemo<ColumnDef<PostTable>[]>(() => [
     {
       accessorKey: "title",
       header: () => "Title",
@@ -98,8 +105,8 @@ function Table({
   data,
   columns,
 }: {
-  data: Post[];
-  columns: ColumnDef<Post>[];
+  data: PostTable[];
+  columns: ColumnDef<PostTable>[];
 }) {
   const table = useReactTable({
     data,

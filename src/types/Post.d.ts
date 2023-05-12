@@ -23,6 +23,15 @@ export type Post = {
     rejectDsc?: string
 };
 
+export type PostTable = {
+    title: string,
+    author: string,
+    status?: PostStatus,
+    rejectDsc?: string,
+    accept?: string,
+    reject?: string
+};
+
 export type Media = {
     mediaUrl: string,
     postId: number,
