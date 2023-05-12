@@ -51,11 +51,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <Button
-          className='font-manrope rounded-none p-2 font-regular mt-3 w-40 h-10 tracking-wide transition-colors duration-300 transform focus:outline-none bg-umeed-tangerine-300 text-gray-800 hover:bg-umeed-tangerine-700 hover:text-white'
-          onClick={handleSignout}>
-          Add Admin User
-        </Button>
       </div>
 
       <AdminTabs
