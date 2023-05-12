@@ -20,7 +20,6 @@ export const useSearchPosts = (keyword: string, tagIds: number[]) => {
   );
 };
 
-
 const createPost = async (data: Post) => {
   const r = {
     url: postEndpoint + '/create',
@@ -99,14 +98,14 @@ export const useAssignPostTags = () => {
   });
 };
 
-export const useGetRelevantPosts = (postType: PostType) => {
+export const useGetRelevantPosts = (postType: PostType, keyword: string) => {
   const firebaseUid = auth.currentUser?.uid
 
   if (postType == 'USER_POST') {
     return useQuery(
       ['post'],
       async () => {
-        return request({ url: `${postEndpoint}/get-user-posts` }).then((response) => {
+        return request({ url: `${postEndpoint}/get-user-posts`}).then((response) => {
           return response.data;
         });
       }
@@ -116,7 +115,7 @@ export const useGetRelevantPosts = (postType: PostType) => {
     return useQuery(
       ['post', firebaseUid],
       async () => {
-        return request({ url: `${postEndpoint}/get-by-uid` }).then((response) => {
+        return request({ url: `${postEndpoint}/get-by-uid` , params: {keyword} }).then((response) => {
           return response.data;
         });
       }, {
