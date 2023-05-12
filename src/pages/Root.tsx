@@ -8,7 +8,8 @@ import {
   ResetPassword,
   Onboarding,
   Signout,
-  CreatePost
+  CreatePost,
+  UserPosts
 } from "../pages";
 import { ToastContainer } from "react-toastify";
 
@@ -33,6 +34,14 @@ function Root() {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/user-posts'
+          element={
+            <PrivateRoute>
+              <UserPosts />
             </PrivateRoute>
           }
         />

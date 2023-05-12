@@ -19,6 +19,20 @@ export const useSearchPosts = (keyword: string, tagIds: number[]) => {
   );
 };
 
+export const useSearchUserPosts = (keyword: string) => {
+  return useInfiniteQuery(
+    ['user-posts', keyword],
+    async ({pageParam = 0}) => {
+      return request({ url: `${postEndpoint}/user-search`, params: { keyword, cursor: pageParam }}).then((response) => {
+        return response.data;
+      });
+    },
+    {
+      getNextPageParam: lastPage => lastPage.pageBookmark ?? undefined,
+    }
+  );
+};
+
 
 const createPost = async (data: Post) => {
   const r = {
