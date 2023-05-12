@@ -45,7 +45,14 @@ jobs:
 
     - name: Run e2e tests
       if: ${{ matrix.node-version == '16'}}
-      run: npm run test:e2e
+      run: |
+        touch .env
+        echo VITE_BASE_URL=$VITE_BASE_URL >> .env
+        echo VITE_SALT=$VITE_SALT >> .env
+        npm run test:e2e
+      env: 
+        VITE_BASE_URL: ${{secrets.VITE_BASE_URL}}
+        VITE_SALT: ${{secrets.VITE_SALT}}
   
   deploy_staging: 
 
