@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Post, PostType } from "../../types/Post";
 import { title } from "process";
 import AdminTabs from "../AdminDashboard/Components/AdminTabs";
-import AdminTable from "./Components/AdminTable";
+import UserPostTable from "./Components/UserPostTable";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ const AdminDashboard = () => {
           placeholder='Search by titles...'></input>
       </div>
 
-      <AdminTable tabData={data} />
+      <UserPostTable tabData={data} />
     </div>
   );
 };

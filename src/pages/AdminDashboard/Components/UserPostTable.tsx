@@ -18,7 +18,7 @@ interface Props {
   tabData: PostTable[];
 }
 
-const AdminTable = ({ tabData }: Props) => {
+const UserPostTable = ({ tabData }: Props) => {
   const data = tabData || [];
 
   data.forEach((rowData) => {
@@ -144,4 +144,4 @@ function Table({
   );
 }
 
-export default AdminTable;
+export default UserPostTable;
