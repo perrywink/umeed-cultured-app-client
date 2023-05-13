@@ -9,10 +9,12 @@ import { useInView } from "react-intersection-observer";
 import React from "react";
 import { Masonry } from "@mui/lab";
 import SearchContext from "../../context/SearchContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 const UserPosts = () => {
   const [numCols, setNumCols] = useState<number>(5);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const queryClient = useQueryClient();
 
   const { ref, inView } = useInView();
 
@@ -24,6 +26,9 @@ const UserPosts = () => {
     fetchNextPage,
   } = useSearchUserPosts(searchKeyword);
 
+  useEffect(() => {
+    queryClient.removeQueries(["user-posts"])
+  }, [])
 
   useEffect(() => {
     if (inView) {
