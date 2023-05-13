@@ -50,9 +50,8 @@ const Onboarding = () => {
       toast.success("You're onboarded!");
       navigate("/");
       // needs to be invalidated for dashboard to load properly
-      queryClient.invalidateQueries(["user-tags", auth.currentUser?.uid])
-      queryClient.invalidateQueries(["tags", userTags?.map((ut:{tagId: number}) => ut.tagId)])
-
+      queryClient.removeQueries(["user-tags"])
+      queryClient.removeQueries(["tags"])
     } catch (err: any) {
       toast.error(err);
     } finally {
