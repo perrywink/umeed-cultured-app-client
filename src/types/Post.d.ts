@@ -41,4 +41,6 @@ export const PostStatus: {
     IN_REVIEW: IN_REVIEW
 };
 
+export type PostType = 'MY_POST' | 'USER_POST'
+
 export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
