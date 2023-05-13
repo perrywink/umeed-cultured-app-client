@@ -13,6 +13,7 @@ import MyPostTable from "./Components/AdminPostTable";
 import Search from "../../components/Search/Search";
 import Nav from "../../components/Nav/Nav";
 import SearchContext from "../../context/SearchContext";
+import { FunnelIcon } from "@heroicons/react/24/outline";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ const AdminDashboard = () => {
           onMyPostClick={handleMyPosts}
           type={postType}
         />
-        <div className='flex flex-row my-2 p-2 shadow '>
+        <div className='flex flex-row my-2 p-2 shadow bg-gray-100'>
           {/* <input
             type='text'
             id='title-search'
@@ -71,6 +72,14 @@ const AdminDashboard = () => {
           <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
             <Search />
           </SearchContext.Provider>
+
+          {postType == "USER_POST" && (
+            <div
+              className={`flex flex-row text-md py-2 px-5 mr-3 bg-white text-gray-600 hover:bg-umeed-tangerine-100`}>
+              <FunnelIcon className='h-6 w-6' />
+              Filter
+            </div>
+          )}
         </div>
 
         <div className='w-full'>

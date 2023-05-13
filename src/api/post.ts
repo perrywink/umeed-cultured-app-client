@@ -153,7 +153,7 @@ export const useGetPostsByStatus = (status: PostStatus) => {
   );
 }
 
-export const useGetRelevantPosts = (postType: PostType, keyword: string, status: PostStatus) => {
+export const useGetRelevantPosts = (postType: PostType, keyword: string, status?: PostStatus) => {
 
   if (postType == 'USER_POST') {
       return useGetUserPosts(keyword)
