@@ -191,7 +191,7 @@ const CreatePost = () => {
         <AdminNav />
       )}  
       {!location.includes("/admin") && (
-        <Nav />
+        <Nav renderSearch={false}/>
       )}
       
       {/* <div className="text-center font-cormorant text-5xl font-bold text-umeed-blue">

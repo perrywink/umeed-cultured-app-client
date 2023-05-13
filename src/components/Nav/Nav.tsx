@@ -7,13 +7,12 @@ import UmeedLogo from "../../assets/umeed-psych-logo.png";
 import Search from "../Search/Search";
 
 interface IProps {
-  searchKeyword: string
+  renderSearch?: boolean
+  searchKeyword?: string
 }
 
-export default function Nav({searchKeyword}: IProps) {
+export default function Nav({renderSearch=true, searchKeyword=""}: IProps) {
   const [open, setOpen] = useState(false);
-  const [mobile, setMobile] = useState(false);
-  const navigate = useNavigate();
 
   const navListItems: INavListItem[] = [
     {
@@ -50,9 +49,11 @@ export default function Nav({searchKeyword}: IProps) {
         <div className="md:flex">
           <img src={UmeedLogo} className="w-12 h-12 rounded-lg object-cover"/>
         </div>
-        <div className="md:flex justify-center w-full">
-          <Search/>
-        </div>
+        {renderSearch &&
+          <div className="md:flex justify-center w-full">
+            <Search/>
+          </div>
+        }
         <div className="hidden md:flex">
           {navListItems.map((item) => {
             return <NavItem key={item.label} navListItem={item} styles="mx-2"/>;
