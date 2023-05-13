@@ -113,11 +113,11 @@ export const useAssignPostTags = () => {
   });
 };
 
-export const useGetUserPosts = (keyword: string) => {
+export const useGetUserPosts = (keyword: string, status: PostStatus) => {
   return useQuery(
       ['post'],
       async () => {
-        return request({ url: `${postEndpoint}/get-user-posts`, params: {keyword} }).then((response) => {
+        return request({ url: `${postEndpoint}/get-user-posts`, params: {keyword, status} }).then((response) => {
           return response.data;
         });
       }
@@ -153,12 +153,12 @@ export const useGetPostsByStatus = (status: PostStatus) => {
   );
 }
 
-export const useGetRelevantPosts = (postType: PostType, keyword: string, status?: PostStatus) => {
+export const useGetRelevantPosts = (postType: PostType, keyword: string, status: PostStatus) => {
 
   if (postType == 'USER_POST') {
-      return useGetUserPosts(keyword)
+      return useGetUserPosts(keyword, status)
   }
-  else  {
+  else {
       return useGetPostsByUid(keyword)
   }
 };

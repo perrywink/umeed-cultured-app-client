@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components";
 import { useGetRelevantPosts } from "../../api/post";
 import { useEffect, useState } from "react";
-import { Post, PostType } from "../../types/Post";
+import { Post, PostStatus, PostType } from "../../types/Post";
 import { title } from "process";
 import AdminTabs from "../AdminDashboard/Components/AdminTabs";
 import UserPostTable from "./Components/UserPostTable";
@@ -20,7 +20,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [postType, setPostType] = useState<PostType>("MY_POST");
   const [searchKeyword, setSearchKeyword] = useState<string>("");
-
+  const [postStatus, setPostStatus] = useState<PostStatus>("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -30,7 +30,8 @@ const AdminDashboard = () => {
 
   const { data, isLoading, refetch } = useGetRelevantPosts(
     postType,
-    searchKeyword
+    searchKeyword,
+    postStatus
   );
 
   useEffect(() => {
@@ -45,6 +46,30 @@ const AdminDashboard = () => {
   const handleMyPosts = () => {
     setPostType("MY_POST");
     // adminPostFetch();
+    refetch();
+  };
+
+  const handleApprovedPosts = () => {
+    setPostStatus("APPROVED");
+    setAnchorEl(null);
+    refetch();
+  };
+
+  const handleRejectedPosts = () => {
+    setPostStatus("REJECTED");
+    setAnchorEl(null);
+    refetch();
+  };
+
+  const handleReviewPosts = () => {
+    setPostStatus("IN_REVIEW");
+    setAnchorEl(null);
+    refetch();
+  };
+
+  const handleAllPosts = () => {
+    setPostStatus("");
+    setAnchorEl(null);
     refetch();
   };
 
@@ -90,10 +115,10 @@ const AdminDashboard = () => {
                 Filter
               </div>
               <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                <MenuItem onClick={handleClose}>All</MenuItem>
-                <MenuItem onClick={handleClose}>Approved</MenuItem>
-                <MenuItem onClick={handleClose}>Rejected</MenuItem>
-                <MenuItem onClick={handleClose}>In Review</MenuItem>
+                <MenuItem onClick={handleAllPosts}>All</MenuItem>
+                <MenuItem onClick={handleApprovedPosts}>Approved</MenuItem>
+                <MenuItem onClick={handleRejectedPosts}>Rejected</MenuItem>
+                <MenuItem onClick={handleReviewPosts}>In Review</MenuItem>
               </Menu>
             </div>
           )}
