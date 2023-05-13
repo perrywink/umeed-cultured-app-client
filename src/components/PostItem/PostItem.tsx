@@ -29,11 +29,11 @@ const PostItem = ({post, showStatus = false}: IProps) => {
   return ( 
     <div className="flex flex-initial flex-col overflow-hidden animate-slide-in">
       <img className="w-full h-full object-contain rounded-lg" src={retrieveThumbnailMediaUrl(post)} alt={post.title}/>
-      <div className="p-2">
-        <div className="text-md text-gray-700 text-ellipse line-clamp-2">
+      <div className="p-2 pt-1">
+        <div className="text-sm md:text-md text-gray-700 text-ellipse line-clamp-2">
           {post.title} 
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-xs md:text-sm text-gray-500">
           {post.author} | {moment(post.updatedAt).fromNow()}
         </div>
         {showStatus &&

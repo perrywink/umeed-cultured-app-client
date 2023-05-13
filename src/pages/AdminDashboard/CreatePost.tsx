@@ -22,7 +22,9 @@ import React from "react";
 import { useFormValidator } from "../../hooks";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
-// import InterestsStep from "../Onboarding/InterestsStep";
+import { useLocation } from 'react-router-dom';
+import Nav from "../../components/Nav/Nav";
+
 
 const CreatePost = () => {
   const [mediaUpload, setMediaUpload] = useState<File[]>([]);
@@ -37,6 +39,7 @@ const CreatePost = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [postId, setPostId] = useState<number>(0);
   const { checkEmptyFields } = useFormValidator();
+  const location = useLocation().pathname;
 
   const refer = React.useRef<HTMLInputElement>(null);
 
@@ -82,8 +85,7 @@ const CreatePost = () => {
     const newPost: Post = {
       title: title,
       author: author,
-      desc: desc,
-      status: "APPROVED",
+      desc: desc
     };
     try {
       createPost(newPost)
@@ -185,7 +187,13 @@ const CreatePost = () => {
 
   return (
     <div className="bg-gray-50 flex flex-col min-h-screen">
-      <AdminNav />
+      {location.includes("/admin") && (
+        <AdminNav />
+      )}  
+      {!location.includes("/admin") && (
+        <Nav renderSearch={false}/>
+      )}
+      
       {/* <div className="text-center font-cormorant text-5xl font-bold text-umeed-blue">
                 Create Post
             </div> */}

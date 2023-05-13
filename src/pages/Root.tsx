@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { OnboardingRoute, PrivateRoute } from "../components";
+import { OnboardingRoute, PrivateRoute, AdminRoute } from "../components";
 import {
   Login,
   Register,
@@ -46,10 +46,20 @@ function Root() {
           }
         />
         <Route
+          path='/post'
+          element={
+            <PrivateRoute>
+              <CreatePost />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path='/admin'
           element={
             <PrivateRoute>
-              <AdminDashboard />
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
             </PrivateRoute>
           }
         />
@@ -57,7 +67,9 @@ function Root() {
           path='/admin/post'
           element={
             <PrivateRoute>
-              <CreatePost />
+              <AdminRoute>
+                <CreatePost />
+              </AdminRoute>
             </PrivateRoute>
           }
         />
