@@ -8,9 +8,13 @@ import { ArrowDownCircleIcon, EllipsisHorizontalCircleIcon, FaceFrownIcon, NoSym
 import { useInView } from "react-intersection-observer";
 import React from "react";
 import { Masonry } from "@mui/lab";
+import SearchContext from "../../context/SearchContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 const UserPosts = () => {
   const [numCols, setNumCols] = useState<number>(5);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const queryClient = useQueryClient();
 
   const { ref, inView } = useInView();
 
@@ -20,8 +24,11 @@ const UserPosts = () => {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useSearchUserPosts("");
+  } = useSearchUserPosts(searchKeyword);
 
+  useEffect(() => {
+    queryClient.removeQueries(["user-posts"])
+  }, [])
 
   useEffect(() => {
     if (inView) {
@@ -50,7 +57,9 @@ const UserPosts = () => {
 
   return (
     <div className="min-h-screen">
-      <Nav />
+      <SearchContext.Provider value={{searchKeyword, setSearchKeyword}}>
+        <Nav />
+      </SearchContext.Provider>
       <div className="bg-white flex flex-col mt-2 mx-8">
         <div className="my-4">
           <div className="text-xl font-semibold text-gray-800">Your Posts</div>
