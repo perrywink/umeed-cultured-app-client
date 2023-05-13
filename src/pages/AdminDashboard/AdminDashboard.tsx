@@ -14,11 +14,19 @@ import Search from "../../components/Search/Search";
 import Nav from "../../components/Nav/Nav";
 import SearchContext from "../../context/SearchContext";
 import { FunnelIcon } from "@heroicons/react/24/outline";
+import { Menu, MenuItem } from "@mui/material";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [postType, setPostType] = useState<PostType>("MY_POST");
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const { data, isLoading, refetch } = useGetRelevantPosts(
     postType,
@@ -74,10 +82,19 @@ const AdminDashboard = () => {
           </SearchContext.Provider>
 
           {postType == "USER_POST" && (
-            <div
-              className={`flex flex-row text-md py-2 px-5 mr-3 bg-white text-gray-600 hover:bg-umeed-tangerine-100`}>
-              <FunnelIcon className='h-6 w-6' />
-              Filter
+            <div>
+              <div
+                onClick={(event) => setAnchorEl(event.currentTarget)}
+                className={`flex flex-row text-md py-2 px-5 mr-3 bg-white text-gray-600 hover:bg-umeed-tangerine-100`}>
+                <FunnelIcon className='h-6 w-6' />
+                Filter
+              </div>
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={handleClose}>All</MenuItem>
+                <MenuItem onClick={handleClose}>Approved</MenuItem>
+                <MenuItem onClick={handleClose}>Rejected</MenuItem>
+                <MenuItem onClick={handleClose}>In Review</MenuItem>
+              </Menu>
             </div>
           )}
         </div>
