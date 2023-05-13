@@ -1,6 +1,5 @@
 import { Post } from "../../../types/Post";
-import React, { useMemo, useState } from 'react'
-// import { useTable, usePagination, Column } from 'react-table'
+import React, { useMemo } from 'react'
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import {
     useReactTable,
@@ -14,7 +13,6 @@ import {
 import TablePagination from "./TablePagination";
 import Modal from "../../../components/Modal/Modal";
 import { useDeletePost } from "../../../api/post";
-import ModalContext from "../../../context/ModalContext";
 
 interface Props {
     tabData: Post[];
