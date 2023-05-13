@@ -18,7 +18,7 @@ const MobileNav = ({navListItems, close}: {navListItems: INavListItem[],close: (
   }, []);
 
   return (
-    <div className="z-5">
+    <div className="z-10">
       <div className="fixed inset-0 h-screen w-full backdrop-blur-sm bg-gray-500 bg-opacity-50" />
       <div className="fixed inset-0 p-5">
         <div
