@@ -1,5 +1,5 @@
 import { Post } from "../../../types/Post";
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 // import { useTable, usePagination, Column } from 'react-table'
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import {
@@ -11,6 +11,7 @@ import {
     flexRender,
 } from '@tanstack/react-table'
 import TablePagination from "./TablePagination";
+import Modal, { IModalItem } from "../../../components/Modal/Modal";
 
 interface Props {
     tabData: Post[];
@@ -18,6 +19,30 @@ interface Props {
 
 
 const MyPostTable = ({ tabData }: Props) => {
+
+    const [deletePostId, setDeletePostId] = useState<number>(0);
+
+    const onClick = (data:any) => {
+
+        const hello = flexRender(
+            data[0].column.columnDef.header,
+            data[0].getContext()
+        )
+        console.log(hello);
+    }
+
+    const handleDelete = () => {
+        console.log("deleted")
+    }
+
+    const modalItem: IModalItem = {
+        icon: <TrashIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" />,
+        title: "Delete Post",
+        body: "Are you sure you want to permanantly delete this post ?",
+        action: "Delete",
+        onClick: handleDelete
+    }
+
     const data = useMemo(() => tabData, [tabData]);
 
 
@@ -76,13 +101,16 @@ const MyPostTable = ({ tabData }: Props) => {
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext()
-                                        )} </td>
+                                        
+                                        )}
+                                    </td>
                                 ))}
                                 <td className="border-b-2 border-gray-200 px-6"> 
                                     <button><PencilSquareIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" /></button>
                                 </td>
                                 <td className="border-b-2 border-gray-200 px-6" > 
-                                    <button><TrashIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" /></button>
+                                    <button onClick={() => onClick(row.getVisibleCells())} ><Modal {...modalItem}></Modal></button>
+                                    
                                 </td>
                             </tr>
                         );
