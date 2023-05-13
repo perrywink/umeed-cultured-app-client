@@ -113,32 +113,6 @@ export const useAssignPostTags = () => {
   });
 };
 
-export const useGetUserPosts = (keyword: string, status: PostStatus) => {
-  return useQuery(
-      ['post'],
-      async () => {
-        return request({ url: `${postEndpoint}/get-user-posts`, params: {keyword, status} }).then((response) => {
-          return response.data;
-        });
-      }
-    );
-}
-
-export const useGetPostsByUid = (keyword: string) => {
- const firebaseUid = auth.currentUser?.uid
-
-    return useQuery(
-      ['post', firebaseUid],
-      async () => {
-        return request({ url: `${postEndpoint}/get-by-uid` , params: {keyword} }).then((response) => {
-          return response.data;
-        });
-      }, {
-      enabled: typeof firebaseUid !== 'undefined',
-    }
-    );
-}
-
 export const useGetPostsByStatus = (status: PostStatus) => {
 
     return useQuery(
@@ -154,12 +128,29 @@ export const useGetPostsByStatus = (status: PostStatus) => {
 }
 
 export const useGetRelevantPosts = (postType: PostType, keyword: string, status: PostStatus) => {
+  const firebaseUid = auth.currentUser?.uid
 
   if (postType == 'USER_POST') {
-      return useGetUserPosts(keyword, status)
+      return useQuery(
+      ['post'],
+      async () => {
+        return request({ url: `${postEndpoint}/get-user-posts`, params: {keyword, status} }).then((response) => {
+          return response.data;
+        });
+      }
+    );
   }
   else {
-      return useGetPostsByUid(keyword)
+      return useQuery(
+      ['post', firebaseUid],
+      async () => {
+        return request({ url: `${postEndpoint}/get-by-uid` , params: {keyword} }).then((response) => {
+          return response.data;
+        });
+      }, {
+      enabled: typeof firebaseUid !== 'undefined',
+    }
+    );
   }
 };
 

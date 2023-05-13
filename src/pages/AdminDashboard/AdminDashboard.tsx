@@ -38,6 +38,10 @@ const AdminDashboard = () => {
     refetch();
   }, [searchKeyword]);
 
+  useEffect(() => {
+    refetch();
+  }, [postStatus]);
+
   const handleUserPosts = () => {
     setPostType("USER_POST");
     refetch();
@@ -52,25 +56,21 @@ const AdminDashboard = () => {
   const handleApprovedPosts = () => {
     setPostStatus("APPROVED");
     setAnchorEl(null);
-    refetch();
   };
 
   const handleRejectedPosts = () => {
     setPostStatus("REJECTED");
     setAnchorEl(null);
-    refetch();
   };
 
   const handleReviewPosts = () => {
     setPostStatus("IN_REVIEW");
     setAnchorEl(null);
-    refetch();
   };
 
   const handleAllPosts = () => {
     setPostStatus("");
     setAnchorEl(null);
-    refetch();
   };
 
   return (
