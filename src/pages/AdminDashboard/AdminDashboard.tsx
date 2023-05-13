@@ -25,6 +25,10 @@ const AdminDashboard = () => {
     refetch();
   }, [searchKeyword])
 
+  useEffect(() => {
+    refetch();
+  }, [data])
+
 
 
   const handleUserPosts = () => {

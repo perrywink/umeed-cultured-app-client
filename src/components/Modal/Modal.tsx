@@ -1,7 +1,7 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
-export interface IModalItem {
+interface IModalItem {
     icon: JSX.Element;
     title: string;
     body: string;
@@ -12,6 +12,11 @@ export interface IModalItem {
 
 export const Modal = ({icon, title, body, action, onClick, label}: IModalItem) => {
     const [showModal, setShowModal] = useState<boolean>(false);
+
+    const handleClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        onClick(e);
+        setShowModal(false);
+    }
     return (
         <>
             <button onClick={() => setShowModal(true)}>
@@ -43,7 +48,7 @@ export const Modal = ({icon, title, body, action, onClick, label}: IModalItem) =
                                         className="bg-red-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         // className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                         type="button"
-                                        onClick={onClick}
+                                        onClick={handleClick}
                                     >
                                         {action}
                                     </button>

@@ -62,6 +62,33 @@ export const useCreatePost = () => {
   });
 };
 
+const deletePost = async (data: {postId: number}) => {
+  const r = {
+    url: postEndpoint + '/delete',
+    method: "PUT",
+    data: data,
+    headers: { "Content-Type": "application/json" },
+  };
+  const response = await request(r);
+  return response;
+};
+
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(deletePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["post"]);
+      toast.success("Post Deleted");
+    },
+    onError: (e: any) => {
+      console.error(e)
+      toast.error(e.data)
+    }
+  });
+};
+
 export const createMedia = async (data: Media) => {
   const r = {
     url: postEndpoint + '/create-media',
