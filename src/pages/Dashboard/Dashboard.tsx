@@ -62,8 +62,8 @@ const Dashboard = () => {
   }, [getTagsSuccess]);
 
   useEffect(() => {
-    // if (!!selectedTags && selectedTags.length > 0)
-    refetch();
+    if (!!selectedTags && selectedTags.length > 0)
+      refetch();
   }, [selectedTags]);
 
   useEffect(() => parseTags(), [getUserOnTagsSuccess]);
