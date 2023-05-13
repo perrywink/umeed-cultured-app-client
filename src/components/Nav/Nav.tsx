@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { INavListItem, NavItem } from "./NavItem";
-import { UserCircleIcon, ArrowLeftOnRectangleIcon, Bars3Icon } from "@heroicons/react/24/solid";
+import { UserCircleIcon, ArrowLeftOnRectangleIcon, Bars3Icon, ArrowUpOnSquareStackIcon } from "@heroicons/react/24/solid";
 import MobileNav from './MobileNav'
 import UmeedLogo from "../../assets/umeed-psych-logo.png";
 import Search from "../Search/Search";
@@ -13,6 +13,11 @@ export default function Nav() {
   const navigate = useNavigate();
 
   const navListItems: INavListItem[] = [
+    {
+      label: "Create Post",
+      link: "/post",
+      icon: <ArrowUpOnSquareStackIcon className="h-6 w-6"/>,
+    },
     {
       label: "Profile",
       link: "/profile",
