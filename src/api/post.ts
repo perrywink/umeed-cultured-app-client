@@ -1,4 +1,4 @@
-import { Media, Post, PostTags, PostType } from "../types/Post";
+import { Media, Post, PostStatus, PostTags, PostType } from "../types/Post";
 import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { postEndpoint } from "./endpoints";
 import { request } from "./request";
@@ -113,11 +113,8 @@ export const useAssignPostTags = () => {
   });
 };
 
-export const useGetRelevantPosts = (postType: PostType, keyword: string) => {
-  const firebaseUid = auth.currentUser?.uid
-
-  if (postType == 'USER_POST') {
-    return useQuery(
+export const useGetUserPosts = (keyword: string) => {
+  return useQuery(
       ['post'],
       async () => {
         return request({ url: `${postEndpoint}/get-user-posts`, params: {keyword} }).then((response) => {
@@ -125,8 +122,11 @@ export const useGetRelevantPosts = (postType: PostType, keyword: string) => {
         });
       }
     );
-  }
-  else {
+}
+
+export const useGetPostsByUid = (keyword: string) => {
+ const firebaseUid = auth.currentUser?.uid
+
     return useQuery(
       ['post', firebaseUid],
       async () => {
@@ -137,6 +137,29 @@ export const useGetRelevantPosts = (postType: PostType, keyword: string) => {
       enabled: typeof firebaseUid !== 'undefined',
     }
     );
+}
+
+export const useGetPostsByStatus = (status: PostStatus) => {
+
+    return useQuery(
+    ['post-status', status],
+    async () => {
+      return request({ url: `${postEndpoint}/get-by-status`, params: {status} }).then((response) => {
+        return response.data;
+      });
+    }, {
+      enabled: !!status,
+    }
+  );
+}
+
+export const useGetRelevantPosts = (postType: PostType, keyword: string, status: PostStatus) => {
+
+  if (postType == 'USER_POST') {
+      return useGetUserPosts(keyword)
+  }
+  else  {
+      return useGetPostsByUid(keyword)
   }
 };
 
