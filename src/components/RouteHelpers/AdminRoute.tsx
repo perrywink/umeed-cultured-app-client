@@ -9,8 +9,8 @@ type Props = {
 const AdminRoute = ({children} : Props) => {
     const authToken = useAuthContext();
     const {data: resUser, isLoading} = useGetUser();
-
-    if (authToken && resUser.userType == "USER"){
+    console.log(resUser)
+    if (authToken && !isLoading && resUser?.userType == "USER"){
         return <Navigate to='/'/>
     } 
 
