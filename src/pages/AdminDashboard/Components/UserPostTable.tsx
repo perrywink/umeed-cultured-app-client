@@ -29,6 +29,10 @@ const UserPostTable = ({ tabData }: Props) => {
     if (rowData.status === "IN_REVIEW") {
       rowData["accept"] = "Accept";
       rowData["reject"] = "Reject";
+    } else if (rowData.status === "APPROVED") {
+      rowData["reject"] = "Reject";
+    } else {
+      rowData["accept"] = "Accept";
     }
   });
 
@@ -91,7 +95,7 @@ function getCell(cell: any) {
   } else if (val == "Accept") {
     ele = (
       <Button
-        className='bg-blue-300 hover:bg-blue-500 text-gray-600 px-5 py-1 rounded'
+        className='bg-umeed-cyan hover:bg-cyan-200 text-gray-600 px-5 py-1 rounded'
         onClick={() => handleClick("Accept clicked")}>
         {val}
       </Button>
@@ -99,14 +103,14 @@ function getCell(cell: any) {
   } else if (val == "Reject") {
     ele = (
       <Button
-        className='bg-umeed-tangerine-300 hover:bg-umeed-tangerine-500 text-gray-600 px-5 py-1 rounded'
+        className='bg-umeed-tangerine-100 hover:bg-umeed-tangerine-300 text-gray-600 px-5 py-1 rounded'
         onClick={() => handleClick("Reject clicked")}>
         {val}
       </Button>
     );
   } else if (val == "APPROVED") {
     ele = (
-      <span className='bg-blue-100 text-umeed-blue text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
+      <span className='bg-umeed-cyan text-gray-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
         {val}
       </span>
     );
