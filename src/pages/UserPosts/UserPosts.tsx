@@ -1,6 +1,6 @@
 import Nav from "../../components/Nav/Nav";
 
-import { PostItem } from "../../components";
+import { PostItem, Search } from "../../components";
 import { useSearchUserPosts } from "../../api/post";
 import { useEffect, useState } from "react";
 import { IPostWithMedia } from "../../types/Post";
@@ -57,13 +57,15 @@ const UserPosts = () => {
 
   return (
     <div className="min-h-screen">
-      <SearchContext.Provider value={{searchKeyword, setSearchKeyword}}>
-        <Nav />
-      </SearchContext.Provider>
       <div className="bg-white flex flex-col mt-2 mx-8">
         <div className="my-4">
           <div className="text-xl font-semibold text-gray-800">Your Posts</div>
           <div className="text-xs text-gray-700">These are posts you have uploaded to the site.</div>
+        </div>
+        <div className="mb-10">
+          <SearchContext.Provider value={{searchKeyword, setSearchKeyword}}>
+            <Search />
+          </SearchContext.Provider>
         </div>
         <Masonry columns={numCols} spacing={2} className="w-full">
           {isSuccess &&

@@ -1,6 +1,6 @@
 import Nav from "../../components/Nav/Nav";
 
-import { PostItem, SelectTags, Spinner } from "../../components";
+import { PostItem, Search, SelectTags, Spinner } from "../../components";
 import { useGetUserTags } from "../../api/user";
 import { useSearchPosts } from "../../api/post";
 import { useEffect, useState } from "react";
@@ -126,10 +126,12 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
-        <Nav searchKeyword={searchKeyword} />
-      </SearchContext.Provider>
-      <div className="bg-white flex flex-col mt-2 mx-2 md:mx-8">
+      <div className="flex flex-col md:flex-row  mx-3 gap-2">
+        <div>
+          <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
+            <Search />
+          </SearchContext.Provider>
+        </div>
         <div className="mb-3">
           <SelectTags selectedTagsState={{ selectedTags, setSelectedTags }} />
         </div>

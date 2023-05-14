@@ -1,5 +1,5 @@
-import { Routes, Route } from "react-router-dom";
-import { OnboardingRoute, PrivateRoute, AdminRoute } from "../components";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { OnboardingRoute, PrivateRoute, AdminRoute, AdminNav, Nav } from "../components";
 import {
   Login,
   Register,
@@ -9,13 +9,22 @@ import {
   Onboarding,
   Signout,
   CreatePost,
-  UserPosts
+  UserPosts,
+  Profile
 } from "../pages";
 import { ToastContainer } from "react-toastify";
 
 function Root() {
+  const location = useLocation().pathname;
+
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
+      {location.includes("/admin") && (
+        <AdminNav />
+      )}  
+      {!location.includes("/admin") && (
+        <Nav />
+      )}
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
@@ -42,6 +51,14 @@ function Root() {
           element={
             <PrivateRoute>
               <UserPosts />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/profile'
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />
@@ -75,7 +92,7 @@ function Root() {
         />
       </Routes>
       <ToastContainer />
-    </>
+    </div>
   );
 }
 
