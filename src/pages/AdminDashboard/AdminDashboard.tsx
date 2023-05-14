@@ -2,9 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { useGetRelevantPosts } from "../../api/post";
 import { useEffect, useState } from "react";
 import { PostType } from "../../types/Post";
-import AdminTabs from "../AdminDashboard/components/AdminTabs";
-import AdminTable from "./components/AdminTable";
-import MyPostTable from "./components/AdminPostTable";
+import AdminTabs from "./components-admindashboard/AdminTabs";
+import AdminTable from "./components-admindashboard/AdminTable";
+import MyPostTable from "./components-admindashboard/AdminPostTable";
 import Search from "../../components/Search/Search";
 import SearchContext from "../../context/SearchContext";
 
