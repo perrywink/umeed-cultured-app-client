@@ -1,14 +1,14 @@
-import Nav from "../../../../components/Nav/Nav";
+import Nav from "../../../components/Nav/Nav";
 
-import { PostItem, Search } from "../../../../components";
-import { useSearchUserPosts } from "../../../../api/post";
+import { PostItem, Search } from "../../../components";
+import { useSearchUserPosts } from "../../../api/post";
 import { useEffect, useState } from "react";
-import { IPostWithMedia } from "../../../../types/Post";
+import { IPostWithMedia } from "../../../types/Post";
 import { ArrowDownCircleIcon, EllipsisHorizontalCircleIcon, FaceFrownIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
 import { useInView } from "react-intersection-observer";
 import React from "react";
 import { Masonry } from "@mui/lab";
-import SearchContext from "../../../../context/SearchContext";
+import SearchContext from "../../../context/SearchContext";
 import { useQueryClient } from "@tanstack/react-query";
 
 const UserPosts = () => {

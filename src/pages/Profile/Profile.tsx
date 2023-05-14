@@ -1,7 +1,5 @@
-import { useEffect } from "react";
 import { useGetUser } from "../../api/user";
-import Nav from "../../components/Nav/Nav";
-import { UserPosts } from "..";
+import UserPosts from "./components/UserPosts";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
