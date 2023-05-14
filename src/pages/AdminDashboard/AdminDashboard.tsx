@@ -1,17 +1,11 @@
-import { auth } from "../../config/firebase";
-import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../components";
 import { useGetRelevantPosts } from "../../api/post";
 import { useEffect, useState } from "react";
-import { Post, PostType } from "../../types/Post";
-import { title } from "process";
+import { PostType } from "../../types/Post";
 import AdminTabs from "../AdminDashboard/components/AdminTabs";
 import AdminTable from "./components/AdminTable";
-import { AdminNav } from "../../components";
 import MyPostTable from "./components/AdminPostTable";
 import Search from "../../components/Search/Search";
-import Nav from "../../components/Nav/Nav";
 import SearchContext from "../../context/SearchContext";
 
 const AdminDashboard = () => {
