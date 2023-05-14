@@ -22,7 +22,7 @@ export const MobileNavItem = ({
       onClick={() => {
         navigate(navListItem.link);
       }}
-      className={`text-md cursor-pointer hover:text-gray-900 ${styles} flex align-center gap-2 ${
+      className={`text-md cursor-pointer hover:text-umeed-beige ${styles} flex align-center gap-2 ${
         location == navListItem.link ? "text-umeed-beige" : "text-gray-500"
       }`}
     >

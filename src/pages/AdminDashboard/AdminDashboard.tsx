@@ -46,7 +46,6 @@ const AdminDashboard = () => {
 
   return (
     <div className='bg-gray-50 flex flex-col min-h-screen'>
-      <AdminNav />
       <div className='text-center my-10 pb-4'>
         <div className='w-full h-10 justify-center'>
           <div >

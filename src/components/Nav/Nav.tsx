@@ -24,11 +24,6 @@ export default function Nav() {
       icon: <UserCircleIcon className="h-6 w-6"/>,
     },
     {
-      label: "My Posts",
-      link: "/user-posts",
-      icon: <Squares2X2Icon className="h-6 w-6"/>,
-    },
-    {
       label: "Sign out",
       link: "/signout",
       icon: <ArrowLeftOnRectangleIcon className="h-6 w-6"/>,

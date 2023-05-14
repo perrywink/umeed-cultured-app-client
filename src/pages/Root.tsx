@@ -9,22 +9,27 @@ import {
   Onboarding,
   Signout,
   CreatePost,
-  UserPosts,
-  Profile
+  Profile,
+  EditProfile
 } from "../pages";
 import { ToastContainer } from "react-toastify";
 
 function Root() {
   const location = useLocation().pathname;
 
+  const renderNav = () => {
+    if (!location.includes("/login") && !location.includes("/register") && !location.includes("/signout") && !location.includes("/reset-password")) {
+      if (location.includes("/admin")) {
+        return <AdminNav />
+      } else {
+        return <Nav/>
+      }
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
-      {location.includes("/admin") && (
-        <AdminNav />
-      )}  
-      {!location.includes("/admin") && (
-        <Nav />
-      )}
+      {renderNav()}
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
@@ -43,14 +48,6 @@ function Root() {
           element={
             <PrivateRoute>
               <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/user-posts'
-          element={
-            <PrivateRoute>
-              <UserPosts />
             </PrivateRoute>
           }
         />
@@ -87,6 +84,14 @@ function Root() {
               <AdminRoute>
                 <CreatePost />
               </AdminRoute>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/profile/edit'
+          element={
+            <PrivateRoute>
+              <EditProfile />
             </PrivateRoute>
           }
         />
