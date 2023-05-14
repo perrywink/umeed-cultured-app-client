@@ -26,3 +26,16 @@ export const useGetTagWithId = (tagIds: number[]) => {
     }
   )
 }
+
+export const useGetTagByPost = (postId: string | undefined) => {
+  return useQuery(
+    ['post-tags', postId],
+    async () => {
+      return request({ url: `${tagEndpoint}/get-by-post`, params: {postId} }).then((response) => {
+        return response.data
+      })
+    }, {
+      enabled: !!postId,
+    }
+  )
+}

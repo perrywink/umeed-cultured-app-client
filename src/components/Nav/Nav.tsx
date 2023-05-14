@@ -15,7 +15,7 @@ export default function Nav() {
     },
     {
       label: "Create Post",
-      link: "/post",
+      link: "/create-post",
       icon: <ArrowUpOnSquareStackIcon className="h-6 w-6"/>,
     },
     {

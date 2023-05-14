@@ -10,7 +10,8 @@ import {
   Signout,
   CreatePost,
   Profile,
-  EditProfile
+  EditProfile,
+  Post
 } from "../pages";
 import { ToastContainer } from "react-toastify";
 
@@ -60,7 +61,15 @@ function Root() {
           }
         />
         <Route
-          path='/post'
+          path='/post/:id'
+          element={
+            <PrivateRoute>
+              <Post />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/create-post'
           element={
             <PrivateRoute>
               <CreatePost />
@@ -78,7 +87,7 @@ function Root() {
           }
         />
         <Route
-          path='/admin/post'
+          path='/admin/create-post'
           element={
             <PrivateRoute>
               <AdminRoute>
