@@ -52,8 +52,7 @@ const CreatePost = () => {
 
   const {
     data: postData,
-    isLoading: postLoading,
-    refetch: getPosts,
+    isSuccess: getPostSuccess,
   } = useGetPost(parseInt(params.get("postId") as string));
   const { data: postTags } = useGetPostTags(
     parseInt(params.get("postId") as string)
@@ -65,7 +64,6 @@ const CreatePost = () => {
     parseInt(params.get("postId") as string)
   );
 
-  console.log("hereee", media);
 
   useEffect(() => {
     refetch();
@@ -75,20 +73,25 @@ const CreatePost = () => {
     if (mediaUpload) {
       let array: [string, string, string][] = [];
 
-      for (let i = 0; i < mediaUpload.length; i++) {
-        let url = URL.createObjectURL(mediaUpload[i]);
-        array.push([url, mediaUpload[i].name, mediaUpload[i].type]);
-      }
-      setPreview([...array]);
-      console.log("preview", preview);
+      mediaUpload.map((m) => {
+        let url = URL.createObjectURL(m);
+        if (!checkDuplicatePreview(m.name)) {
+          array.push([url, m.name, m.type]);
+        }
+       
+      })
+      
+      setPreview(o=> [...o,...array]);
     }
   }, [mediaUpload]);
 
-  // useEffect(() => {
-  //   if (imageUrls[0] != "") {
-  //     sendMediaData();
-  //   }
-  // }, [imageUrls]);
+  useEffect(() => {
+    if (getPostSuccess && postData) {
+      setTitle(postData.title);
+      setAuthor(postData.author);
+      setDesc(postData.desc)
+    }
+  },[getPostSuccess])
 
   useEffect(() => {
     if (getTagsSuccess && tags) {
@@ -103,13 +106,12 @@ const CreatePost = () => {
 
   useEffect(() => {
     if (getMediaSuccess && media) {
-      console.log("Media", media);
       setPreview(media.map((m: Media) => [m.mediaUrl, "", ""]));
     }
   }, [getMediaSuccess]);
 
   const validateForm = () => {
-    if (!checkEmptyFields([title, author, desc]) || mediaUpload.length == 0 || selectedTags.length<=0) {
+    if (!checkEmptyFields([title, author, desc]) || preview.length == 0 || selectedTags.length<=0) {
       toast.error("All required fields are not filled up.");
       return false;
     }
@@ -127,15 +129,15 @@ const CreatePost = () => {
       author: author,
       desc: desc,
     };
-    console.log("heloooo", newPost.id);
     try {
       const res = await createPost(newPost);
       await assignPostTags({ tagIds: selectedTags.map((o) => o.value), postId: res.data.id });
+      //check diff in preview and mediaUpload
+      // if diff delete from media
       await uploadFile(res.data.id);
     } catch (err) {
       console.log(err);
     } finally {
-      console.log("doneeeee")
       setLoading(false);
     }
   };
@@ -160,8 +162,7 @@ const CreatePost = () => {
   };
 
   const sendMediaData = async (url: string, isThumbnail: boolean, postId: number) => {
-    console.log("sendMediaData", url);
-    console.log("sendMediaData", postId);
+
     let media: Media = {
       mediaUrl: url,
       postId,
@@ -197,25 +198,32 @@ const CreatePost = () => {
     return false;
   })
 
+  const checkDuplicatePreview = (name: string) => preview.some(p => {
+    if (p[1] === name) {
+      return true;
+    }
+    return false;
+  })
+
 
 
   const selectFiles = ({
     currentTarget: { files },
   }: React.ChangeEvent<HTMLInputElement>) => {
     if (files && files.length) {
-      console.log("condition", checkDuplicateFile(files[0].name));
+
       if (checkDuplicateFile(files[0].name)) {
         toast.error("File already Uploaded !");
       } else {
-        console.log(files);
-        console.log(mediaUpload);
         setMediaUpload((existing) => [...existing, ...files]);
       }
     }
   };
 
   const removeImage = (url: string, filename: string) => {
+
     setPreview(preview.filter((x) => x[0] !== url));
+
     setMediaUpload(mediaUpload.filter((x) => x.name !== filename));
   };
 
@@ -363,7 +371,7 @@ const CreatePost = () => {
               label="Post Title"
               placeholder="Your title here"
               onChange={(e) => setTitle(e.target.value)}
-              defaultValue={postData ? postData.title : ""}
+              value={title}
             />
 
             <Input
@@ -371,7 +379,7 @@ const CreatePost = () => {
               label="Author"
               placeholder="Author of the post"
               onChange={(e) => setAuthor(e.target.value)}
-              defaultValue={postData ? postData.author : ""}
+              value={author}
             />
 
             <TextareaInput
@@ -379,7 +387,7 @@ const CreatePost = () => {
               placeholder="What is this post about"
               rows={6}
               onChange={(e) => setDesc(e.target.value)}
-              defaultValue={postData ? postData.desc : ""}
+              value={desc}
             />
             <label className="font-bold font-cormorant text-xl text-gray-600 pb-1 block">
               {" "}
@@ -394,7 +402,8 @@ const CreatePost = () => {
               value={[...selectedTags]}
             />
             <Button styles="mt-5 w-full text-lg" onClick={handleSubmit}>
-              {loading ? <Spinner /> : "Post"}
+              
+              {params.get("postId")?loading ? <Spinner /> : "Edit Post":loading ? <Spinner /> : "Post"}
             </Button>
           </div>
         </div>
