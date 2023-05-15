@@ -49,7 +49,6 @@ const AdminDashboard = () => {
 
   const handleMyPosts = () => {
     setPostType("MY_POST");
-    // adminPostFetch();
     refetch();
   };
 
@@ -125,7 +124,9 @@ const AdminDashboard = () => {
         </div>
 
         <div className='w-full'>
-          {postType === "USER_POST" && <UserPostTable tabData={data} />}
+          {postType === "USER_POST" && (
+            <UserPostTable tabData={data} refetch={refetch} />
+          )}
           {postType === "MY_POST" && data && <MyPostTable tabData={data} />}
         </div>
       </div>

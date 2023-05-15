@@ -138,12 +138,12 @@ const updatePostStatus = async (status: PostStatus) => {
   return response;
 };
 
-export const useUpdatePost = (id?: number) => {
+export const useUpdatePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation(updatePostStatus, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['user', id]);
+      queryClient.invalidateQueries(['post-status']);
     },
     onError: (e: any) => {
       console.error(e)

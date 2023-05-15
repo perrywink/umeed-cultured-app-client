@@ -1,5 +1,6 @@
 import React from "react";
 import { Post, PostTable } from "../../../types/Post";
+import { useEffect, useState } from "react";
 import {
   Column,
   Table as ReactTable,
@@ -14,13 +15,22 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "../../../components";
 import TablePagination from "./TablePagination";
+import { useUpdatePost } from "../../../api/post";
 
 interface Props {
   tabData: PostTable[];
+  refetch: any;
 }
 
-const UserPostTable = ({ tabData }: Props) => {
+const UserPostTable = ({ tabData, refetch }: Props) => {
   const data = tabData || [];
+  const [dataUpdate, setDataUpdate] = useState<boolean>(false);
+  const { mutateAsync: updatePostStatus } = useUpdatePost();
+
+  useEffect(() => {
+    refetch();
+    setDataUpdate(false);
+  }, [dataUpdate]);
 
   data.forEach((rowData) => {
     if (rowData.status === "IN_REVIEW") {
@@ -59,12 +69,29 @@ const UserPostTable = ({ tabData }: Props) => {
     []
   );
 
+  const handleAcceptClick = async (rowData: any) => {
+    await updatePostStatus({
+      status: "APPROVED",
+      id: rowData.id,
+    });
+    setDataUpdate(true);
+  };
+
+  const handleRejectClick = async (rowData: any) => {
+    await updatePostStatus({
+      status: "REJECTED",
+      id: rowData.id,
+    });
+    setDataUpdate(true);
+  };
+
   const handleClick = (rowData: any) => {
     alert(JSON.stringify(rowData));
   };
 
   const getCell = (cell: any) => {
     let columnId = cell.getContext().column.id;
+    let rowItem = cell.getContext().row.original;
     let val = cell.getValue();
     let ele;
 
@@ -81,7 +108,7 @@ const UserPostTable = ({ tabData }: Props) => {
       ele = (
         <Button
           className='bg-umeed-cyan hover:bg-cyan-200 text-gray-600 px-5 py-1 rounded'
-          onClick={() => handleClick("Accept clicked")}>
+          onClick={() => handleAcceptClick(rowItem)}>
           {val}
         </Button>
       );
@@ -89,7 +116,7 @@ const UserPostTable = ({ tabData }: Props) => {
       ele = (
         <Button
           className='bg-umeed-tangerine-100 hover:bg-umeed-tangerine-300 text-gray-600 px-5 py-1 rounded'
-          onClick={() => handleClick("Reject clicked")}>
+          onClick={() => handleRejectClick(rowItem)}>
           {val}
         </Button>
       );
