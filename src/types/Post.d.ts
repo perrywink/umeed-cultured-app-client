@@ -24,11 +24,8 @@ export type Post = {
   rejectDsc?: string
 };
 
-export type PostTable = {
-    title: string,
-    author: string,
+export interface PostTable extends Post {
     status?: PostStatus,
-    rejectDsc?: string,
     accept?: string,
     reject?: string
 };

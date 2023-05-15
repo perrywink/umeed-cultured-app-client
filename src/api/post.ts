@@ -127,6 +127,31 @@ export const useGetPostsByStatus = (status: PostStatus) => {
   );
 }
 
+const updatePostStatus = async (status: PostStatus) => {
+  const r = {
+    url: postEndpoint + '/update-post-status',
+    method: "PUT",
+    data: status,
+    headers: { "Content-Type": "application/json" },
+  };
+  const response = await request(r);
+  return response;
+};
+
+export const useUpdatePost = (id?: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation(updatePostStatus, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['user', id]);
+    },
+    onError: (e: any) => {
+      console.error(e)
+      toast.error(e.data)
+    },
+  })
+}
+
 export const useGetRelevantPosts = (postType: PostType, keyword: string, status: PostStatus) => {
   const firebaseUid = auth.currentUser?.uid
 
