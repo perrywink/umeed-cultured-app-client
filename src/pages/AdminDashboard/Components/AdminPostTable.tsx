@@ -13,6 +13,7 @@ import {
 import TablePagination from "./TablePagination";
 import Modal from "../../../components/Modal/Modal";
 import { useDeletePost } from "../../../api/post";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     tabData: Post[];
@@ -22,11 +23,16 @@ interface Props {
 const MyPostTable = ({ tabData }: Props) => {
 
     const { mutate: deletePost } = useDeletePost();
-
+    const navigate = useNavigate();
+    
     const handleDelete = (data: any) => {
         console.log(data.row.original.id);
         deletePost({postId: data?.row?.original?.id});
         console.log("deleted")
+    }
+
+    const handleEdit = (data: any) => {
+        navigate(`/admin/post?postId=${data?.row?.original?.id}`)
     }
 
     const data = useMemo(() => tabData, [tabData]);
@@ -37,7 +43,6 @@ const MyPostTable = ({ tabData }: Props) => {
             {
                 id: "id",
                 accessorKey: "id",
-                show: false
             },
             {
                 header: "Title",
@@ -49,7 +54,7 @@ const MyPostTable = ({ tabData }: Props) => {
             },
             columnHelper.display({
                 id: 'edit',
-                cell: props => <PencilSquareIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" />,
+                cell: props => <button onClick={() => handleEdit(props)}><PencilSquareIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" /></button>,
             }),
             columnHelper.display({
                 id: 'delete',
@@ -57,7 +62,7 @@ const MyPostTable = ({ tabData }: Props) => {
                 <Modal
                     icon={<TrashIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" />}
                     title="Delete Post"
-                    body="Are you sure you want to permanantly delete this post ?"
+                    body={`Are you sure you want to permanantly delete the post "${props?.row?.original?.title}" ?`}
                     action="Delete"
                     onClick={() => handleDelete(props)}
                 ></Modal>

@@ -38,7 +38,6 @@ const AdminDashboard = () => {
 
   const handleMyPosts = () => {
     setPostType("MY_POST");
-    // adminPostFetch();
     refetch();
   };
 

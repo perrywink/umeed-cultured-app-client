@@ -13,25 +13,28 @@ import {
   useAssignPostTags,
   useCreateMedia,
   useCreatePost,
+  useGetPost,
+  useGetPostMedia,
+  useGetPostTags,
 } from "../../api/post";
 import { Media, Post } from "../../types/Post";
-import { useSearchTags } from "../../api/tag";
+import { useGetTagWithId, useSearchTags } from "../../api/tag";
 import { Tag } from "../../types/Tag";
 import Select, { MultiValue } from "react-select";
 import React from "react";
 import { useFormValidator } from "../../hooks";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import Nav from "../../components/Nav/Nav";
-
+import { SelectOption } from "../../components/SelectTags/SelectTags";
 
 const CreatePost = () => {
   const [mediaUpload, setMediaUpload] = useState<File[]>([]);
   const [imageUrls, setImageUrls] = useState<[string, boolean]>(["", false]);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const { data, refetch, isLoading } = useSearchTags(searchKeyword);
-  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+  const [selectedTags, setSelectedTags] = useState<SelectOption[]>([]);
   const [preview, setPreview] = useState<[string, string, string][]>([]);
   const [title, setTitle] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
@@ -40,12 +43,29 @@ const CreatePost = () => {
   const [postId, setPostId] = useState<number>(0);
   const { checkEmptyFields } = useFormValidator();
   const location = useLocation().pathname;
-
+  const params = new URLSearchParams(useLocation().search);
   const refer = React.useRef<HTMLInputElement>(null);
 
   const { mutate: createMedia } = useCreateMedia();
   const { mutateAsync: createPost } = useCreatePost();
   const { mutate: assignPostTags } = useAssignPostTags();
+
+  const {
+    data: postData,
+    isLoading: postLoading,
+    refetch: getPosts,
+  } = useGetPost(parseInt(params.get("postId") as string));
+  const { data: postTags } = useGetPostTags(
+    parseInt(params.get("postId") as string)
+  );
+  const { data: tags, isSuccess: getTagsSuccess } = useGetTagWithId(
+    postTags?.map((pt: { tagId: number }) => pt.tagId)
+  );
+  const { data: media, isSuccess: getMediaSuccess } = useGetPostMedia(
+    parseInt(params.get("postId") as string)
+  );
+
+  console.log("hereee", media);
 
   useEffect(() => {
     refetch();
@@ -59,7 +79,7 @@ const CreatePost = () => {
         let url = URL.createObjectURL(mediaUpload[i]);
         array.push([url, mediaUpload[i].name, mediaUpload[i].type]);
       }
-      setPreview(array);
+      setPreview([...array]);
       console.log("preview", preview);
     }
   }, [mediaUpload]);
@@ -70,11 +90,30 @@ const CreatePost = () => {
     }
   }, [imageUrls]);
 
+  useEffect(() => {
+    if (getTagsSuccess && tags) {
+      setSelectedTags(
+        tags.map((t: { id: number; name: string }) => ({
+          value: t.id,
+          label: t.name,
+        }))
+      );
+    }
+  }, [getTagsSuccess]);
+
+  useEffect(() => {
+    if (getMediaSuccess && media) {
+      console.log("Media", media);
+      setPreview(media.map((m: Media) => [m.mediaUrl, "", ""]));
+    }
+  }, [getMediaSuccess]);
+
   const validateForm = () => {
     if (!checkEmptyFields([title, author, desc]) || mediaUpload.length == 0) {
       toast.error("All required fields are not filled up.");
       return false;
     }
+
     return true;
   };
 
@@ -83,15 +122,20 @@ const CreatePost = () => {
     setLoading(true);
 
     const newPost: Post = {
+      id: params?.get("postId") ? parseInt(params.get("postId") as string) : 0,
       title: title,
       author: author,
-      desc: desc
+      desc: desc,
     };
+    console.log("heloooo", newPost.id);
     try {
       createPost(newPost)
         .then((res) => {
           setPostId(res.data.id);
-          assignPostTags({ tagIds: selectedTagIds, postId: res.data.id });
+          assignPostTags({
+            tagIds: selectedTags.map((o) => o.value),
+            postId: res.data.id,
+          });
           uploadFile();
         })
         .finally(() => {
@@ -115,13 +159,10 @@ const CreatePost = () => {
   const onChange = (
     selectedOptions: MultiValue<{
       value: number;
+      label: string;
     }>
   ) => {
-    setSelectedTagIds(
-      selectedOptions.map((option) => {
-        return option.value;
-      })
-    );
+    setSelectedTags([...selectedOptions]);
   };
 
   const sendMediaData = () => {
@@ -155,26 +196,24 @@ const CreatePost = () => {
     }
   };
 
-  const checkDuplicateFile = (name:string) => mediaUpload.some(media => {
-    if (media.name === name) {
-      return true;
-    }
-    return false;
-  })
- 
-
+  const checkDuplicateFile = (name: string) =>
+    mediaUpload.some((media) => {
+      if (media.name === name) {
+        return true;
+      }
+      return false;
+    });
 
   const selectFiles = ({
     currentTarget: { files },
   }: React.ChangeEvent<HTMLInputElement>) => {
-
     if (files && files.length) {
-      console.log("condition", checkDuplicateFile(files[0].name))
-      if (checkDuplicateFile(files[0].name)){
-        toast.error("File already Uploaded !")
-      }else{
-        console.log(files)
-        console.log(mediaUpload)
+      console.log("condition", checkDuplicateFile(files[0].name));
+      if (checkDuplicateFile(files[0].name)) {
+        toast.error("File already Uploaded !");
+      } else {
+        console.log(files);
+        console.log(mediaUpload);
         setMediaUpload((existing) => [...existing, ...files]);
       }
     }
@@ -187,13 +226,9 @@ const CreatePost = () => {
 
   return (
     <div className="bg-gray-50 flex flex-col min-h-screen">
-      {location.includes("/admin") && (
-        <AdminNav />
-      )}  
-      {!location.includes("/admin") && (
-        <Nav renderSearch={false}/>
-      )}
-      
+      {location.includes("/admin") && <AdminNav />}
+      {!location.includes("/admin") && <Nav renderSearch={false} />}
+
       {/* <div className="text-center font-cormorant text-5xl font-bold text-umeed-blue">
                 Create Post
             </div> */}
@@ -333,6 +368,7 @@ const CreatePost = () => {
               label="Post Title"
               placeholder="Your title here"
               onChange={(e) => setTitle(e.target.value)}
+              defaultValue={postData ? postData.title : ""}
             />
 
             <Input
@@ -340,6 +376,7 @@ const CreatePost = () => {
               label="Author"
               placeholder="Author of the post"
               onChange={(e) => setAuthor(e.target.value)}
+              defaultValue={postData ? postData.author : ""}
             />
 
             <TextareaInput
@@ -347,6 +384,7 @@ const CreatePost = () => {
               placeholder="What is this post about"
               rows={6}
               onChange={(e) => setDesc(e.target.value)}
+              defaultValue={postData ? postData.desc : ""}
             />
             <label className="font-bold font-cormorant text-xl text-gray-600 pb-1 block">
               {" "}
@@ -358,6 +396,7 @@ const CreatePost = () => {
               options={loadOptions()}
               onInputChange={(keyword) => setSearchKeyword(keyword as string)}
               onChange={onChange}
+              value={[...selectedTags]}
             />
             <Button styles="mt-5 w-full text-lg" onClick={handleSubmit}>
               {loading ? <Spinner /> : "Post"}
