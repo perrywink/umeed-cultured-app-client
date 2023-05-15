@@ -11,6 +11,7 @@ import {
 import { Button } from "../../../components";
 import TablePagination from "./TablePagination";
 import { useUpdatePost } from "../../../api/post";
+import { toast } from "react-toastify";
 
 interface Props {
   tabData: PostTable[];
@@ -72,6 +73,7 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
       id: rowData.id,
     });
     setDataUpdate(true);
+    toast.success(`Post "${rowData.title}" is approved! `);
   };
 
   const handleRejectClick = async (rowData: any) => {
@@ -80,6 +82,7 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
       id: rowData.id,
     });
     setDataUpdate(true);
+    toast.error(`Post "${rowData.title}" is rejected! `);
   };
 
   const handleClick = (rowData: any) => {
