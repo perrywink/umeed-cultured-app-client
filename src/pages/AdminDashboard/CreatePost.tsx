@@ -28,7 +28,7 @@ import Nav from "../../components/Nav/Nav";
 
 const CreatePost = () => {
   const [mediaUpload, setMediaUpload] = useState<File[]>([]);
-  const [imageUrls, setImageUrls] = useState<[string, boolean]>(["", false]);
+  // const [imageUrls, setImageUrls] = useState<[string, boolean]>(["", false]);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const { data, refetch, isLoading } = useSearchTags(searchKeyword);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
@@ -37,15 +37,15 @@ const CreatePost = () => {
   const [author, setAuthor] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [postId, setPostId] = useState<number>(0);
+  // const [postId, setPostId] = useState<number>(0);
   const { checkEmptyFields } = useFormValidator();
   const location = useLocation().pathname;
 
   const refer = React.useRef<HTMLInputElement>(null);
 
-  const { mutate: createMedia } = useCreateMedia();
+  const { mutateAsync: createMedia } = useCreateMedia();
   const { mutateAsync: createPost } = useCreatePost();
-  const { mutate: assignPostTags } = useAssignPostTags();
+  const { mutateAsync: assignPostTags } = useAssignPostTags();
 
   useEffect(() => {
     refetch();
@@ -64,21 +64,15 @@ const CreatePost = () => {
     }
   }, [mediaUpload]);
 
-  useEffect(() => {
-    if (imageUrls[0] != "") {
-      sendMediaData();
-    }
-  }, [imageUrls]);
-
   const validateForm = () => {
-    if (!checkEmptyFields([title, author, desc]) || mediaUpload.length == 0) {
+    if (!checkEmptyFields([title, author, desc]) || mediaUpload.length == 0 || selectedTagIds.length<=0) {
       toast.error("All required fields are not filled up.");
       return false;
     }
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm()) return;
     setLoading(true);
 
@@ -88,17 +82,14 @@ const CreatePost = () => {
       desc: desc
     };
     try {
-      createPost(newPost)
-        .then((res) => {
-          setPostId(res.data.id);
-          assignPostTags({ tagIds: selectedTagIds, postId: res.data.id });
-          uploadFile();
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      const res = await createPost(newPost);
+      await assignPostTags({ tagIds: selectedTagIds, postId: res.data.id });
+      await uploadFile(res.data.id);
     } catch (err) {
       console.log(err);
+    } finally {
+      console.log("doneeeee")
+      setLoading(false);
     }
   };
 
@@ -124,44 +115,44 @@ const CreatePost = () => {
     );
   };
 
-  const sendMediaData = () => {
-    console.log("sendMediaData", imageUrls);
+  const sendMediaData = async (url: string, isThumbnail: boolean, postId: number) => {
+    console.log("sendMediaData", url);
     console.log("sendMediaData", postId);
     let media: Media = {
-      mediaUrl: imageUrls[0],
-      postId: postId,
-      isThumbnail: imageUrls[1],
+      mediaUrl: url,
+      postId,
+      isThumbnail
     };
-    createMedia(media);
+    await createMedia(media);
   };
 
-  const uploadFile = async () => {
+  const uploadFile = async (postId: number) => {
     if (mediaUpload !== undefined && mediaUpload?.length) {
       for (let i = 0; i < mediaUpload?.length; i++) {
         const mediaRef = ref(
           storage,
           `${auth.currentUser?.uid}/${mediaUpload[i].name}` + uuidv4()
         );
-        uploadBytes(mediaRef, mediaUpload[i]).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((url) => {
-            if (i == 0) {
-              setImageUrls([url, true]);
-            } else {
-              setImageUrls([url, false]);
-            }
-          });
-        });
+        const snapshot = await uploadBytes(mediaRef, mediaUpload[i])
+        const url = await getDownloadURL(snapshot.ref)
+        if (i == 0) {
+          await sendMediaData(url, true, postId);
+        } else {
+          await sendMediaData(url, false, postId);
+
+        }
+
       }
     }
   };
 
-  const checkDuplicateFile = (name:string) => mediaUpload.some(media => {
+  const checkDuplicateFile = (name: string) => mediaUpload.some(media => {
     if (media.name === name) {
       return true;
     }
     return false;
   })
- 
+
 
 
   const selectFiles = ({
@@ -170,9 +161,9 @@ const CreatePost = () => {
 
     if (files && files.length) {
       console.log("condition", checkDuplicateFile(files[0].name))
-      if (checkDuplicateFile(files[0].name)){
+      if (checkDuplicateFile(files[0].name)) {
         toast.error("File already Uploaded !")
-      }else{
+      } else {
         console.log(files)
         console.log(mediaUpload)
         setMediaUpload((existing) => [...existing, ...files]);
@@ -189,11 +180,11 @@ const CreatePost = () => {
     <div className="bg-gray-50 flex flex-col min-h-screen">
       {location.includes("/admin") && (
         <AdminNav />
-      )}  
-      {!location.includes("/admin") && (
-        <Nav renderSearch={false}/>
       )}
-      
+      {!location.includes("/admin") && (
+        <Nav renderSearch={false} />
+      )}
+
       {/* <div className="text-center font-cormorant text-5xl font-bold text-umeed-blue">
                 Create Post
             </div> */}
