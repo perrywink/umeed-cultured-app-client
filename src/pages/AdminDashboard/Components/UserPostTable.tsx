@@ -59,97 +59,76 @@ const UserPostTable = ({ tabData }: Props) => {
     []
   );
 
-  return (
-    <>
-      <Table
-        {...{
-          data,
-          columns,
-        }}
-      />
-    </>
-  );
-};
+  const handleClick = (rowData: any) => {
+    alert(JSON.stringify(rowData));
+  };
 
-const handleClick = (rowData: any) => {
-  alert(JSON.stringify(rowData));
-};
+  const getCell = (cell: any) => {
+    let columnId = cell.getContext().column.id;
+    let val = cell.getValue();
+    let ele;
 
-function getCell(cell: any) {
-  let columnId = cell.getContext().column.id;
-  let val = cell.getValue();
-  let ele;
+    if (columnId == "title") {
+      ele = (
+        <a
+          href='#'
+          className='font-regular text-slate-600 underline'
+          onClick={() => handleClick(val)}>
+          {val}
+        </a>
+      );
+    } else if (val == "Accept") {
+      ele = (
+        <Button
+          className='bg-umeed-cyan hover:bg-cyan-200 text-gray-600 px-5 py-1 rounded'
+          onClick={() => handleClick("Accept clicked")}>
+          {val}
+        </Button>
+      );
+    } else if (val == "Reject") {
+      ele = (
+        <Button
+          className='bg-umeed-tangerine-100 hover:bg-umeed-tangerine-300 text-gray-600 px-5 py-1 rounded'
+          onClick={() => handleClick("Reject clicked")}>
+          {val}
+        </Button>
+      );
+    } else if (val == "APPROVED") {
+      ele = (
+        <span className='bg-umeed-cyan text-gray-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
+          {val}
+        </span>
+      );
+    } else if (val == "REJECTED") {
+      ele = (
+        <span className='bg-umeed-tangerine-100 text-umeed-tangerine-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
+          {val}
+        </span>
+      );
+    } else if (val == "IN_REVIEW") {
+      ele = (
+        <span className='bg-gray-200 text-gray-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
+          {"IN REVIEW"}
+        </span>
+      );
+    } else {
+      ele = val;
+    }
 
-  if (columnId == "title") {
-    ele = (
-      <a
-        href='#'
-        className='font-regular text-slate-600 underline'
-        onClick={() => handleClick(val)}>
-        {val}
-      </a>
+    return (
+      <td className='border-b-2 border-gray-200 py-4 px-12' key={cell.id}>
+        {ele}
+      </td>
     );
-  } else if (val == "Accept") {
-    ele = (
-      <Button
-        className='bg-umeed-cyan hover:bg-cyan-200 text-gray-600 px-5 py-1 rounded'
-        onClick={() => handleClick("Accept clicked")}>
-        {val}
-      </Button>
-    );
-  } else if (val == "Reject") {
-    ele = (
-      <Button
-        className='bg-umeed-tangerine-100 hover:bg-umeed-tangerine-300 text-gray-600 px-5 py-1 rounded'
-        onClick={() => handleClick("Reject clicked")}>
-        {val}
-      </Button>
-    );
-  } else if (val == "APPROVED") {
-    ele = (
-      <span className='bg-umeed-cyan text-gray-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
-        {val}
-      </span>
-    );
-  } else if (val == "REJECTED") {
-    ele = (
-      <span className='bg-umeed-tangerine-100 text-umeed-tangerine-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
-        {val}
-      </span>
-    );
-  } else if (val == "IN_REVIEW") {
-    ele = (
-      <span className='bg-gray-200 text-gray-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
-        {"IN REVIEW"}
-      </span>
-    );
-  } else {
-    ele = val;
-  }
+  };
 
-  return (
-    <td className='border-b-2 border-gray-200 py-4 px-12' key={cell.id}>
-      {ele}
-    </td>
-  );
-}
-
-function Table({
-  data,
-  columns,
-}: {
-  data: PostTable[];
-  columns: ColumnDef<PostTable>[];
-}) {
   const table = useReactTable({
     data,
     columns,
-    // Pipeline
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     initialState: { pagination: { pageSize: 5 } },
-    //
     debugTable: true,
   });
 
@@ -198,6 +177,6 @@ function Table({
       <TablePagination table={table}></TablePagination>
     </div>
   );
-}
+};
 
 export default UserPostTable;
