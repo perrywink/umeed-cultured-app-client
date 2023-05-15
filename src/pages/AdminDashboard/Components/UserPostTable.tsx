@@ -1,15 +1,11 @@
-import { Post, PostTable } from "../../../types/Post";
+import { PostTable } from "../../../types/Post";
 import { useEffect, useState, useMemo } from "react";
 import {
-  Column,
-  Table as ReactTable,
-  PaginationState,
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   ColumnDef,
-  OnChangeFn,
   flexRender,
 } from "@tanstack/react-table";
 import { Button } from "../../../components";
