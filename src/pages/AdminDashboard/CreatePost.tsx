@@ -31,7 +31,7 @@ import { SelectOption } from "../../components/SelectTags/SelectTags";
 
 const CreatePost = () => {
   const [mediaUpload, setMediaUpload] = useState<File[]>([]);
-  const [imageUrls, setImageUrls] = useState<[string, boolean]>(["", false]);
+  // const [imageUrls, setImageUrls] = useState<[string, boolean]>(["", false]);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const { data, refetch, isLoading } = useSearchTags(searchKeyword);
   const [selectedTags, setSelectedTags] = useState<SelectOption[]>([]);
@@ -40,15 +40,15 @@ const CreatePost = () => {
   const [author, setAuthor] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [postId, setPostId] = useState<number>(0);
+  // const [postId, setPostId] = useState<number>(0);
   const { checkEmptyFields } = useFormValidator();
   const location = useLocation().pathname;
   const params = new URLSearchParams(useLocation().search);
   const refer = React.useRef<HTMLInputElement>(null);
 
-  const { mutate: createMedia } = useCreateMedia();
+  const { mutateAsync: createMedia } = useCreateMedia();
   const { mutateAsync: createPost } = useCreatePost();
-  const { mutate: assignPostTags } = useAssignPostTags();
+  const { mutateAsync: assignPostTags } = useAssignPostTags();
 
   const {
     data: postData,
@@ -84,11 +84,11 @@ const CreatePost = () => {
     }
   }, [mediaUpload]);
 
-  useEffect(() => {
-    if (imageUrls[0] != "") {
-      sendMediaData();
-    }
-  }, [imageUrls]);
+  // useEffect(() => {
+  //   if (imageUrls[0] != "") {
+  //     sendMediaData();
+  //   }
+  // }, [imageUrls]);
 
   useEffect(() => {
     if (getTagsSuccess && tags) {
@@ -109,7 +109,7 @@ const CreatePost = () => {
   }, [getMediaSuccess]);
 
   const validateForm = () => {
-    if (!checkEmptyFields([title, author, desc]) || mediaUpload.length == 0) {
+    if (!checkEmptyFields([title, author, desc]) || mediaUpload.length == 0 || selectedTags.length<=0) {
       toast.error("All required fields are not filled up.");
       return false;
     }
@@ -117,7 +117,7 @@ const CreatePost = () => {
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm()) return;
     setLoading(true);
 
@@ -129,20 +129,14 @@ const CreatePost = () => {
     };
     console.log("heloooo", newPost.id);
     try {
-      createPost(newPost)
-        .then((res) => {
-          setPostId(res.data.id);
-          assignPostTags({
-            tagIds: selectedTags.map((o) => o.value),
-            postId: res.data.id,
-          });
-          uploadFile();
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      const res = await createPost(newPost);
+      await assignPostTags({ tagIds: selectedTags.map((o) => o.value), postId: res.data.id });
+      await uploadFile(res.data.id);
     } catch (err) {
       console.log(err);
+    } finally {
+      console.log("doneeeee")
+      setLoading(false);
     }
   };
 
@@ -165,44 +159,45 @@ const CreatePost = () => {
     setSelectedTags([...selectedOptions]);
   };
 
-  const sendMediaData = () => {
-    console.log("sendMediaData", imageUrls);
+  const sendMediaData = async (url: string, isThumbnail: boolean, postId: number) => {
+    console.log("sendMediaData", url);
     console.log("sendMediaData", postId);
     let media: Media = {
-      mediaUrl: imageUrls[0],
-      postId: postId,
-      isThumbnail: imageUrls[1],
+      mediaUrl: url,
+      postId,
+      isThumbnail
     };
-    createMedia(media);
+    await createMedia(media);
   };
 
-  const uploadFile = async () => {
+  const uploadFile = async (postId: number) => {
     if (mediaUpload !== undefined && mediaUpload?.length) {
       for (let i = 0; i < mediaUpload?.length; i++) {
         const mediaRef = ref(
           storage,
           `${auth.currentUser?.uid}/${mediaUpload[i].name}` + uuidv4()
         );
-        uploadBytes(mediaRef, mediaUpload[i]).then((snapshot) => {
-          getDownloadURL(snapshot.ref).then((url) => {
-            if (i == 0) {
-              setImageUrls([url, true]);
-            } else {
-              setImageUrls([url, false]);
-            }
-          });
-        });
+        const snapshot = await uploadBytes(mediaRef, mediaUpload[i])
+        const url = await getDownloadURL(snapshot.ref)
+        if (i == 0) {
+          await sendMediaData(url, true, postId);
+        } else {
+          await sendMediaData(url, false, postId);
+
+        }
+
       }
     }
   };
 
-  const checkDuplicateFile = (name: string) =>
-    mediaUpload.some((media) => {
-      if (media.name === name) {
-        return true;
-      }
-      return false;
-    });
+  const checkDuplicateFile = (name: string) => mediaUpload.some(media => {
+    if (media.name === name) {
+      return true;
+    }
+    return false;
+  })
+
+
 
   const selectFiles = ({
     currentTarget: { files },
