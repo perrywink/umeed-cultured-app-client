@@ -34,12 +34,12 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
 
   data.forEach((rowData) => {
     if (rowData.status === "IN_REVIEW") {
-      rowData["accept"] = "Accept";
+      rowData["approve"] = "Approve";
       rowData["reject"] = "Reject";
     } else if (rowData.status === "APPROVED") {
       rowData["reject"] = "Reject";
     } else {
-      rowData["accept"] = "Accept";
+      rowData["approve"] = "Approve";
     }
   });
 
@@ -58,7 +58,7 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
         header: "Status",
       },
       {
-        accessorKey: "accept",
+        accessorKey: "approve",
         header: "",
       },
       {
@@ -69,7 +69,7 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
     []
   );
 
-  const handleAcceptClick = async (rowData: any) => {
+  const handleApproveClick = async (rowData: any) => {
     await updatePostStatus({
       status: "APPROVED",
       id: rowData.id,
@@ -104,11 +104,11 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
           {val}
         </a>
       );
-    } else if (val == "Accept") {
+    } else if (val == "Approve") {
       ele = (
         <Button
           className='bg-umeed-cyan hover:bg-cyan-200 text-gray-600 px-5 py-1 rounded'
-          onClick={() => handleAcceptClick(rowItem)}>
+          onClick={() => handleApproveClick(rowItem)}>
           {val}
         </Button>
       );
