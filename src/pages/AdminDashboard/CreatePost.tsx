@@ -13,6 +13,7 @@ import {
   useAssignPostTags,
   useCreateMedia,
   useCreatePost,
+  useDeletePostMedia,
   useGetPost,
   useGetPostMedia,
   useGetPostTags,
@@ -28,19 +29,31 @@ import { v4 as uuidv4 } from "uuid";
 import { useLocation } from "react-router-dom";
 import Nav from "../../components/Nav/Nav";
 import { SelectOption } from "../../components/SelectTags/SelectTags";
+import { CloudArrowUpIcon, XMarkIcon} from "@heroicons/react/24/outline";
+import { BookmarkIcon } from "@heroicons/react/24/solid";
+
+type IPreviewItems = {
+  url: string;
+  filename: string;
+  isFirebaseUrl: boolean;
+}
+
+type IThumbnail = {
+  url: string;
+  filename: string;
+}
 
 const CreatePost = () => {
   const [mediaUpload, setMediaUpload] = useState<File[]>([]);
-  // const [imageUrls, setImageUrls] = useState<[string, boolean]>(["", false]);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const { data, refetch, isLoading } = useSearchTags(searchKeyword);
   const [selectedTags, setSelectedTags] = useState<SelectOption[]>([]);
-  const [preview, setPreview] = useState<[string, string, string][]>([]);
+  const [preview, setPreview] = useState<IPreviewItems[]>([]);
   const [title, setTitle] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  // const [postId, setPostId] = useState<number>(0);
+  const [thumnail, setThumbnail] = useState<IThumbnail>();
   const { checkEmptyFields } = useFormValidator();
   const location = useLocation().pathname;
   const params = new URLSearchParams(useLocation().search);
@@ -49,11 +62,11 @@ const CreatePost = () => {
   const { mutateAsync: createMedia } = useCreateMedia();
   const { mutateAsync: createPost } = useCreatePost();
   const { mutateAsync: assignPostTags } = useAssignPostTags();
+  const { mutateAsync: deletePostMedia } = useDeletePostMedia();
 
-  const {
-    data: postData,
-    isSuccess: getPostSuccess,
-  } = useGetPost(parseInt(params.get("postId") as string));
+  const { data: postData, isSuccess: getPostSuccess } = useGetPost(
+    parseInt(params.get("postId") as string)
+  );
   const { data: postTags } = useGetPostTags(
     parseInt(params.get("postId") as string)
   );
@@ -71,17 +84,16 @@ const CreatePost = () => {
 
   useEffect(() => {
     if (mediaUpload) {
-      let array: [string, string, string][] = [];
-
+      let array: IPreviewItems[] = [];
+      console.log("hereee", preview);
       mediaUpload.map((m) => {
         let url = URL.createObjectURL(m);
         if (!checkDuplicatePreview(m.name)) {
-          array.push([url, m.name, m.type]);
+          array.push({url, filename: m.name, isFirebaseUrl: false});
         }
-       
-      })
-      
-      setPreview(o=> [...o,...array]);
+      });
+
+      setPreview((o) => [...o, ...array]);
     }
   }, [mediaUpload]);
 
@@ -89,9 +101,9 @@ const CreatePost = () => {
     if (getPostSuccess && postData) {
       setTitle(postData.title);
       setAuthor(postData.author);
-      setDesc(postData.desc)
+      setDesc(postData.desc);
     }
-  },[getPostSuccess])
+  }, [getPostSuccess]);
 
   useEffect(() => {
     if (getTagsSuccess && tags) {
@@ -106,13 +118,21 @@ const CreatePost = () => {
 
   useEffect(() => {
     if (getMediaSuccess && media) {
-      setPreview(media.map((m: Media) => [m.mediaUrl, "", ""]));
+      setPreview(media.map((m: Media) => ({ url: m.mediaUrl, filename: "", isFirebaseUrl: true}))); 
     }
   }, [getMediaSuccess]);
 
   const validateForm = () => {
-    if (!checkEmptyFields([title, author, desc]) || preview.length == 0 || selectedTags.length<=0) {
+    if (
+      !checkEmptyFields([title, author, desc]) ||
+      preview.length == 0 ||
+      selectedTags.length <= 0
+    ) {
       toast.error("All required fields are not filled up.");
+      return false;
+    }
+    if (!thumnail || thumnail.url.trim()=="") {
+      toast.error("Please select an image as thumbnail");
       return false;
     }
 
@@ -131,16 +151,36 @@ const CreatePost = () => {
     };
     try {
       const res = await createPost(newPost);
-      await assignPostTags({ tagIds: selectedTags.map((o) => o.value), postId: res.data.id });
-      //check diff in preview and mediaUpload
-      // if diff delete from media
+      await assignPostTags({
+        tagIds: selectedTags.map((o) => o.value),
+        postId: res.data.id,
+      });
+      if (params.get("postId")) {
+        const postId = parseInt(params.get("postId") as string)
+        await deletePostMedia({postId})
+        await sendPreExistingMedia(postId);
+
+      }
       await uploadFile(res.data.id);
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
+      toast.success("Post published");
     }
   };
+
+  const sendPreExistingMedia = async (postId: number) => {
+    preview.map( async (p) => {
+      if (p.isFirebaseUrl) {
+        if (p.url == thumnail?.url) {
+          await sendMediaData(p.url, true, postId);
+        } else {
+          await sendMediaData(p.url, false, postId);
+        }
+      }
+    });
+  }
 
   const loadOptions = () => {
     if (!isLoading && data) {
@@ -161,12 +201,15 @@ const CreatePost = () => {
     setSelectedTags([...selectedOptions]);
   };
 
-  const sendMediaData = async (url: string, isThumbnail: boolean, postId: number) => {
-
+  const sendMediaData = async (
+    url: string,
+    isThumbnail: boolean,
+    postId: number
+  ) => {
     let media: Media = {
       mediaUrl: url,
       postId,
-      isThumbnail
+      isThumbnail,
     };
     await createMedia(media);
   };
@@ -178,40 +221,37 @@ const CreatePost = () => {
           storage,
           `${auth.currentUser?.uid}/${mediaUpload[i].name}` + uuidv4()
         );
-        const snapshot = await uploadBytes(mediaRef, mediaUpload[i])
-        const url = await getDownloadURL(snapshot.ref)
-        if (i == 0) {
+        const snapshot = await uploadBytes(mediaRef, mediaUpload[i]);
+        const url = await getDownloadURL(snapshot.ref);
+        if (mediaUpload[i].name == thumnail?.filename) {
           await sendMediaData(url, true, postId);
         } else {
           await sendMediaData(url, false, postId);
-
         }
-
       }
     }
   };
 
-  const checkDuplicateFile = (name: string) => mediaUpload.some(media => {
-    if (media.name === name) {
-      return true;
-    }
-    return false;
-  })
+  const checkDuplicateFile = (name: string) =>
+    mediaUpload.some((media) => {
+      if (media.name === name) {
+        return true;
+      }
+      return false;
+    });
 
-  const checkDuplicatePreview = (name: string) => preview.some(p => {
-    if (p[1] === name) {
-      return true;
-    }
-    return false;
-  })
-
-
+  const checkDuplicatePreview = (name: string) =>
+    preview.some((p) => {
+      if (p.filename === name) {
+        return true;
+      }
+      return false;
+    });
 
   const selectFiles = ({
     currentTarget: { files },
   }: React.ChangeEvent<HTMLInputElement>) => {
     if (files && files.length) {
-
       if (checkDuplicateFile(files[0].name)) {
         toast.error("File already Uploaded !");
       } else {
@@ -221,8 +261,7 @@ const CreatePost = () => {
   };
 
   const removeImage = (url: string, filename: string) => {
-
-    setPreview(preview.filter((x) => x[0] !== url));
+    setPreview(preview.filter((x) => x.url !== url));
 
     setMediaUpload(mediaUpload.filter((x) => x.name !== filename));
   };
@@ -244,20 +283,7 @@ const CreatePost = () => {
             {preview.length == 0 && (
               <div className="flex flex-col items-center justify-center">
                 <i>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21.2 15c.7-1.2 1-2.5.7-3.9-.6-2-2.4-3.5-4.4-3.5h-1.2c-.7-3-3.2-5.2-6.2-5.6-3-.3-5.9 1.3-7.3 4-1.2 2.5-1 6.5.5 8.8m8.7-1.6V21" />
-                    <path d="M16 16l-4-4-4 4" />
-                  </svg>
+                  <CloudArrowUpIcon className="h-10 w-10 text-gray-600" />
                 </i>
                 <p className="text-md text-gray-600 font-light">
                   Browse and choose files from your device
@@ -269,32 +295,28 @@ const CreatePost = () => {
               <div className="grid grid-cols-2 p-5 gap-2 place-items-center">
                 {preview.map((img, key) => (
                   <div key={key} className="w-full h-full relative">
-                    <div className="w-full h-full relative">
-                      <i
-                        className="absolute right-0 top-0"
-                        onClick={() => {
-                          removeImage(img[0], img[1]);
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          stroke="#FFFFFF"
-                          className="w-6 h-6"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </i>
+                    <div
+                      className="w-full h-full relative group"
+                    >
                       <img
-                        src={img[0]}
+                        src={img.url}
                         alt=""
-                        className=" w-full h-full rounded"
+                        className={` w-full h-full rounded group-hover:opacity-30 ${img.url == thumnail?.url ?"border-umeed-beige border-4": ""}`}
                       />
+                        <div
+                          className="flex justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full transition-all transform opacity-0 
+                        group-hover:opacity-100 "
+                        >
+                          <Button
+                            styles="w-fit border-r border-black"
+                            onClick={() => {
+                              removeImage(img.url, img.filename);
+                            }}
+                          >
+                            <XMarkIcon className="h-6 w-6 " />
+                          </Button>
+                          <Button styles="w-fit" onClick={() => setThumbnail({url:img.url, filename: img.filename})}><BookmarkIcon className="h-6 w-6 " /></Button>
+                        </div>
                     </div>
                   </div>
                 ))}
@@ -402,8 +424,17 @@ const CreatePost = () => {
               value={[...selectedTags]}
             />
             <Button styles="mt-5 w-full text-lg" onClick={handleSubmit}>
-              
-              {params.get("postId")?loading ? <Spinner /> : "Edit Post":loading ? <Spinner /> : "Post"}
+              {params.get("postId") ? (
+                loading ? (
+                  <Spinner />
+                ) : (
+                  "Edit Post"
+                )
+              ) : loading ? (
+                <Spinner />
+              ) : (
+                "Post"
+              )}
             </Button>
           </div>
         </div>

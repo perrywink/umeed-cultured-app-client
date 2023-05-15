@@ -122,7 +122,6 @@ export const useCreatePost = () => {
   return useMutation(createPost, {
     onSuccess: () => {
       queryClient.invalidateQueries(["post"]);
-      toast.success("Post published");
     },
     onError: (e: any) => {
       console.error(e);
@@ -149,6 +148,32 @@ export const useDeletePost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["post"]);
       toast.success("Post Deleted");
+    },
+    onError: (e: any) => {
+      console.error(e);
+      toast.error(e.data);
+    },
+  });
+};
+
+const deletePostMedia = async (data: { postId: number }) => {
+  const r = {
+    url: postEndpoint + "/delete-media",
+    method: "PUT",
+    data: data,
+    headers: { "Content-Type": "application/json" },
+  };
+  const response = await request(r);
+  return response;
+};
+
+export const useDeletePostMedia = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(deletePostMedia, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["media"]);
+      console.log("Post media deleted");
     },
     onError: (e: any) => {
       console.error(e);
