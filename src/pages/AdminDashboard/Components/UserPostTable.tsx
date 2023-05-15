@@ -1,6 +1,5 @@
-import React from "react";
 import { Post, PostTable } from "../../../types/Post";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   Column,
   Table as ReactTable,
@@ -43,7 +42,9 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
     }
   });
 
-  const columns = React.useMemo<ColumnDef<PostTable>[]>(
+  data.sort((a, b) => a.id - b.id);
+
+  const columns = useMemo<ColumnDef<PostTable>[]>(
     () => [
       {
         accessorKey: "title",

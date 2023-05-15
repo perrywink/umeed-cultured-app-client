@@ -25,7 +25,7 @@ export type Post = {
 };
 
 export interface PostTable extends Post {
-    status?: PostStatus,
+    id: number
     approve?: string,
     reject?: string
 };
