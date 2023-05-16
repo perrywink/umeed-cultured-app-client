@@ -11,7 +11,7 @@ delete colors['blueGray'];
 module.exports = {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     colors: {
@@ -36,7 +36,19 @@ module.exports = {
       'cormorant': ['Cormorant Garamond', 'serif'],
       'sans': ['Roboto', 'sans-serif']
     },
-    extend: {},
+    extend: {
+      animation: {
+        "slide-in": 'slideIn 0.7s ease-in-out',
+      },
+      keyframes: theme => ({
+        slideIn: {
+          '0%': { opacity: '0%', transform: 'translateY(25%)' },
+          '100%': { opacity: '100%', transform: 'translateY(0%)' },
+        },
+      }),
+    },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar-hide')
+  ],
 }

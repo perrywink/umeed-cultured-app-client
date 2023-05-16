@@ -112,7 +112,7 @@ const Register = () => {
           </div>
           <Button
             onClick={handleSubmit}
-            styles="mt-5 text-lg"
+            styles="mt-5 text-lg w-full"
           >
             {loading ? <Spinner /> : "Register"}
           </Button>

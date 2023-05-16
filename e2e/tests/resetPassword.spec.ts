@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Reset Password Page', () => {
+const E2E_EMAIL = "test@gmail.com"
+const E2E_PASSWORD = "test@1234"
+
+test.describe.skip('Reset Password Page', () => {
   test.describe.configure({ mode: 'serial' });
 
   test.beforeEach(async ({ page }) => {

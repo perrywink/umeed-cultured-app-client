@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { OnboardingRoute, PrivateRoute } from "../components";
+import { OnboardingRoute, PrivateRoute, AdminRoute } from "../components";
 import {
   Login,
   Register,
@@ -7,6 +7,9 @@ import {
   AdminDashboard,
   ResetPassword,
   Onboarding,
+  Signout,
+  CreatePost,
+  UserPosts
 } from "../pages";
 import { ToastContainer } from "react-toastify";
 
@@ -16,6 +19,7 @@ function Root() {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/signout' element={<Signout />} />
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route
           path='/onboarding'
@@ -34,10 +38,38 @@ function Root() {
           }
         />
         <Route
+          path='/user-posts'
+          element={
+            <PrivateRoute>
+              <UserPosts />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/post'
+          element={
+            <PrivateRoute>
+              <CreatePost />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path='/admin'
           element={
             <PrivateRoute>
-              <AdminDashboard />
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/admin/post'
+          element={
+            <PrivateRoute>
+              <AdminRoute>
+                <CreatePost />
+              </AdminRoute>
             </PrivateRoute>
           }
         />

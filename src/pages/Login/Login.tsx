@@ -49,7 +49,7 @@ const AuthForm = () => {
 
   useEffect(() => {
     if (submitClicked && getUserFetched && getUserError) {
-      toast.error("Your account does not exist. Please contact an admin.", {
+      toast.error("Internal server error occured. Please contact an admin.", {
         toastId: "login-toast",
       });
       auth.signOut();
@@ -115,7 +115,7 @@ const AuthForm = () => {
               Forgot Password?
             </LinkButton>
           </div>
-          <Button onClick={handleSubmit} styles="mt-5 text-lg">
+          <Button onClick={handleSubmit} styles="mt-5 text-lg w-full">
             {loading ? <Spinner /> : "Login"}
           </Button>
         </div>
