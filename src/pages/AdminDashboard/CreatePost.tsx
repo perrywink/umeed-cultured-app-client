@@ -51,7 +51,7 @@ const CreatePost = () => {
   const [author, setAuthor] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [thumnail, setThumbnail] = useState<IThumbnail>();
+  const [thumbnail, setThumbnail] = useState<IThumbnail>();
   const { checkEmptyFields } = useFormValidator();
   const params = new URLSearchParams(useLocation().search);
   const refer = React.useRef<HTMLInputElement>(null);
@@ -118,7 +118,7 @@ const CreatePost = () => {
       toast.error("All required fields are not filled up.");
       return false;
     }
-    if (!thumnail || thumnail.url.trim() == "") {
+    if (!thumbnail || thumbnail.url.trim() == "") {
       toast.error("Please select an image as thumbnail");
       return false;
     }
@@ -159,7 +159,7 @@ const CreatePost = () => {
   const sendPreExistingMedia = async (postId: number) => {
     preview.map(async (p) => {
       if (p.isFirebaseUrl) {
-        if (p.url == thumnail?.url) {
+        if (p.url == thumbnail?.url) {
           await sendMediaData(p.url, true, postId);
         } else {
           await sendMediaData(p.url, false, postId);
@@ -209,7 +209,7 @@ const CreatePost = () => {
         );
         const snapshot = await uploadBytes(mediaRef, mediaUpload[i]);
         const url = await getDownloadURL(snapshot.ref);
-        if (mediaUpload[i].name == thumnail?.filename) {
+        if (mediaUpload[i].name == thumbnail?.filename) {
           await sendMediaData(url, true, postId);
         } else {
           await sendMediaData(url, false, postId);
@@ -244,6 +244,9 @@ const CreatePost = () => {
   };
 
   const removeImage = (url: string, filename: string) => {
+    if (thumbnail?.url == url || thumbnail?.filename == filename) {
+      setThumbnail({url:"",filename:""});
+    }
     setPreview(preview.filter((x) => x.url !== url));
     setMediaUpload(mediaUpload.filter((x) => x.name !== filename));
   };
@@ -276,7 +279,7 @@ const CreatePost = () => {
                         src={img.url}
                         alt=""
                         className={` w-full h-full rounded group-hover:opacity-30 ${
-                          img.url == thumnail?.url
+                          img.url == thumbnail?.url
                             ? "border-umeed-beige border-4"
                             : ""
                         }`}
