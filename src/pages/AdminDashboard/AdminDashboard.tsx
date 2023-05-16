@@ -34,6 +34,10 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     refetch();
+  }, [data])
+
+  useEffect(() => {
+    refetch();
   }, [postStatus]);
 
   const handleUserPosts = () => {

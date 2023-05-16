@@ -60,12 +60,11 @@ const Dashboard = () => {
   }, [getTagsSuccess]);
 
   useEffect(() => {
-    if (!!selectedTags && selectedTags.length > 0)
-      refetch();
+    refetch();
   }, [selectedTags]);
 
   useEffect(() => {
-    if (!!selectedTags && selectedTags.length > 0) refetch();
+    refetch();
   }, [searchKeyword]);
 
   useEffect(() => {
