@@ -1,17 +1,10 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { INavListItem, NavItem } from "./NavItem";
 import { UserCircleIcon, ArrowLeftOnRectangleIcon, Bars3Icon, Squares2X2Icon, HomeIcon, ArrowUpOnSquareStackIcon } from "@heroicons/react/24/outline";
 import MobileNav from './MobileNav'
 import UmeedLogo from "../../assets/umeed-psych-logo.png";
-import Search from "../Search/Search";
 
-interface IProps {
-  renderSearch?: boolean
-  searchKeyword?: string
-}
-
-export default function Nav({renderSearch=true, searchKeyword=""}: IProps) {
+export default function Nav() {
   const [open, setOpen] = useState(false);
 
   const navListItems: INavListItem[] = [
@@ -22,18 +15,13 @@ export default function Nav({renderSearch=true, searchKeyword=""}: IProps) {
     },
     {
       label: "Create Post",
-      link: "/post",
+      link: "/create-post",
       icon: <ArrowUpOnSquareStackIcon className="h-6 w-6"/>,
     },
     {
       label: "Profile",
       link: "/profile",
       icon: <UserCircleIcon className="h-6 w-6"/>,
-    },
-    {
-      label: "My Posts",
-      link: "/user-posts",
-      icon: <Squares2X2Icon className="h-6 w-6"/>,
     },
     {
       label: "Sign out",
@@ -59,11 +47,6 @@ export default function Nav({renderSearch=true, searchKeyword=""}: IProps) {
         <div className="md:flex">
           <img src={UmeedLogo} className="w-12 h-12 rounded-lg object-cover"/>
         </div>
-        {renderSearch &&
-          <div className="md:flex justify-center w-full">
-            <Search/>
-          </div>
-        }
         <div className="hidden md:flex">
           {navListItems.map((item) => {
             return <NavItem key={item.label} navListItem={item} styles="mx-2"/>;

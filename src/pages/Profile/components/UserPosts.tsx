@@ -1,14 +1,14 @@
-import Nav from "../../components/Nav/Nav";
+import Nav from "../../../components/Nav/Nav";
 
-import { PostItem } from "../../components";
-import { useSearchUserPosts } from "../../api/post";
+import { PostItem, Search } from "../../../components";
+import { useSearchUserPosts } from "../../../api/post";
 import { useEffect, useState } from "react";
-import { IPostWithMedia } from "../../types/Post";
+import { IPostWithMedia } from "../../../types/Post";
 import { ArrowDownCircleIcon, EllipsisHorizontalCircleIcon, FaceFrownIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
 import { useInView } from "react-intersection-observer";
 import React from "react";
 import { Masonry } from "@mui/lab";
-import SearchContext from "../../context/SearchContext";
+import SearchContext from "../../../context/SearchContext";
 import { useQueryClient } from "@tanstack/react-query";
 
 const UserPosts = () => {
@@ -56,14 +56,12 @@ const UserPosts = () => {
 
 
   return (
-    <div className="min-h-screen">
-      <SearchContext.Provider value={{searchKeyword, setSearchKeyword}}>
-        <Nav />
-      </SearchContext.Provider>
-      <div className="bg-white flex flex-col mt-2 mx-8">
-        <div className="my-4">
-          <div className="text-xl font-semibold text-gray-800">Your Posts</div>
-          <div className="text-xs text-gray-700">These are posts you have uploaded to the site.</div>
+    <div className="min-h-screen w-full">
+      <div className="flex flex-col mt-2 mx-8 justify-center items-center">
+        <div className="mb-5 w-full md:max-w-md">
+          <SearchContext.Provider value={{searchKeyword, setSearchKeyword}}>
+            <Search />
+          </SearchContext.Provider>
         </div>
         <Masonry columns={numCols} spacing={2} className="w-full">
           {isSuccess &&
@@ -89,7 +87,7 @@ const UserPosts = () => {
             ? <EllipsisHorizontalCircleIcon className="animate-ping w-5 h-5"/>
             : hasNextPage
             ? <ArrowDownCircleIcon className="w-5 h-5"/>
-            : <div className="flex gap-3"><NoSymbolIcon className="w-5 h-5"/> Nothing left to see here.</div>}
+            : <div className="flex gap-3"><NoSymbolIcon className="w-5 h-5"/> Nothing to load...</div>}
         </button>
       </div>
     </div>

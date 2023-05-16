@@ -177,17 +177,7 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="bg-gray-50 flex flex-col min-h-screen">
-      {location.includes("/admin") && (
-        <AdminNav />
-      )}
-      {!location.includes("/admin") && (
-        <Nav renderSearch={false} />
-      )}
-
-      {/* <div className="text-center font-cormorant text-5xl font-bold text-umeed-blue">
-                Create Post
-            </div> */}
+    <div className="bg-white flex flex-col flex-grow">
       <div className="grid md:grid-cols-2 h-full flex-1">
         <div className="md:block justify-center md:py-24 py-10 px-7 md:h-full h-auto">
           <div
