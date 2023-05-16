@@ -9,7 +9,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { Button } from "../../../components";
-import TablePagination from "./TablePagination";
+import TablePagination from "../components/TablePagination";
 import { useUpdatePost } from "../../../api/post";
 import { toast } from "react-toastify";
 
