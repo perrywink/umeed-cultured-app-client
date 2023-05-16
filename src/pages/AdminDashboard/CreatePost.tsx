@@ -29,19 +29,19 @@ import { v4 as uuidv4 } from "uuid";
 import { useLocation } from "react-router-dom";
 import Nav from "../../components/Nav/Nav";
 import { SelectOption } from "../../components/SelectTags/SelectTags";
-import { CloudArrowUpIcon, XMarkIcon} from "@heroicons/react/24/outline";
-import { BookmarkIcon } from "@heroicons/react/24/solid";
+import { CloudArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { BookmarkIcon, PlusIcon } from "@heroicons/react/24/solid";
 
 type IPreviewItems = {
   url: string;
   filename: string;
   isFirebaseUrl: boolean;
-}
+};
 
 type IThumbnail = {
   url: string;
   filename: string;
-}
+};
 
 const CreatePost = () => {
   const [mediaUpload, setMediaUpload] = useState<File[]>([]);
@@ -77,25 +77,9 @@ const CreatePost = () => {
     parseInt(params.get("postId") as string)
   );
 
-
   useEffect(() => {
     refetch();
   }, [searchKeyword]);
-
-  useEffect(() => {
-    if (mediaUpload) {
-      let array: IPreviewItems[] = [];
-      console.log("hereee", preview);
-      mediaUpload.map((m) => {
-        let url = URL.createObjectURL(m);
-        if (!checkDuplicatePreview(m.name)) {
-          array.push({url, filename: m.name, isFirebaseUrl: false});
-        }
-      });
-
-      setPreview((o) => [...o, ...array]);
-    }
-  }, [mediaUpload]);
 
   useEffect(() => {
     if (getPostSuccess && postData) {
@@ -118,7 +102,13 @@ const CreatePost = () => {
 
   useEffect(() => {
     if (getMediaSuccess && media) {
-      setPreview(media.map((m: Media) => ({ url: m.mediaUrl, filename: "", isFirebaseUrl: true}))); 
+      setPreview(
+        media.map((m: Media) => ({
+          url: m.mediaUrl,
+          filename: "",
+          isFirebaseUrl: true,
+        }))
+      );
     }
   }, [getMediaSuccess]);
 
@@ -131,7 +121,7 @@ const CreatePost = () => {
       toast.error("All required fields are not filled up.");
       return false;
     }
-    if (!thumnail || thumnail.url.trim()=="") {
+    if (!thumnail || thumnail.url.trim() == "") {
       toast.error("Please select an image as thumbnail");
       return false;
     }
@@ -156,10 +146,9 @@ const CreatePost = () => {
         postId: res.data.id,
       });
       if (params.get("postId")) {
-        const postId = parseInt(params.get("postId") as string)
-        await deletePostMedia({postId})
+        const postId = parseInt(params.get("postId") as string);
+        await deletePostMedia({ postId });
         await sendPreExistingMedia(postId);
-
       }
       await uploadFile(res.data.id);
     } catch (err) {
@@ -171,7 +160,7 @@ const CreatePost = () => {
   };
 
   const sendPreExistingMedia = async (postId: number) => {
-    preview.map( async (p) => {
+    preview.map(async (p) => {
       if (p.isFirebaseUrl) {
         if (p.url == thumnail?.url) {
           await sendMediaData(p.url, true, postId);
@@ -180,7 +169,7 @@ const CreatePost = () => {
         }
       }
     });
-  }
+  };
 
   const loadOptions = () => {
     if (!isLoading && data) {
@@ -240,14 +229,6 @@ const CreatePost = () => {
       return false;
     });
 
-  const checkDuplicatePreview = (name: string) =>
-    preview.some((p) => {
-      if (p.filename === name) {
-        return true;
-      }
-      return false;
-    });
-
   const selectFiles = ({
     currentTarget: { files },
   }: React.ChangeEvent<HTMLInputElement>) => {
@@ -256,18 +237,22 @@ const CreatePost = () => {
         toast.error("File already Uploaded !");
       } else {
         setMediaUpload((existing) => [...existing, ...files]);
+        let url = URL.createObjectURL(files[0]);
+        setPreview((e) => [
+          ...e,
+          { url, filename: files[0].name, isFirebaseUrl: false },
+        ]);
       }
     }
   };
 
   const removeImage = (url: string, filename: string) => {
     setPreview(preview.filter((x) => x.url !== url));
-
     setMediaUpload(mediaUpload.filter((x) => x.name !== filename));
   };
 
   return (
-    <div className="bg-gray-50 flex flex-col min-h-screen">
+    <div className="bg-gray-50 flex flex-col min-h-screen w-full">
       {location.includes("/admin") && <AdminNav />}
       {!location.includes("/admin") && <Nav renderSearch={false} />}
 
@@ -295,28 +280,40 @@ const CreatePost = () => {
               <div className="grid grid-cols-2 p-5 gap-2 place-items-center">
                 {preview.map((img, key) => (
                   <div key={key} className="w-full h-full relative">
-                    <div
-                      className="w-full h-full relative group"
-                    >
+                    <div className="w-full h-full relative group">
                       <img
                         src={img.url}
                         alt=""
-                        className={` w-full h-full rounded group-hover:opacity-30 ${img.url == thumnail?.url ?"border-umeed-beige border-4": ""}`}
+                        className={` w-full h-full rounded group-hover:opacity-30 ${
+                          img.url == thumnail?.url
+                            ? "border-umeed-beige border-4"
+                            : ""
+                        }`}
                       />
-                        <div
-                          className="flex justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full transition-all transform opacity-0 
+                      <div
+                        className="flex justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full transition-all transform opacity-0 
                         group-hover:opacity-100 "
+                      >
+                        <Button
+                          styles="w-fit border-r border-black"
+                          onClick={() => {
+                            removeImage(img.url, img.filename);
+                          }}
                         >
-                          <Button
-                            styles="w-fit border-r border-black"
-                            onClick={() => {
-                              removeImage(img.url, img.filename);
-                            }}
-                          >
-                            <XMarkIcon className="h-6 w-6 " />
-                          </Button>
-                          <Button styles="w-fit" onClick={() => setThumbnail({url:img.url, filename: img.filename})}><BookmarkIcon className="h-6 w-6 " /></Button>
-                        </div>
+                          <XMarkIcon className="h-6 w-6 " />
+                        </Button>
+                        <Button
+                          styles="w-fit"
+                          onClick={() =>
+                            setThumbnail({
+                              url: img.url,
+                              filename: img.filename,
+                            })
+                          }
+                        >
+                          <BookmarkIcon className="h-6 w-6 " />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -334,20 +331,7 @@ const CreatePost = () => {
                       styles="mt-5 w-fit rounded-md"
                       onClick={() => refer.current?.click()}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#ffffff"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                      </svg>
+                      <PlusIcon className="h-8 w-8 " />
                     </Button>
                   </div>
                 )}
@@ -367,20 +351,7 @@ const CreatePost = () => {
                   styles="mt-5 w-fit rounded-md"
                   onClick={() => refer.current?.click()}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#ffffff"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
+                  <PlusIcon className="h-8 w-8 " />
                 </Button>
               </div>
             )}
