@@ -87,7 +87,7 @@ function Root() {
           }
         />
         <Route
-          path='/admin/create-post'
+          path='/admin/post'
           element={
             <PrivateRoute>
               <AdminRoute>
