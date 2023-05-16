@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const colors = require('tailwindcss/colors')
+const withMT = require("@material-tailwind/react/utils/withMT");
 
 // deleting deprecated color names to silence warnings
 delete colors['lightBlue'];
@@ -8,11 +9,10 @@ delete colors['trueGray'];
 delete colors['coolGray'];
 delete colors['blueGray'];
 
-module.exports = {
+module.exports = withMT({
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}"
+    "./src/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     colors: {
@@ -52,4 +52,4 @@ module.exports = {
   plugins: [
     require('tailwind-scrollbar-hide')
   ],
-}
+})

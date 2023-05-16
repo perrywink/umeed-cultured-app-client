@@ -12,15 +12,16 @@ export interface IPostWithMedia {
   userId: number
   author: string
   updatedAt: Date
+  status?: PostStatus
   media: IMedia[]
 }
 
 export type Post = {
-    title: string,
-    author: string,
-    desc: string,
-    status?: PostStatus,
-    rejectDsc?: string
+  title: string,
+  author: string,
+  desc: string,
+  status?: PostStatus,
+  rejectDsc?: string
 };
 
 export type Media = {
@@ -39,5 +40,7 @@ export const PostStatus: {
     REJECTED: REJECTED
     IN_REVIEW: IN_REVIEW
 };
+
+export type PostType = 'MY_POST' | 'USER_POST'
 
 export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]

@@ -1,5 +1,5 @@
-import { Routes, Route } from "react-router-dom";
-import { OnboardingRoute, PrivateRoute } from "../components";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { OnboardingRoute, PrivateRoute, AdminRoute, AdminNav, Nav } from "../components";
 import {
   Login,
   Register,
@@ -8,13 +8,29 @@ import {
   ResetPassword,
   Onboarding,
   Signout,
-  CreatePost
+  CreatePost,
+  Profile,
+  EditProfile,
+  Post
 } from "../pages";
 import { ToastContainer } from "react-toastify";
 
 function Root() {
+  const location = useLocation().pathname;
+
+  const renderNav = () => {
+    if (!location.includes("/login") && !location.includes("/register") && !location.includes("/signout") && !location.includes("/reset-password")) {
+      if (location.includes("/admin")) {
+        return <AdminNav />
+      } else {
+        return <Nav/>
+      }
+    }
+  }
+
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
+      {renderNav()}
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
@@ -37,24 +53,60 @@ function Root() {
           }
         />
         <Route
-          path='/admin'
+          path='/profile'
           element={
             <PrivateRoute>
-              <AdminDashboard />
+              <Profile />
             </PrivateRoute>
           }
         />
         <Route
-          path='/admin/post'
+          path='/post/:id'
+          element={
+            <PrivateRoute>
+              <Post />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/create-post'
           element={
             <PrivateRoute>
               <CreatePost />
             </PrivateRoute>
           }
         />
+        <Route
+          path='/admin'
+          element={
+            <PrivateRoute>
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/admin/create-post'
+          element={
+            <PrivateRoute>
+              <AdminRoute>
+                <CreatePost />
+              </AdminRoute>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/profile/edit'
+          element={
+            <PrivateRoute>
+              <EditProfile />
+            </PrivateRoute>
+          }
+        />
       </Routes>
       <ToastContainer />
-    </>
+    </div>
   );
 }
 
