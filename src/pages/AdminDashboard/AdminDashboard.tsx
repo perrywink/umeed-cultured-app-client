@@ -2,10 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { useGetRelevantPosts } from "../../api/post";
 import { useEffect, useState } from "react";
 import { PostType } from "../../types/Post";
-import AdminTabs from "../AdminDashboard/Components/AdminTabs";
-import AdminTable from "./Components/AdminTable";
-import { AdminNav } from "../../components";
-import MyPostTable from "./Components/AdminPostTable";
+import AdminTabs from "./components/AdminTabs";
+import AdminTable from "./components/AdminTable";
+import MyPostTable from "./components/AdminPostTable";
 import Search from "../../components/Search/Search";
 import SearchContext from "../../context/SearchContext";
 
@@ -44,7 +43,6 @@ const AdminDashboard = () => {
 
   return (
     <div className='bg-gray-50 flex flex-col min-h-screen'>
-      <AdminNav />
       <div className='text-center my-10 pb-4'>
         <div className='w-full h-10 justify-center'>
           <div >

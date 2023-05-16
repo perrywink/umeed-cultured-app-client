@@ -5,7 +5,6 @@ import {
   Spinner,
   TextareaInput,
   FileInput,
-  AdminNav,
 } from "../../components";
 import { useEffect, useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -27,7 +26,6 @@ import { useFormValidator } from "../../hooks";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import { useLocation } from "react-router-dom";
-import Nav from "../../components/Nav/Nav";
 import { SelectOption } from "../../components/SelectTags/SelectTags";
 import { CloudArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { BookmarkIcon, PlusIcon } from "@heroicons/react/24/solid";
@@ -45,8 +43,8 @@ type IThumbnail = {
 
 const CreatePost = () => {
   const [mediaUpload, setMediaUpload] = useState<File[]>([]);
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
-  const { data, refetch, isLoading } = useSearchTags(searchKeyword);
+  const [searchTagsKeyword, setSearchTagsKeyword] = useState<string>("");
+  const { data, refetch, isLoading } = useSearchTags(searchTagsKeyword);
   const [selectedTags, setSelectedTags] = useState<SelectOption[]>([]);
   const [preview, setPreview] = useState<IPreviewItems[]>([]);
   const [title, setTitle] = useState<string>("");
@@ -55,7 +53,6 @@ const CreatePost = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [thumnail, setThumbnail] = useState<IThumbnail>();
   const { checkEmptyFields } = useFormValidator();
-  const location = useLocation().pathname;
   const params = new URLSearchParams(useLocation().search);
   const refer = React.useRef<HTMLInputElement>(null);
 
@@ -79,7 +76,7 @@ const CreatePost = () => {
 
   useEffect(() => {
     refetch();
-  }, [searchKeyword]);
+  }, [searchTagsKeyword]);
 
   useEffect(() => {
     if (getPostSuccess && postData) {
@@ -252,13 +249,7 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="bg-gray-50 flex flex-col min-h-screen w-full">
-      {location.includes("/admin") && <AdminNav />}
-      {!location.includes("/admin") && <Nav renderSearch={false} />}
-
-      {/* <div className="text-center font-cormorant text-5xl font-bold text-umeed-blue">
-                Create Post
-            </div> */}
+    <div className="bg-white flex flex-col flex-grow">
       <div className="grid md:grid-cols-2 h-full flex-1">
         <div className="md:block justify-center md:py-24 py-10 px-7 md:h-full h-auto">
           <div
@@ -390,7 +381,7 @@ const CreatePost = () => {
               closeMenuOnSelect={false}
               isMulti
               options={loadOptions()}
-              onInputChange={(keyword) => setSearchKeyword(keyword as string)}
+              onInputChange={(keyword) => setSearchTagsKeyword(keyword as string)}
               onChange={onChange}
               value={[...selectedTags]}
             />
