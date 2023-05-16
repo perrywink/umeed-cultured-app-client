@@ -6,4 +6,6 @@ export { default as ResetPassword } from "./ResetPassword/ResetPassword";
 export { default as Onboarding } from "./Onboarding/Onboarding";
 export { default as Signout } from "./Signout/Signout";
 export { default as CreatePost} from "./AdminDashboard/CreatePost";
-export { default as UserPosts } from "./UserPosts/UserPosts";
+export { default as Post} from "./Post/Post";
+export { default as Profile } from "./Profile/Profile";
+export { default as EditProfile } from "./Profile/EditProfile";

@@ -179,3 +179,28 @@ export const useGetRelevantPosts = (postType: PostType, keyword: string, status:
   }
 };
 
+export const useGetPost = (postId: string | undefined) => {
+  return useQuery(
+    ['post', postId],
+    async () => {
+      return request({ url: `${postEndpoint}/get`, params: {postId} }).then((response) => {
+        return response.data
+      })
+    }, {
+      enabled: !!postId,
+    }
+  )
+}
+
+export const useGetPostMedia = (postId: string | undefined) => {
+  return useQuery(
+    ['post-media', postId],
+    async () => {
+      return request({ url: `${postEndpoint}/get-media`, params: {postId} }).then((response) => {
+        return response.data
+      })
+    }, {
+      enabled: !!postId,
+    }
+  )
+}
