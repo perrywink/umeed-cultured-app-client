@@ -24,6 +24,10 @@ const AdminDashboard = () => {
     refetch();
   }, [searchKeyword])
 
+  useEffect(() => {
+    refetch();
+  }, [data])
+
 
 
   const handleUserPosts = () => {
@@ -33,7 +37,6 @@ const AdminDashboard = () => {
 
   const handleMyPosts = () => {
     setPostType("MY_POST");
-    // adminPostFetch();
     refetch();
   };
 

@@ -9,7 +9,7 @@ interface Props {
 
 const TablePagination = ({table}: Props) => {
     return (
-        <div className="flex justify-between items-center w-full ">
+        <div className="flex justify-between items-center w-full pb-2">
 
         <div >
             <Button

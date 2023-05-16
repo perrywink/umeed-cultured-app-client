@@ -61,7 +61,7 @@ function Root() {
           }
         />
         <Route
-          path='/post/:id'
+          path='/post/:postId'
           element={
             <PrivateRoute>
               <Post />
@@ -87,7 +87,7 @@ function Root() {
           }
         />
         <Route
-          path='/admin/create-post'
+          path='/admin/post'
           element={
             <PrivateRoute>
               <AdminRoute>

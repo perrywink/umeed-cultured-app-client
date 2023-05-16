@@ -1,6 +1,5 @@
 import { Post } from "../../../types/Post";
 import React, { useMemo } from 'react'
-// import { useTable, usePagination, Column } from 'react-table'
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import {
     useReactTable,
@@ -9,8 +8,12 @@ import {
     getPaginationRowModel,
     ColumnDef,
     flexRender,
+    createColumnHelper
 } from '@tanstack/react-table'
 import TablePagination from "./TablePagination";
+import Modal from "../../../components/Modal/Modal";
+import { useDeletePost } from "../../../api/post";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     tabData: Post[];
@@ -18,11 +21,29 @@ interface Props {
 
 
 const MyPostTable = ({ tabData }: Props) => {
-    const data = useMemo(() => tabData, [tabData]);
 
+    const { mutate: deletePost } = useDeletePost();
+    const navigate = useNavigate();
+    
+    const handleDelete = (data: any) => {
+        console.log(data.row.original.id);
+        deletePost({postId: data?.row?.original?.id});
+        console.log("deleted")
+    }
+
+    const handleEdit = (data: any) => {
+        navigate(`/admin/post?postId=${data?.row?.original?.id}`)
+    }
+
+    const data = useMemo(() => tabData, [tabData]);
+    const columnHelper = createColumnHelper<Post>();
 
     const columns = React.useMemo<ColumnDef<Post>[]>(
         () => [
+            {
+                id: "id",
+                accessorKey: "id",
+            },
             {
                 header: "Title",
                 accessorKey: "title",
@@ -31,6 +52,22 @@ const MyPostTable = ({ tabData }: Props) => {
                 header: "Author",
                 accessorKey: "author",
             },
+            columnHelper.display({
+                id: 'edit',
+                cell: props => <button onClick={() => handleEdit(props)}><PencilSquareIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" /></button>,
+            }),
+            columnHelper.display({
+                id: 'delete',
+                cell: props => 
+                <Modal
+                    icon={<TrashIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" />}
+                    title="Delete Post"
+                    body={`Are you sure you want to permanantly delete the post "${props?.row?.original?.title}" ?`}
+                    action="Delete"
+                    onClick={() => handleDelete(props)}
+                ></Modal>
+
+            }),
         ],
         []
     );
@@ -42,6 +79,9 @@ const MyPostTable = ({ tabData }: Props) => {
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         initialState: { pagination: { pageSize: 5 } },
+        state: {
+            columnVisibility: { 'id': false }
+        },
         //
         debugTable: true,
     })
@@ -72,18 +112,14 @@ const MyPostTable = ({ tabData }: Props) => {
                         return (
                             <tr key={row.id}>
                                 {row.getVisibleCells().map(cell => (
-                                    <td className="border-b-2 border-gray-200 py-4 px-12" key={cell.id}>
+                                    <td className="border-b-2 border-gray-200 py-2 px-12" key={cell.id}>
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext()
-                                        )} </td>
+
+                                        )}
+                                    </td>
                                 ))}
-                                <td className="border-b-2 border-gray-200 px-6"> 
-                                    <button><PencilSquareIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" /></button>
-                                </td>
-                                <td className="border-b-2 border-gray-200 px-6" > 
-                                    <button><TrashIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" /></button>
-                                </td>
                             </tr>
                         );
                     })}

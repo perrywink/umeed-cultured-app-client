@@ -12,14 +12,12 @@ import { Media } from "../../types/Post";
 import { Carousel, IconButton } from "@material-tailwind/react";
 
 const Post = () => {
-  const { id } = useParams();
+  const { postId } = useParams();
   const navigate = useNavigate();
 
-  const { data: post, isSuccess: getPostSuccess } = useGetPost(id);
-  const { data: tags, isSuccess: getPostTagsSuccess } = useGetTagByPost(id);
-  const { data: media, isSuccess: getPostMediaSuccess } = useGetPostMedia(id);
-
-  console.log(media);
+  const { data: post, isSuccess: getPostSuccess } = useGetPost(parseInt(postId as string));
+  const { data: tags, isSuccess: getPostTagsSuccess } = useGetTagByPost(postId);
+  const { data: media } = useGetPostMedia(parseInt(postId as string));
 
   const returnToPrevScreen = () => {
     if (window.history.state && window.history.state.idx > 0) {
