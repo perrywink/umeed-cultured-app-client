@@ -282,7 +282,7 @@ const CreatePost = () => {
                         }`}
                       />
                       <div
-                        className="flex justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full transition-all transform opacity-0 
+                        className="flex justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full transition-all opacity-0 
                         group-hover:opacity-100 "
                       >
                         <Button
