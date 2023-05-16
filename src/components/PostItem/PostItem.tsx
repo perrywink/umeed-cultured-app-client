@@ -1,6 +1,7 @@
 import moment from "moment";
 import type { IPostWithMedia, PostStatus } from "../../types/Post";
 import { PostStatus as PostStatusValues} from "../../types/Post";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   showStatus?: boolean
@@ -8,6 +9,8 @@ interface IProps {
 }
 
 const PostItem = ({post, showStatus = false}: IProps) => {
+
+  const navigate = useNavigate();
 
   const retrieveThumbnailMediaUrl = (post: IPostWithMedia) => {
     const thumbnailMedia = post.media?.find((m) => m.isThumbnail)
@@ -27,7 +30,7 @@ const PostItem = ({post, showStatus = false}: IProps) => {
   }
 
   return ( 
-    <div className="flex flex-initial flex-col overflow-hidden animate-slide-in">
+    <div className="flex flex-initial flex-col overflow-hidden animate-slide-in cursor-pointer" onClick={() => navigate(`/post/${post.id}`)}>
       <img className="w-full h-full object-contain rounded-lg" src={retrieveThumbnailMediaUrl(post)} alt={post.title}/>
       <div className="p-2 pt-1">
         <div className="text-sm md:text-md text-gray-700 text-ellipse line-clamp-2">

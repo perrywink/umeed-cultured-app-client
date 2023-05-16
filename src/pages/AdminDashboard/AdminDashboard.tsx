@@ -1,17 +1,11 @@
-import { auth } from "../../config/firebase";
-import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../components";
 import { useGetRelevantPosts } from "../../api/post";
 import { useEffect, useState } from "react";
-import { Post, PostType } from "../../types/Post";
-import { title } from "process";
-import AdminTabs from "../AdminDashboard/Components/AdminTabs";
-import AdminTable from "./Components/AdminTable";
-import { AdminNav } from "../../components";
-import MyPostTable from "./Components/AdminPostTable";
+import { PostType } from "../../types/Post";
+import AdminTabs from "./components/AdminTabs";
+import AdminTable from "./components/AdminTable";
+import MyPostTable from "./components/AdminPostTable";
 import Search from "../../components/Search/Search";
-import Nav from "../../components/Nav/Nav";
 import SearchContext from "../../context/SearchContext";
 
 const AdminDashboard = () => {
@@ -46,7 +40,6 @@ const AdminDashboard = () => {
 
   return (
     <div className='bg-gray-50 flex flex-col min-h-screen'>
-      <AdminNav />
       <div className='text-center my-10 pb-4'>
         <div className='w-full h-10 justify-center'>
           <div >

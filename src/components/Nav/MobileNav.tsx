@@ -18,7 +18,7 @@ const MobileNav = ({navListItems, close}: {navListItems: INavListItem[],close: (
   }, []);
 
   return (
-    <div className="z-10">
+    <div className="z-10 fixed">
       <div className="fixed inset-0 h-screen w-full backdrop-blur-sm bg-gray-500 bg-opacity-50" />
       <div className="fixed inset-0 p-5">
         <div
@@ -35,7 +35,7 @@ const MobileNav = ({navListItems, close}: {navListItems: INavListItem[],close: (
           </div>
           <div className="mt-5 divide-y">
             {navListItems.map((item) => {
-              return <MobileNavItem key={item.label} navListItem={item} styles="py-1" />;
+              return <MobileNavItem key={item.label} navListItem={item} styles="py-1"/>;
             })}
           </div>
         </div>
