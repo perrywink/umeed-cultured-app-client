@@ -5,12 +5,11 @@ const fullEditorButtonSet = [
   "undo",
   "redo",
   "|",
-  "paragraph",
+  "fontsize",
   "bold",
   "strikethrough",
   "underline",
   "italic",
-  "fontsize",
   "|",
   "ul",
   "ol",
@@ -23,7 +22,7 @@ const fullEditorButtonSet = [
 ];
 
 const mobileEditorButtonSet = [
-  "paragraph",
+  "fontsize",
   "bold",
   "strikethrough",
   "underline",
@@ -42,10 +41,8 @@ const config = {
   buttonsMD: fullEditorButtonSet,
   buttonsSM: mobileEditorButtonSet,
   buttonsXS: mobileEditorButtonSet,
-  uploader: {
-    insertImageAsBase64URI: true
-  },
   height: 300,
+  readOnly: false
 };
 
 

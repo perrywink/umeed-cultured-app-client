@@ -282,7 +282,7 @@ const CreatePost = () => {
       return (
         <div className="flex flex-col w-full justify-center text-sm text-gray-700 text-center bg-gray-100 rounded-md p-3 mb-2">
           <InformationCircleIcon className="w-5 h-5 mx-auto mb-2"/>
-          Pick a thumbnail by hovering over an image and clicking on the bookmark icon.
+          Pick a thumbnail by hovering/clicking on the image and clicking on the bookmark icon.
         </div>
       )
     }
@@ -296,7 +296,7 @@ const CreatePost = () => {
             <UploadImgEmptyState
               preview={preview}
             />
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center items-center">
               {preview.length > 0 && (
                 <>
                   {renderThumbnailInfoMessage()}
@@ -353,7 +353,22 @@ const CreatePost = () => {
         </div>
       </div>
       <div className="mt-5 mx-5 h-full" >
-        <Editor value={desc} onChange={(desc: string) => {setDesc(desc)}}/>
+        <Editor value={desc} onChange={(desc: string) => {console.log(desc);setDesc(desc)}}/>
+      </div>
+      <div className="mb-10 mx-5 h-full">
+        <Button styles="mt-5 w-full text-lg" onClick={handleSubmit}>
+          {params.get("postId") ? (
+            loading ? (
+              <Spinner />
+            ) : (
+              "Edit Post"
+            )
+          ) : loading ? (
+            <Spinner />
+          ) : (
+            "Post"
+          )}
+        </Button>
       </div>
     </div>
   );

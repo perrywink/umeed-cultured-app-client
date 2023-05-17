@@ -10,12 +10,15 @@ import { useGetTagByPost } from "../../api/tag";
 import { Tag } from "../../types/Tag";
 import { Media } from "../../types/Post";
 import { Carousel, IconButton } from "@material-tailwind/react";
+import { Parser } from "html-to-react";
 
 const Post = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
 
-  const { data: post, isSuccess: getPostSuccess } = useGetPost(parseInt(postId as string));
+  const { data: post, isSuccess: getPostSuccess } = useGetPost(
+    parseInt(postId as string)
+  );
   const { data: tags, isSuccess: getPostTagsSuccess } = useGetTagByPost(postId);
   const { data: media } = useGetPostMedia(parseInt(postId as string));
 
@@ -28,10 +31,20 @@ const Post = () => {
   };
 
   return (
-    <div className="flex flex-col flex-grow items-center">
-      <div className="rounded-xl border p-5 shadow-sm w-11/12 md:w-9/12 bg-white">
-        <div className="border-b pb-3">
-          <div className="flex w-full items-center justify-between">
+    <div className="flex flex-col lg:flex-row flex-grow">
+      <div className="max-w-1/3">
+        <Carousel className="mt-3 bg-gray-100">
+          {media &&
+            (media as Media[]).map((m, i) => (
+              <div key={i}>
+                <img src={m.mediaUrl} className="h-full w-full object-cover" />
+              </div>
+            ))}
+        </Carousel>
+      </div>
+      <div className="p-5 bg-white w-full lg:min-w-2/3">
+        <div className="border-b">
+          <div className="flex w-full items-center justify-between mb-2">
             <ArrowUturnLeftIcon
               className="w-5 h-5 hover:text-umeed-tangerine-500 cursor-pointer"
               onClick={returnToPrevScreen}
@@ -52,25 +65,14 @@ const Post = () => {
               </div>
             </div>
           </div>
-          <Carousel className="mt-3 bg-gray-900">
-            {media &&
-              (media as Media[]).map((m, i) => (
-                <div key={i}>
-                  <img
-                    src={m.mediaUrl}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ))}
-          </Carousel>
         </div>
 
         <div className="mt-4 mb-6">
           <div className="mb-3 text-xl font-bold">
             {getPostSuccess && post.title}
           </div>
-          <div className="text-sm text-neutral-600">
-            {getPostSuccess && post.desc}
+          <div className="">
+            {getPostSuccess && new Parser().parse(post.desc as string)}
           </div>
         </div>
       </div>
