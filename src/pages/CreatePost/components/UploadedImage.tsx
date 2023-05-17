@@ -15,7 +15,7 @@ const UploadedImage = ({img, thumbnail, removeImage, setThumbnail} : IProps) => 
       <img
         src={img.url}
         alt=""
-        className={`rounded group-hover:opacity-30 ${
+        className={`max-h-[240px] max-w-[240px] rounded group-hover:opacity-30 ${
           img.url == thumbnail?.url
             ? "border-4 border-gray-900 duration-100"
             : ""

@@ -5,6 +5,7 @@ import {
   Spinner,
   TextareaInput,
   FileInput,
+  Editor,
 } from "../../components";
 import { useEffect, useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -290,31 +291,31 @@ const CreatePost = () => {
   return (
     <div className="bg-white flex flex-col flex-grow">
       <div className="flex flex-col lg:flex-row w-full">
-        <div className="lg:w-1/3 justify-center m-5 p-5 border-2 border-gray-400 border-dashed rounded-md">
-          <UploadImgEmptyState
-            preview={preview}
-            onChange={selectFiles}
-            ref={refer}
-          />
-          <div className="flex flex-col justify-center max-h-100">
-            {preview.length > 0 && (
-              <>
-                {renderThumbnailInfoMessage()}
-                <div className="grid grid-cols-2 gap-2 place-items-center">
-                  {preview.map((img, key) => (
-                    <UploadedImage
-                      img={img}
-                      thumbnail={thumbnail}
-                      removeImage={removeImage}
-                      setThumbnail={setThumbnail}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-          <div className="flex justify-center">
-            {renderUploadBtn()}
+        <div className="max-w-1/3 justify-center items-center m-5 p-5 border-2 border-gray-400 border-dashed rounded-md">
+          <div className="h-full flex flex-col justify-center items-center">
+            <UploadImgEmptyState
+              preview={preview}
+            />
+            <div className="flex flex-col justify-center">
+              {preview.length > 0 && (
+                <>
+                  {renderThumbnailInfoMessage()}
+                  <div className="grid grid-cols-2 gap-2 place-items-center">
+                    {preview.map((img, key) => (
+                      <UploadedImage
+                        img={img}
+                        thumbnail={thumbnail}
+                        removeImage={removeImage}
+                        setThumbnail={setThumbnail}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="flex justify-center">
+              {renderUploadBtn()}
+            </div>
           </div>
         </div>
         <div className="flex-grow m-5">
@@ -351,8 +352,8 @@ const CreatePost = () => {
           />
         </div>
       </div>
-      <div className="bg-green-300">
-        3rd
+      <div className="mt-5 mx-5 h-full" >
+        <Editor value={desc} onChange={(desc: string) => {setDesc(desc)}}/>
       </div>
     </div>
   );

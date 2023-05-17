@@ -3,11 +3,9 @@ import { IPreviewItems } from "../CreatePost";
 
 interface IProps {
   preview: IPreviewItems[];
-  onChange: ({ currentTarget: { files }, }: React.ChangeEvent<HTMLInputElement>) => void
-  ref:React.RefObject<HTMLInputElement>
 }
 
-const UploadImgEmptyState = ({preview, onChange, ref}: IProps) => {
+const UploadImgEmptyState = ({preview}: IProps) => {
 
   return preview.length == 0 ? (
     <div className="flex flex-col items-center justify-center">
