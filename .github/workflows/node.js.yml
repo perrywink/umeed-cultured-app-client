@@ -38,10 +38,6 @@ jobs:
     
     - name: Run Unit tests
       run: npm run test
-
-    # - name: Install playwright
-    #   if: ${{ matrix.node-version == '16'}}
-    #   run: npx playwright install
   
   deploy_staging: 
 
@@ -77,6 +73,10 @@ jobs:
         database_id: ${{ secrets.DATABASE_ID }}
         digitalocean_token: ${{ secrets.DO_ACCESS_TOKEN }}
     
+    - name: Install playwright
+      if: ${{ matrix.node-version == '16'}}
+      run: npx playwright install
+      
     - name: Run e2e tests
       if: ${{ matrix.node-version == '16'}}
       run: |
