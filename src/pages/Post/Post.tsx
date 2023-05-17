@@ -5,8 +5,7 @@ import moment from "moment";
 import { useGetTagByPost } from "../../api/tag";
 import { Tag } from "../../types/Tag";
 import { Media } from "../../types/Post";
-import { Carousel, IconButton } from "@material-tailwind/react";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { Carousel } from "@material-tailwind/react";
 import DOMPurify from "dompurify";
 
 const Post = () => {
