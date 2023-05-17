@@ -41,6 +41,10 @@ jobs:
   
   deploy_staging: 
 
+    strategy:
+      matrix:
+        node-version: ${{ fromJSON(github.ref == 'refs/heads/main' && '[18]' || '[16,18]') }}
+
     runs-on: 'ubuntu-latest'
 
     # if: github.ref == 'refs/heads/main'
