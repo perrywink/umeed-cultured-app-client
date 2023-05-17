@@ -19,7 +19,7 @@ function Root() {
   const location = useLocation().pathname;
 
   const renderNav = () => {
-    if (!location.includes("/login") && !location.includes("/register") && !location.includes("/signout") && !location.includes("/reset-password")) {
+    if (!location.includes("/login") && !location.includes("/register") && !location.includes("/signout") && !location.includes("/reset-password")  && !location.includes("/onboarding")) {
       if (location.includes("/admin")) {
         return <AdminNav />
       } else {
