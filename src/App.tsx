@@ -21,14 +21,15 @@ function App() {
   useEffect(() => {
     return auth.onAuthStateChanged(async (userCred) => {
       if (userCred){
-        userCred.getIdToken()
+        userCred.getIdToken(true)
           .then((token) => {
             // console.log('TOKEN', token)
             sessionStorage.setItem("auth_token", encryptData(token, import.meta.env.VITE_SALT))
             setAuthToken(token)
           })
           .catch((e) => {
-            sessionStorage.clear()
+            // potential need to signOut here if we want to clear session storage and handle error
+            // sessionStorage.clear() 
             console.error(e)
           })
       } else {

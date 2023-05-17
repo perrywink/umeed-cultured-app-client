@@ -1,23 +1,88 @@
-import { auth } from "../../config/firebase";
-import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../components";
+import { useGetRelevantPosts } from "../../api/post";
+import { useEffect, useState } from "react";
+import { PostType } from "../../types/Post";
+import AdminTabs from "./components/AdminTabs";
+import AdminTable from "./components/AdminTable";
+import MyPostTable from "./components/AdminPostTable";
+import Search from "../../components/Search/Search";
+import SearchContext from "../../context/SearchContext";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const handleSignout = () => {
-    signOut(auth);
-    sessionStorage.clear();
-    navigate("/login");
+  const [postType, setPostType] = useState<PostType>("MY_POST");
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+
+  const { data, isLoading, refetch } = useGetRelevantPosts(postType, searchKeyword);
+
+  if (!isLoading && data) {
+    // console.log("^^^^^^^^^^^^^^^^^^^^^^", JSON.stringify(data));
+    // setTableData(data);
+  }
+
+  useEffect(() => {
+    refetch();
+  }, [searchKeyword])
+
+  useEffect(() => {
+    refetch();
+  }, [data])
+
+
+
+  const handleUserPosts = () => {
+    setPostType("USER_POST");
+    refetch();
   };
 
+  const handleMyPosts = () => {
+    setPostType("MY_POST");
+    refetch();
+  };
+
+
   return (
-    <div className='min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12'>
-      <div className='p-10 xs:p-0 mx-auto md:w-full md:max-w-md'>
-        <div className='px-5 py-7'>
-          Hello there! You're logged in as an admin!
+    <div className='bg-gray-50 flex flex-col min-h-screen'>
+      <div className='text-center my-10 pb-4'>
+        <div className='w-full h-10 justify-center'>
+          <div >
+            <span className='font-cormorant rounded-none p-2 font-bold text-3xl'>
+              Admin Dashboard
+            </span>
+          </div>
+          <div>
+            <span className='font-manrope rounded-none p-2 font-regular text-lg text-slate-500'>
+              Welcome back, SuperUser
+            </span>
+          </div>
         </div>
-        <Button onClick={handleSignout} styles={"w-full"}>Sign out</Button>
+
+      </div>
+      <div className="mx-10 ">
+        <AdminTabs
+          onUserPostClick={handleUserPosts}
+          onMyPostClick={handleMyPosts}
+          type={postType}
+        />
+        <div className='flex flex-row my-2 p-2 shadow '>
+          {/* <input
+            type='text'
+            id='title-search'
+            className='text-sm rounded-lg w-2/5 pl-10 p-2.5 outline-gray-300'
+            placeholder='Search by titles...'></input> */}
+          <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
+            <Search />
+          </SearchContext.Provider>
+        </div>
+
+        <div className="w-full">
+          {postType === "USER_POST" && (
+            <AdminTable tabData={data} />
+          )}
+          {postType === "MY_POST" && data && (
+            <MyPostTable tabData={data} />
+          )}
+        </div>
       </div>
     </div>
   );
