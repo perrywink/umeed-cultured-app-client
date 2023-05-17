@@ -1,70 +1,59 @@
-import React, { useRef } from "react";
-import JoditEditor from "jodit-react";
+import { useRef, useState } from "react";
+import ReactQuill, { Quill } from "react-quill";
+import * as Emoji from "quill-emoji";
 
-const fullEditorButtonSet = [
-  "undo",
-  "redo",
-  "|",
-  "fontsize",
-  "bold",
-  "strikethrough",
-  "underline",
-  "italic",
-  "|",
-  "ul",
-  "ol",
-  "outdent",
-  "indent",
-  "|",
-  "image",
-  "video",
-  "link"
-];
+import "react-quill/dist/quill.snow.css";
+import "quill-emoji/dist/quill-emoji.css";
 
-const mobileEditorButtonSet = [
-  "fontsize",
-  "bold",
-  "strikethrough",
-  "underline",
-  "italic",
-  "|",
-  "ul",
-  "ol",
-  "|",
-  "image",
-  "video",
-  "link"
-];
+Quill.register("modules/emoji", Emoji);
 
-const config = {
-  buttons: fullEditorButtonSet,
-  buttonsMD: fullEditorButtonSet,
-  buttonsSM: mobileEditorButtonSet,
-  buttonsXS: mobileEditorButtonSet,
-  height: 300,
-  readOnly: false
-};
-
-
-
-interface IProps {
-  value: string;
-  onChange: (newContent: string) => void;
+export interface EditorContentChanged {
+  html: string;
+  markdown: string;
 }
 
-const RichTextEditor = ({ value, onChange }: IProps) => {
-  const editor = useRef(null);
+export interface EditorProps {
+  value: string;
+  onChange: (changes: string) => void;
+}
+
+const TOOLBAR_OPTIONS = [
+  [{ header: [1, 2, 3, false] }],
+  ["bold", "italic", "underline", "strike", "blockquote", "link"],
+  [{ list: "ordered" }, { list: "bullet" }],
+  [{ indent: "-1" }, { indent: "+1" }],
+  ["emoji"],
+  ["clean"]
+];
+
+export default function Editor(props: EditorProps) {
+  const [value, setValue] = useState<string>(props.value || "");
+  const reactQuillRef = useRef<ReactQuill>(null);
+
+  const onChange = (content: string) => {
+    setValue(content);
+
+    if (props.onChange) {
+      console.log(content)
+      props.onChange(content);
+    }
+  };
 
   return (
-    <JoditEditor
-      ref={editor}
+    <ReactQuill
+      ref={reactQuillRef}
+      theme="snow"
+      placeholder="Start writing..."
+      modules={{
+        toolbar: {
+          container: TOOLBAR_OPTIONS
+        },
+        "emoji-toolbar": true,
+        "emoji-textarea": false,
+        "emoji-shortname": true,
+      }}
       value={value}
-      config={config}
-      // tabIndex={1}
-      // onBlur={(newContent) => getValue(newContent)}
       onChange={onChange}
     />
   );
-};
-
-export default RichTextEditor;
+}

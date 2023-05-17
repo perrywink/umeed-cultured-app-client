@@ -3,7 +3,6 @@ import {
   Button,
   Input,
   Spinner,
-  TextareaInput,
   FileInput,
   Editor,
 } from "../../components";
@@ -33,6 +32,7 @@ import { BookmarkIcon, PlusIcon } from "@heroicons/react/24/solid";
 import UploadImgEmptyState from "./components/UploadImgEmptyState";
 import UploadedImage from "./components/UploadedImage";
 import { selectTheme } from "../../components/SelectTags/theme";
+import { EditorContentChanged } from "../../components/Editor/Editor";
 
 export type IPreviewItems = {
   url: string;
@@ -53,7 +53,14 @@ const CreatePost = () => {
   const [preview, setPreview] = useState<IPreviewItems[]>([]);
   const [title, setTitle] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
-  const [desc, setDesc] = useState<string>("");
+  
+  const [editorValue, setEditorValue] = useState<string>("");
+
+  const onEditorContentChanged = (content: string) => {
+    setEditorValue(content);
+  };
+
+
   const [loading, setLoading] = useState<boolean>(false);
   const [thumbnail, setThumbnail] = useState<IThumbnail>();
   const { checkEmptyFields } = useFormValidator();
@@ -86,7 +93,8 @@ const CreatePost = () => {
     if (getPostSuccess && postData) {
       setTitle(postData.title);
       setAuthor(postData.author);
-      setDesc(postData.desc);
+      // setDesc(postData.desc);
+      setEditorValue(postData.desc);
     }
   }, [getPostSuccess]);
 
@@ -115,7 +123,7 @@ const CreatePost = () => {
 
   const validateForm = () => {
     if (
-      !checkEmptyFields([title, author, desc]) ||
+      !checkEmptyFields([title, author, editorValue]) ||
       preview.length == 0 ||
       selectedTags.length <= 0
     ) {
@@ -138,7 +146,7 @@ const CreatePost = () => {
       id: params?.get("postId") ? parseInt(params.get("postId") as string) : 0,
       title: title,
       author: author,
-      desc: desc,
+      desc: editorValue,
     };
     try {
       const res = await createPost(newPost);
@@ -307,6 +315,7 @@ const CreatePost = () => {
                         thumbnail={thumbnail}
                         removeImage={removeImage}
                         setThumbnail={setThumbnail}
+                        key={key}
                       />
                     ))}
                   </div>
@@ -353,7 +362,7 @@ const CreatePost = () => {
         </div>
       </div>
       <div className="mt-5 mx-5 h-full" >
-        <Editor value={desc} onChange={(desc: string) => {console.log(desc);setDesc(desc)}}/>
+        <Editor value={editorValue} onChange={onEditorContentChanged}/>
       </div>
       <div className="mb-10 mx-5 h-full">
         <Button styles="mt-5 w-full text-lg" onClick={handleSubmit}>

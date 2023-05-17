@@ -1,16 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetPost, useGetPostMedia } from "../../api/post";
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ArrowUturnLeftIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import { useGetTagByPost } from "../../api/tag";
 import { Tag } from "../../types/Tag";
 import { Media } from "../../types/Post";
 import { Carousel, IconButton } from "@material-tailwind/react";
-import { Parser } from "html-to-react";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import DOMPurify from "dompurify";
 
 const Post = () => {
   const { postId } = useParams();
@@ -30,25 +27,40 @@ const Post = () => {
     }
   };
 
+  const renderHTMLData = (rawHtml: string) => {
+    const sanitizedData = () => ({
+      __html: DOMPurify.sanitize(rawHtml),
+    });
+    return <div dangerouslySetInnerHTML={sanitizedData()} />;
+  };
+
   return (
     <div className="flex flex-col lg:flex-row flex-grow">
-      <div className="max-w-1/3">
-        <Carousel className="mt-3 bg-gray-100">
-          {media &&
-            (media as Media[]).map((m, i) => (
+      <div>
+        {media && (
+          <Carousel className="mt-3 bg-gray-100 max-h-[500px] lg:max-h-none">
+            {(media as Media[]).map((m, i) => (
               <div key={i}>
                 <img src={m.mediaUrl} className="h-full w-full object-cover" />
               </div>
             ))}
-        </Carousel>
+          </Carousel>
+        )}
       </div>
       <div className="p-5 bg-white w-full lg:min-w-2/3">
         <div className="border-b">
           <div className="flex w-full items-center justify-between mb-2">
-            <ArrowUturnLeftIcon
-              className="w-5 h-5 hover:text-umeed-tangerine-500 cursor-pointer"
-              onClick={returnToPrevScreen}
-            />
+            <div className="flex flex-row">
+              <div className="flex items-center">
+                <ArrowUturnLeftIcon
+                  className="w-5 h-5 hover:text-umeed-tangerine-500 cursor-pointer items-center justify-center mr-5"
+                  onClick={returnToPrevScreen}
+                />
+              </div>
+              <div className="items-end text-4xl font-bold">
+                {getPostSuccess && post.title}
+              </div>
+            </div>
             <div className="flex items-center space-x-2">
               {getPostTagsSuccess &&
                 !!tags &&
@@ -68,12 +80,7 @@ const Post = () => {
         </div>
 
         <div className="mt-4 mb-6">
-          <div className="mb-3 text-xl font-bold">
-            {getPostSuccess && post.title}
-          </div>
-          <div className="">
-            {getPostSuccess && new Parser().parse(post.desc as string)}
-          </div>
+          <div className="">{getPostSuccess && renderHTMLData(post.desc)}</div>
         </div>
       </div>
     </div>
