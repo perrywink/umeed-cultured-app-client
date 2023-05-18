@@ -290,32 +290,32 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="flex flex-col flex-grow w-full justify-center items-center">
-      <div className="flex flex-col w-full px-20">
+    <div className="flex flex-col flex-grow w-full justify-center items-center mb-10">
+      <div className="flex flex-col w-full px-5 lg:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <div className="justify-center items-center p-5 border-2 border-gray-400 border-dashed rounded-md">
-            <div className="h-full flex flex-col justify-center items-center">
-              <UploadImgEmptyState preview={preview} />
-              <div className="flex flex-col justify-center items-center">
-                {preview.length > 0 && (
-                  <>
-                    {renderThumbnailInfoMessage()}
-                    <div className="grid grid-cols-2 gap-2">
-                      {preview.map((img, key) => (
-                        <UploadedImage
-                          img={img}
-                          thumbnail={thumbnail}
-                          removeImage={removeImage}
-                          setThumbnail={setThumbnail}
-                          key={key}
-                        />
-                      ))}
-                    </div>
-                  </>
-                )}
+            <div className="lg:sticky lg:top-0 items-start justify-center p-5 border-2 border-gray-400 border-dashed rounded-md lg:h-[660px]">
+              <div className="h-full flex flex-col justify-center items-center">
+                <UploadImgEmptyState preview={preview} />
+                <div className="flex flex-col justify-center items-center">
+                  {preview.length > 0 && (
+                    <>
+                      {renderThumbnailInfoMessage()}
+                      <div className="grid grid-cols-2 gap-2">
+                        {preview.map((img, key) => (
+                          <UploadedImage
+                            img={img}
+                            thumbnail={thumbnail}
+                            removeImage={removeImage}
+                            setThumbnail={setThumbnail}
+                            key={key}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="flex justify-center">{renderUploadBtn()}</div>
               </div>
-              <div className="flex justify-center">{renderUploadBtn()}</div>
-            </div>
           </div>
           <div className="flex-grow mt-5">
             <Input
@@ -343,7 +343,9 @@ const CreatePost = () => {
               closeMenuOnSelect={false}
               isMulti
               options={loadOptions()}
-              onInputChange={(keyword) => setSearchTagsKeyword(keyword as string)}
+              onInputChange={(keyword) =>
+                setSearchTagsKeyword(keyword as string)
+              }
               onChange={onChange}
               value={[...selectedTags]}
               theme={selectTheme}

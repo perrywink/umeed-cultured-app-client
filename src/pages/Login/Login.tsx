@@ -49,11 +49,11 @@ const AuthForm = () => {
 
   useEffect(() => {
     if (submitClicked && getUserFetched && getUserError) {
-      toast.error("Internal server error occured. Please contact an admin.", {
+      toast.error("Internal server error occured.", {
         toastId: "login-toast",
       });
-      auth.signOut();
-      sessionStorage.clear();
+      // auth.signOut();
+      // sessionStorage.clear();
       setLoading(false);
     }
   }, [submitClicked, getUserError, getUserFetched]);
