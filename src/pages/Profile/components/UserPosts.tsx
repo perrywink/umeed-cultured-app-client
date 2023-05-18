@@ -57,7 +57,7 @@ const UserPosts = () => {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="flex flex-col mt-2 mx-8 justify-center items-center">
+      <div className="flex flex-col mt-2 justify-center items-center">
         <div className="mb-5 w-full md:max-w-md">
           <SearchContext.Provider value={{searchKeyword, setSearchKeyword}}>
             <Search />

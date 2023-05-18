@@ -34,21 +34,11 @@ const Post = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row flex-grow">
-      <div>
-        {media && (
-          <Carousel className="mt-3 bg-gray-100 max-h-[500px] lg:max-h-none">
-            {(media as Media[]).map((m, i) => (
-              <div key={i}>
-                <img src={m.mediaUrl} className="h-full w-full object-cover" />
-              </div>
-            ))}
-          </Carousel>
-        )}
-      </div>
+    <div className="flex flex-grow">
+      
       <div className="p-5 bg-white w-full lg:min-w-2/3">
         <div className="border-b">
-          <div className="flex w-full items-center justify-between mb-2">
+          <div className="flex flex-col lg:flex-row w-full items-left lg:items-center justify-between mb-2">
             <div className="flex flex-row">
               <div className="flex items-center">
                 <ArrowUturnLeftIcon
@@ -56,11 +46,11 @@ const Post = () => {
                   onClick={returnToPrevScreen}
                 />
               </div>
-              <div className="items-end text-4xl font-bold">
+              <div className="items-end text-4xl lg:text-5xl font-bold">
                 {getPostSuccess && post.title}
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 ml-10 mt-3 lg:ml-0 lg:mt-0">
               {getPostTagsSuccess &&
                 !!tags &&
                 tags.map(({ tag }: { tag: Tag }) => (
@@ -70,17 +60,30 @@ const Post = () => {
                   >
                     {tag.name}
                   </div>
-                ))}
+              ))}
               <div className="text-xs text-neutral-500">
                 {getPostSuccess && moment(post.updatedAt).fromNow()}
               </div>
             </div>
           </div>
         </div>
-
-        <div className="mt-4 mb-6">
-          <div className="">{getPostSuccess && renderHTMLData(post.desc)}</div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 lg:ml-10 mt-3 lg:mt-10">
+          <div className="w-full h-fit my-2">
+            {media && (
+              <Carousel className="bg-gray-100 max-h-[500px] lg:max-h-none rounded-xl">
+                {(media as Media[]).map((m, i) => (
+                  <div key={i}>
+                    <img src={m.mediaUrl} className="h-full w-full object-cover" />
+                  </div>
+                ))}
+              </Carousel>
+            )}
+          </div>
+          <div className="mx-auto mt-4 mb-6 prose prose-sm lg:prose-md col-span-2 w-full">
+            <div className="quill">{getPostSuccess && renderHTMLData(post.desc)}</div>
+          </div>
         </div>
+
       </div>
     </div>
   );
