@@ -70,7 +70,7 @@ test.describe('Interests Page', () => {
 
     });
 
-    test('should login a user with correct credentials', async ({ page }) => {
+    test('should login a user with correct credentials, check dashboard and logout the user', async ({ page }) => {
         await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
         await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
         await page.getByRole('checkbox').click();
@@ -78,7 +78,39 @@ test.describe('Interests Page', () => {
     
         //Check toast to see if user is logged in
         await expect(page.getByText("You're logged in!")).toBeVisible();
-      });
+
+        //Check that the user interests are displayed
+        await expect(page.getByText("Depression")).toBeVisible();
+        await expect(page.getByText("Anxiety")).toBeVisible();
+        await expect(page.getByText("Cultured")).toBeVisible();
+
+        //Logout the user
+        await page.getByRole('navigation').locator('svg').nth(3).click();
+
+        //check user is taken back to login page
+        await expect(page).toHaveURL('login#/login');
+
+    });
+
+    //create usser in firebase and then run
+    test('should login a user with correct credentials, check dashboard, remove interests from display bar', async ({ page }) => {
+        await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
+        await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
+        await page.getByRole('checkbox').click();
+        await page.getByRole('button', { name: 'Login' }).click();
+    
+        //Check toast to see if user is logged in
+        await expect(page.getByText("You're logged in!")).toBeVisible();
+
+        //Check that the user interests are displayed
+        await expect(page.getByText("Depression")).toBeVisible();
+        await expect(page.getByText("Anxiety")).toBeVisible();
+        await expect(page.getByText("Cultured")).toBeVisible();
+
+        const val= await page.locator("//div[contains(@class,'MuiMasonry-root css-x3rbgu-MuiMasonry-root')]//div//img");
+        console.log(val);
+
+    });
 
 
 });  
