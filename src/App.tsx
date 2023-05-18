@@ -20,6 +20,15 @@ function App() {
   const queryClient = new QueryClient()
 
   useEffect(() => {
+    auth.onIdTokenChanged((user) => {  
+      user?.getIdToken().then((token) => {  
+        sessionStorage.setItem("auth_token", encryptData(token, import.meta.env.VITE_SALT))
+        setAuthToken(token)
+      })
+    })
+  }, [])
+
+  useEffect(() => {
     return auth.onAuthStateChanged(async (userCred) => {
       if (userCred){
         userCred.getIdToken()
@@ -29,12 +38,11 @@ function App() {
             setAuthToken(token)
           })
           .catch((e) => {
-            // potential need to signOut here if we want to clear session storage and handle error
-            sessionStorage.clear() 
-            signOut(auth);
-            console.error(e)
+            console.error("unable to retrieve user token",e)
           })
       } else {
+        console.log("Automatically signing out...")
+        signOut(auth);
         sessionStorage.clear()
       }
     });
