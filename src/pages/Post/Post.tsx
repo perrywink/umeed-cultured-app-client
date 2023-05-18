@@ -42,7 +42,7 @@ const Post = () => {
             <div className="flex flex-row">
               <div className="flex items-center">
                 <ArrowUturnLeftIcon
-                  className="w-5 h-5 hover:text-umeed-tangerine-500 cursor-pointer items-center justify-center mr-5"
+                  className="w-5 h-5 lg:w-7 lg:h-7 hover:text-umeed-tangerine-500 cursor-pointer items-center justify-center mr-5"
                   onClick={returnToPrevScreen}
                 />
               </div>
@@ -50,7 +50,7 @@ const Post = () => {
                 {getPostSuccess && post.title}
               </div>
             </div>
-            <div className="flex items-center space-x-2 ml-10 mt-3 lg:ml-0 lg:mt-0">
+            <div className="flex items-center space-x-2 ml-10 mt-3 lg:ml-0 lg:mt-0 w-full lg:w-1/3 lg:justify-end">
               {getPostTagsSuccess &&
                 !!tags &&
                 tags.map(({ tag }: { tag: Tag }) => (
@@ -67,13 +67,13 @@ const Post = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 lg:ml-10 mt-3 lg:mt-10">
-          <div className="w-full h-fit my-2">
+        <div className="grid grid-cols-3">
+          <div className="flex justify-center">
             {media && (
-              <Carousel className="bg-gray-100 lg:max-h-none rounded-xl">
+              <Carousel className="bg-gray-100 h-fit sticky top-0 items-start rounded-lg mt-4">
                 {(media as Media[]).map((m, i) => (
                   <div key={i}>
-                    <img src={m.mediaUrl} className="h-full w-full object-cover" />
+                    <img key={i} src={m.mediaUrl} className="w-full h-full object-cover" />
                   </div>
                 ))}
               </Carousel>
