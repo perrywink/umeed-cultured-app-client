@@ -44,19 +44,24 @@ test.describe('Interests Page', () => {
         //Select an interest
         await page.getByTestId("react-select-3-input").click();
         await expect(page.getByTestId("react-select-3-listbox")).toBeVisible();
-        
         const selected_interest_1 = (await page.getByTestId("react-select-3-option-1").innerText()).valueOf()
         await page.getByTestId("react-select-3-option-1").click();
 
+        //Select another interest
+        await page.getByTestId("react-select-3-input").click();
+        await expect(page.getByTestId("react-select-3-listbox")).toBeVisible();
         const selected_interest_2 = (await page.getByTestId("react-select-3-option-5").innerText()).valueOf()
         await page.getByTestId("react-select-3-option-5").click();
 
+        //Select another interest
+        await page.getByTestId("react-select-3-input").click();
+        await expect(page.getByTestId("react-select-3-listbox")).toBeVisible();
         const selected_interest_3 = (await page.getByTestId("react-select-3-option-7").innerText()).valueOf()
         await page.getByTestId("react-select-3-option-7").click();
 
         await page.getByRole('button', { name: "Get Started" }).click()
 
-        //check that the dashboard for the user is displayed
+        //check that the dashboard for the user is displayed with selected interests
         await expect(page.getByText(selected_interest_1)).toBeVisible();
         await expect(page.getByText(selected_interest_2)).toBeVisible();
         await expect(page.getByText(selected_interest_3)).toBeVisible();
