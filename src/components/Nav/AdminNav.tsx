@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { INavListItem, NavItem } from "./NavItem";
-import { ArrowLeftOnRectangleIcon, Bars3Icon, UserPlusIcon, RectangleGroupIcon, ArrowUpOnSquareStackIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftOnRectangleIcon, Bars3Icon, UserPlusIcon, RectangleGroupIcon, ArrowUpOnSquareStackIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import MobileNav from './MobileNav'
 import UmeedLogo from "../../assets/umeed-psych-logo.png";
 
@@ -29,10 +29,15 @@ export default function Nav() {
       icon: <UserPlusIcon className="h-6 w-6"/>,
     },
     {
+      label: "User Mode",
+      link: "/",
+      icon: <UserCircleIcon className="h-6 w-6"/>,
+    },
+    {
       label: "Sign out",
       link: "/signout",
       icon: <ArrowLeftOnRectangleIcon className="h-6 w-6"/>,
-    },
+    }
   ];
 
   const MobileMenuButton = () => (

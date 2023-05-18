@@ -5,6 +5,19 @@ import { useNavigate } from "react-router-dom";
 const Profile = () => {
   const { data, isSuccess } = useGetUser();
   const navigate = useNavigate();
+  
+  const renderAdminLink = () => {
+    if ( isSuccess && data?.userType == "ADMIN" ) {
+      return (
+        <button
+          onClick={() => navigate("/admin")}
+          className="border-gray-400 border w-1/3 px-4 py-1 hover:bg-black hover:text-white hover:border-black duration-300"
+        >
+          Admin
+        </button>
+      )
+    }
+  }
 
   return (
     <div className="flex flex-col items-center justify-center flex-grow bg-white w-full px-4 md:px-0">
@@ -35,13 +48,14 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-6">
+            <div className="flex flex-col gap-2 w-full items-center mt-6">
               <button
                 onClick={() => navigate("/profile/edit")}
-                className="border-gray-400 border px-4 py-1 hover:bg-black hover:text-white hover:border-black duration-300"
+                className="border-gray-400 w-1/3 border px-4 py-1 hover:bg-black hover:text-white hover:border-black duration-300"
               >
                 Edit Profile
               </button>
+              {renderAdminLink()}
             </div>
           </div>
         </div>
