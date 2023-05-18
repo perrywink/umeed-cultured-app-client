@@ -71,7 +71,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className='bg-gray-50 flex flex-col min-h-screen'>
+    <div className='flex flex-col min-h-screen'>
       <div className='text-center my-10 pb-4'>
         <div className='w-full h-10 justify-center'>
           <div>
@@ -92,9 +92,9 @@ const AdminDashboard = () => {
           onMyPostClick={handleMyPosts}
           type={postType}
         />
-        <div className='flex flex-row my-2 p-2 shadow bg-gray-100'>
+        <div className='flex flex-row mb-2 px-4 py-2'>
           <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
-            <Search />
+            <Search inputStyles="focus:shadow-none"/>
           </SearchContext.Provider>
 
           {postType == "USER_POST" && (
