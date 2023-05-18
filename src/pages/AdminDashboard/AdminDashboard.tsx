@@ -12,7 +12,6 @@ import Modal from "../../components/Modal/Modal";
 import { FunnelIcon } from "@heroicons/react/24/outline";
 import { Menu, MenuItem } from "@mui/material";
 import { useCreateTags } from "../../api/tag";
-import { useTagContext } from "../../context/TagContext";
 
 const AdminDashboard = () => {
   const [postType, setPostType] = useState<PostType>("MY_POST");
