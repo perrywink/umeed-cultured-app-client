@@ -92,17 +92,17 @@ const AdminDashboard = () => {
           onMyPostClick={handleMyPosts}
           type={postType}
         />
-        <div className='flex flex-row mb-2 px-4 py-2'>
+        <div className='flex flex-row mb-2 py-2'>
           <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
-            <Search inputStyles="focus:shadow-none"/>
+            <Search />
           </SearchContext.Provider>
 
           {postType == "USER_POST" && (
             <div>
               <div
                 onClick={(event) => setAnchorEl(event.currentTarget)}
-                className={`flex flex-row text-md py-2 px-5 mx-3 bg-white text-gray-600 hover:bg-umeed-tangerine-100`}>
-                <FunnelIcon className='h-6 w-6' />
+                className={`flex flex-row items-center text-md py-2 px-5 mx-3 bg-white text-gray-500 hover:bg-gray-200 hover:text-gray-800 rounded-md text-sm`}>
+                <FunnelIcon className='h-6 w-6 mr-2' />
                 Filter
               </div>
               <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
