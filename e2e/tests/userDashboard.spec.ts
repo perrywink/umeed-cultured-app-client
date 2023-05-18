@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 
+const E2E_EMAIL = "teste2euser@gmail.com"
 const E2E_USERNAME = "teste2euser"
 const E2E_PASSWORD = "teste2euser"
 const E2E_CONTACT = "0422222221"
@@ -11,13 +12,14 @@ test.describe('Interests Page', () => {
   
     test.beforeEach(async ({ page }) => {
         await page.goto('/login');
-        await page.getByText('Register now').click();
-        await expect(page).toHaveURL('/login#/register');
-        await expect(page.getByRole('img', { name: 'Cultured Up All Logo' })).toBeVisible();
     });
 
 
     test("should register a new user and check their dashboard", async ({page}) => {
+        await page.getByText('Register now').click();
+        await expect(page).toHaveURL('/login#/register');
+        await expect(page.getByRole('img', { name: 'Cultured Up All Logo' })).toBeVisible();
+
         //fill in all the details on the register page
         await page.getByPlaceholder('john@doe.com').fill(E2E_USERNAME+datetime+"@gmail.com");
         await page.getByPlaceholder('john doe').fill(E2E_USERNAME+datetime);
@@ -67,5 +69,16 @@ test.describe('Interests Page', () => {
         await expect(page.getByText(selected_interest_3)).toBeVisible();
 
     });
+
+    test('should login a user with correct credentials', async ({ page }) => {
+        await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
+        await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
+        await page.getByRole('checkbox').click();
+        await page.getByRole('button', { name: 'Login' }).click();
+    
+        //Check toast to see if user is logged in
+        await expect(page.getByText("You're logged in!")).toBeVisible();
+      });
+
 
 });  
