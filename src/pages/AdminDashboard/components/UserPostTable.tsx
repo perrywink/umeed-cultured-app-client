@@ -7,11 +7,14 @@ import {
   getPaginationRowModel,
   ColumnDef,
   flexRender,
+  createColumnHelper
 } from "@tanstack/react-table";
 import { Button } from "../../../components";
 import TablePagination from "../components/TablePagination";
 import { useUpdatePost } from "../../../api/post";
 import { toast } from "react-toastify";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   tabData: PostTable[];
@@ -22,6 +25,7 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
   const data = tabData || [];
   const [dataUpdate, setDataUpdate] = useState<boolean>(false);
   const { mutateAsync: updatePostStatus } = useUpdatePost();
+  const navigate = useNavigate();
 
   useEffect(() => {
     refetch();
@@ -40,6 +44,8 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
   });
 
   data.sort((a, b) => a.id - b.id);
+
+  const columnHelper = createColumnHelper<PostTable>();
 
   const columns = useMemo<ColumnDef<PostTable>[]>(
     () => [
@@ -63,6 +69,9 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
         accessorKey: "reject",
         header: "",
       },
+      columnHelper.display({
+        id: "edit",
+      }),
     ],
     []
   );
@@ -89,6 +98,10 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
     alert(JSON.stringify(rowData));
   };
 
+  const handleEdit = (rowData: any) => {
+    navigate(`/admin/post?postId=${rowData.id}`);
+  };
+
   const getCell = (cell: any) => {
     let columnId = cell.getContext().column.id;
     let rowItem = cell.getContext().row.original;
@@ -104,7 +117,14 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
           {val}
         </a>
       );
-    } else if (val == "Approve") {
+    } else if (columnId == "edit"){
+      ele = (
+        <button onClick={() => handleEdit(rowItem)}>
+          <PencilSquareIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" />
+        </button>
+      )
+    }
+    else if (val == "Approve") {
       ele = (
         <Button
           className='bg-umeed-cyan hover:bg-cyan-200 text-gray-600 px-5 py-1 rounded'
@@ -195,6 +215,7 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
                   {
                     return getCell(cell);
                   }
+        
                 })}
               </tr>
             );
