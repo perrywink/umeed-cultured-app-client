@@ -52,7 +52,7 @@ const Post = () => {
                 {getPostSuccess && post.title}
               </div>
             </div>
-            <div className="ml-2 lg:ml-0 lg:max-w-2/5 text-xs text-neutral-500 flex flex-row items-center gap-2">
+            <div className="lg:ml-0 lg:max-w-2/5 text-xs text-neutral-500 flex flex-col lg:flex-row lg:items-center gap-2">
               <div className="flex items-center space-x-2 mt-3 lg:mt-0 lg:justify-end overflow-x-auto scrollbar-hide">
                 {getPostTagsSuccess &&
                   !!tags &&
@@ -65,7 +65,7 @@ const Post = () => {
                     </div>
                 ))}
               </div>
-              <div className="flex-none">
+              <div className="ml-2 lg:ml-0 flex-none">
                 {getPostSuccess && moment(post.updatedAt).fromNow()}
               </div>
             </div>
