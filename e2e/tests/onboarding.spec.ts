@@ -46,7 +46,7 @@ test.describe('Onboarding Process', () => {
         await page.getByRole('button', { name: "Get Started" }).click()
 
         //Check that an error is thrown and the user is not allowed to be registered
-        await expect(page.getByText('Please enter name of emergency contact!')).toBeVisible(); 
+        await expect(page.getByText('All required fields are not filled up.')).toBeVisible(); 
     });
 
     test("fill all details of user, skip number in emergency contact, interest and register - should throw error", async ({page}) => {
@@ -78,7 +78,7 @@ test.describe('Onboarding Process', () => {
         await page.getByRole('button', { name: "Get Started" }).click()
 
         //Check that an error is thrown and the user is not allowed to be registered
-        await expect(page.getByText('Contact number not in format')).toBeVisible(); 
+        await expect(page.getByText('All required fields are not filled up.')).toBeVisible(); 
     });
 
     test("fill all details of user, wrong number in emergency contact, interest and register - should throw error", async ({page}) => {
