@@ -50,6 +50,7 @@ module.exports = withMT({
     },
   },
   plugins: [
-    require('tailwind-scrollbar-hide')
+    require('tailwind-scrollbar-hide'),
+    require('@tailwindcss/typography')
   ],
 })

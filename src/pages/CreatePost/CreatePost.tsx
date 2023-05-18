@@ -3,8 +3,8 @@ import {
   Button,
   Input,
   Spinner,
-  TextareaInput,
   FileInput,
+  Editor,
 } from "../../components";
 import { useEffect, useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -27,16 +27,20 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import { useLocation } from "react-router-dom";
 import { SelectOption } from "../../components/SelectTags/SelectTags";
-import { CloudArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { CloudArrowUpIcon, InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { BookmarkIcon, PlusIcon } from "@heroicons/react/24/solid";
+import UploadImgEmptyState from "./components/UploadImgEmptyState";
+import UploadedImage from "./components/UploadedImage";
+import { selectTheme } from "../../components/SelectTags/theme";
+import { EditorContentChanged } from "../../components/Editor/Editor";
 
-type IPreviewItems = {
+export type IPreviewItems = {
   url: string;
   filename: string;
   isFirebaseUrl: boolean;
 };
 
-type IThumbnail = {
+export type IThumbnail = {
   url: string;
   filename: string;
 };
@@ -49,7 +53,14 @@ const CreatePost = () => {
   const [preview, setPreview] = useState<IPreviewItems[]>([]);
   const [title, setTitle] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
-  const [desc, setDesc] = useState<string>("");
+  
+  const [editorValue, setEditorValue] = useState<string>("");
+
+  const onEditorContentChanged = (content: string) => {
+    setEditorValue(content);
+  };
+
+
   const [loading, setLoading] = useState<boolean>(false);
   const [thumbnail, setThumbnail] = useState<IThumbnail>();
   const { checkEmptyFields } = useFormValidator();
@@ -82,7 +93,8 @@ const CreatePost = () => {
     if (getPostSuccess && postData) {
       setTitle(postData.title);
       setAuthor(postData.author);
-      setDesc(postData.desc);
+      // setDesc(postData.desc);
+      setEditorValue(postData.desc);
     }
   }, [getPostSuccess]);
 
@@ -111,7 +123,7 @@ const CreatePost = () => {
 
   const validateForm = () => {
     if (
-      !checkEmptyFields([title, author, desc]) ||
+      !checkEmptyFields([title, author, editorValue]) ||
       preview.length == 0 ||
       selectedTags.length <= 0
     ) {
@@ -134,7 +146,7 @@ const CreatePost = () => {
       id: params?.get("postId") ? parseInt(params.get("postId") as string) : 0,
       title: title,
       author: author,
-      desc: desc,
+      desc: editorValue,
     };
     try {
       const res = await createPost(newPost);
@@ -245,164 +257,127 @@ const CreatePost = () => {
 
   const removeImage = (url: string, filename: string) => {
     if (thumbnail?.url == url || thumbnail?.filename == filename) {
-      setThumbnail({url:"",filename:""});
+      setThumbnail({ url: "", filename: "" });
     }
     setPreview(preview.filter((x) => x.url !== url));
     setMediaUpload(mediaUpload.filter((x) => x.name !== filename));
   };
 
+  const renderUploadBtn = () => {
+    if (preview.length < 4) {
+      return (
+        <div>
+          <FileInput
+            ref={refer}
+            type="file"
+            onChange={selectFiles}
+            hidden
+            accept="image/*"
+          />
+          <Button
+            styles="mt-5 w-fit rounded-md"
+            onClick={() => refer.current?.click()}
+          >
+            <PlusIcon className="h-8 w-8 " />
+          </Button>
+        </div>
+      );
+    }
+  };
+
+  const renderThumbnailInfoMessage = () => {
+    if ((!thumbnail || thumbnail.url.trim() == "")) {
+      return (
+        <div className="flex flex-col w-full justify-center text-sm text-gray-700 text-center bg-gray-100 rounded-md p-3 mb-2">
+          <InformationCircleIcon className="w-5 h-5 mx-auto mb-2"/>
+          Pick a thumbnail by hovering/clicking on the image and clicking on the bookmark icon.
+        </div>
+      )
+    }
+  }
+
   return (
     <div className="bg-white flex flex-col flex-grow">
-      <div className="grid md:grid-cols-2 h-full flex-1">
-        <div className="md:block justify-center md:py-24 py-10 px-7 md:h-full h-auto">
-          <div
-            id="overlay"
-            className="py-3 md:h-full mx-0 md:mx-auto md:w-full md:max-w-xl flex flex-col items-center justify-center rounded-md border-dashed border-2 border-gray-400"
-          >
-            {preview.length == 0 && (
-              <div className="flex flex-col items-center justify-center">
-                <i>
-                  <CloudArrowUpIcon className="h-10 w-10 text-gray-600" />
-                </i>
-                <p className="text-md text-gray-600 font-light">
-                  Browse and choose files from your device
-                </p>
-              </div>
-            )}
-
-            {preview.length > 0 && (
-              <div className="grid grid-cols-2 p-5 gap-2 place-items-center">
-                {preview.map((img, key) => (
-                  <div key={key} className="w-full h-full relative">
-                    <div className="w-full h-full relative group">
-                      <img
-                        src={img.url}
-                        alt=""
-                        className={` w-full h-full rounded group-hover:opacity-30 ${
-                          img.url == thumbnail?.url
-                            ? "border-umeed-beige border-4"
-                            : ""
-                        }`}
+      <div className="flex flex-col lg:flex-row w-full">
+        <div className="max-w-1/3 justify-center items-center m-5 p-5 border-2 border-gray-400 border-dashed rounded-md">
+          <div className="h-full flex flex-col justify-center items-center">
+            <UploadImgEmptyState
+              preview={preview}
+            />
+            <div className="flex flex-col justify-center items-center">
+              {preview.length > 0 && (
+                <>
+                  {renderThumbnailInfoMessage()}
+                  <div className="grid grid-cols-2 gap-2 place-items-center">
+                    {preview.map((img, key) => (
+                      <UploadedImage
+                        img={img}
+                        thumbnail={thumbnail}
+                        removeImage={removeImage}
+                        setThumbnail={setThumbnail}
+                        key={key}
                       />
-                      <div
-                        className="flex justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full transition-all opacity-0 
-                        group-hover:opacity-100 "
-                      >
-                        <Button
-                          styles="w-fit border-r border-black"
-                          onClick={() => {
-                            removeImage(img.url, img.filename);
-                          }}
-                        >
-                          <XMarkIcon className="h-6 w-6 " />
-                        </Button>
-                        <Button
-                          styles="w-fit"
-                          onClick={() =>
-                            setThumbnail({
-                              url: img.url,
-                              filename: img.filename,
-                            })
-                          }
-                        >
-                          <BookmarkIcon className="h-6 w-6 " />
-                        </Button>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
-
-                {preview.length < 4 && (
-                  <div>
-                    <FileInput
-                      ref={refer}
-                      type="file"
-                      onChange={selectFiles}
-                      hidden
-                      accept="image/*"
-                    />
-                    <Button
-                      styles="mt-5 w-fit rounded-md"
-                      onClick={() => refer.current?.click()}
-                    >
-                      <PlusIcon className="h-8 w-8 " />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {preview.length == 0 && (
-              <div>
-                <FileInput
-                  ref={refer}
-                  type="file"
-                  onChange={selectFiles}
-                  hidden
-                  accept="image/*"
-                />
-                <Button
-                  styles="mt-5 w-fit rounded-md"
-                  onClick={() => refer.current?.click()}
-                >
-                  <PlusIcon className="h-8 w-8 " />
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="p-3 mx-0 md:mx-auto md:pl-0 md:w-full md:max-w-xl flex flex-col justify-center">
-          <div className="px-5 pb-7 md:pl-0">
-            <Input
-              type="text"
-              label="Post Title"
-              placeholder="Your title here"
-              onChange={(e) => setTitle(e.target.value)}
-              value={title}
-            />
-
-            <Input
-              type="text"
-              label="Author"
-              placeholder="Author of the post"
-              onChange={(e) => setAuthor(e.target.value)}
-              value={author}
-            />
-
-            <TextareaInput
-              label="Post Description"
-              placeholder="What is this post about"
-              rows={6}
-              onChange={(e) => setDesc(e.target.value)}
-              value={desc}
-            />
-            <label className="font-bold font-cormorant text-xl text-gray-600 pb-1 block">
-              {" "}
-              Tags{" "}
-            </label>
-            <Select
-              closeMenuOnSelect={false}
-              isMulti
-              options={loadOptions()}
-              onInputChange={(keyword) => setSearchTagsKeyword(keyword as string)}
-              onChange={onChange}
-              value={[...selectedTags]}
-            />
-            <Button styles="mt-5 w-full text-lg" onClick={handleSubmit}>
-              {params.get("postId") ? (
-                loading ? (
-                  <Spinner />
-                ) : (
-                  "Edit Post"
-                )
-              ) : loading ? (
-                <Spinner />
-              ) : (
-                "Post"
+                </>
               )}
-            </Button>
+            </div>
+            <div className="flex justify-center">
+              {renderUploadBtn()}
+            </div>
           </div>
         </div>
+        <div className="flex-grow m-5">
+          <Input
+            type="text"
+            label="Post Title"
+            placeholder="Title here!"
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
+            styles={"focus:outline-umeed-tangerine-300"}
+          />
+
+          <Input
+            type="text"
+            label="Author"
+            placeholder="Author of the post"
+            onChange={(e) => setAuthor(e.target.value)}
+            value={author}
+            styles={"focus:outline-umeed-tangerine-300"}
+          />
+
+          <label className="font-bold font-cormorant text-xl text-gray-600 pb-1 block">
+            Tags
+          </label>
+          <Select
+            closeMenuOnSelect={false}
+            isMulti
+            options={loadOptions()}
+            onInputChange={(keyword) => setSearchTagsKeyword(keyword as string)}
+            onChange={onChange}
+            value={[...selectedTags]}
+            theme={selectTheme}
+            className="font-sans font-light"
+          />
+        </div>
+      </div>
+      <div className="mt-5 mx-5 h-full" >
+        <Editor value={editorValue} onChange={onEditorContentChanged}/>
+      </div>
+      <div className="mb-10 mx-5 h-full">
+        <Button styles="mt-5 w-full text-lg" onClick={handleSubmit}>
+          {params.get("postId") ? (
+            loading ? (
+              <Spinner />
+            ) : (
+              "Edit Post"
+            )
+          ) : loading ? (
+            <Spinner />
+          ) : (
+            "Post"
+          )}
+        </Button>
       </div>
     </div>
   );
