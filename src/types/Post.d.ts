@@ -25,6 +25,12 @@ export type Post = {
   rejectDsc?: string
 };
 
+export interface PostTable extends Post {
+    id: number
+    approve?: string,
+    reject?: string
+};
+
 export type Media = {
     mediaUrl: string,
     postId: number,

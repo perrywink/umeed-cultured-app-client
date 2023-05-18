@@ -9,22 +9,22 @@ interface Props {
 const AdminTabs = ({ onUserPostClick, onMyPostClick, type }: Props) => {
   return (
     <div className='text-sm font-medium text-center text-gray-500 border-b border-gray-200'>
-      <ul className='flex flex-wrap -mb-px'>
-        <li className='mr-2'>
+      <div className='flex flex-wrap -mb-px'>
+        <div className='mr-2'>
           <button
             onClick={onMyPostClick}
             className={`inline-block px-12 pb-2 border-b-2 rounded-t-lg hover:text-gray-400 active ${type == "MY_POST"?"border-umeed-beige text-gray-600":""}`}>
             My Posts
           </button>
-        </li>
-        <li className='mr-2'>
+        </div>
+        <div className='mr-2'>
           <button
             onClick={onUserPostClick}
             className={`inline-block px-12 pb-2 border-b-2 rounded-t-lg hover:text-gray-400 active  ${type == "USER_POST"?"border-umeed-beige text-gray-600":""}`}>
             User Posts
           </button>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Media, Post, PostTags, PostType } from "../types/Post";
+import { Media, Post, PostStatus, PostTags, PostType } from "../types/Post";
 import {
   useMutation,
   useQuery,
@@ -182,8 +182,6 @@ export const useDeletePostMedia = () => {
   });
 };
 
-
-
 export const createMedia = async (data: Media) => {
   const r = {
     url: postEndpoint + "/create-media",
@@ -234,16 +232,63 @@ export const useAssignPostTags = () => {
   });
 };
 
-export const useGetRelevantPosts = (postType: PostType, keyword: string) => {
+export const useGetPostsByStatus = (status: PostStatus) => {
+  return useQuery(
+    ["post-status", status],
+    async () => {
+      return request({
+        url: `${postEndpoint}/get-by-status`,
+        params: { status },
+      }).then((response) => {
+        return response.data;
+      });
+    },
+    {
+      enabled: !!status,
+    }
+  );
+};
+
+const updatePostStatus = async (status: PostStatus) => {
+  const r = {
+    url: postEndpoint + "/update-post-status",
+    method: "PUT",
+    data: status,
+    headers: { "Content-Type": "application/json" },
+  };
+  const response = await request(r);
+  return response;
+};
+
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(updatePostStatus, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["post-status"]);
+    },
+    onError: (e: any) => {
+      console.error(e);
+      toast.error(e.data);
+    },
+  });
+};
+
+export const useGetRelevantPosts = (
+  postType: PostType,
+  keyword: string,
+  status: PostStatus
+) => {
   const firebaseUid = auth.currentUser?.uid;
 
   if (postType == "USER_POST") {
     return useQuery(["post"], async () => {
-      return request({ url: `${postEndpoint}/get-user-posts` }).then(
-        (response) => {
-          return response.data;
-        }
-      );
+      return request({
+        url: `${postEndpoint}/get-user-posts`,
+        params: { keyword, status },
+      }).then((response) => {
+        return response.data;
+      });
     });
   } else {
     return useQuery(

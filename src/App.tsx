@@ -11,6 +11,7 @@ import {
 } from '@tanstack/react-query';
 import { encryptData } from "./utils/crypto";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { signOut } from "firebase/auth";
 
 function App() {
   const [authToken, setAuthToken] = useState<string | null>(
@@ -21,7 +22,7 @@ function App() {
   useEffect(() => {
     return auth.onAuthStateChanged(async (userCred) => {
       if (userCred){
-        userCred.getIdToken(true)
+        userCred.getIdToken()
           .then((token) => {
             // console.log('TOKEN', token)
             sessionStorage.setItem("auth_token", encryptData(token, import.meta.env.VITE_SALT))
@@ -29,7 +30,8 @@ function App() {
           })
           .catch((e) => {
             // potential need to signOut here if we want to clear session storage and handle error
-            // sessionStorage.clear() 
+            sessionStorage.clear() 
+            signOut(auth);
             console.error(e)
           })
       } else {

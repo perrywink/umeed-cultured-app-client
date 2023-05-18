@@ -17,7 +17,7 @@ const SecretInput = ({ label, styles, onChange, ...rest }: Props) => {
       </label>
       <div className="relative block mt-1 mb-5">
         <input
-          className={`border rounded-none p-2 text-md w-full text-gray-700 font-light outline-gray-300 placeholder:text-gray-300 ${styles}`}
+          className={`border border-gray-300 rounded-none p-2 mt-1 text-md w-full text-gray-700 font-light outline-gray-300 placeholder:text-gray-400 ${styles}`}
           onChange={onChange}
           {...rest}
           type={showPassword ? "text" : "password"}
