@@ -70,7 +70,7 @@ const Post = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:ml-10 mt-3 lg:mt-10">
           <div className="w-full h-fit my-2">
             {media && (
-              <Carousel className="bg-gray-100 max-h-[500px] lg:max-h-none rounded-xl">
+              <Carousel className="bg-gray-100 lg:max-h-none rounded-xl">
                 {(media as Media[]).map((m, i) => (
                   <div key={i}>
                     <img src={m.mediaUrl} className="h-full w-full object-cover" />

@@ -75,12 +75,12 @@ const AdminDashboard = () => {
       <div className='text-center my-10 pb-4'>
         <div className='w-full h-10 justify-center'>
           <div>
-            <span className='font-cormorant rounded-none p-2 font-bold text-3xl'>
+            <span className='font-cormorant rounded-none p-2 font-bold text-3xl text-gray-800'>
               Admin Dashboard
             </span>
           </div>
           <div>
-            <span className='font-manrope rounded-none p-2 font-regular text-lg text-slate-500'>
+            <span className='font-manrope rounded-none p-2 font-regular text-lg text-gray-500'>
               Welcome back, SuperUser
             </span>
           </div>

@@ -1,11 +1,5 @@
 import { auth, storage } from "../../config/firebase";
-import {
-  Button,
-  Input,
-  Spinner,
-  FileInput,
-  Editor,
-} from "../../components";
+import { Button, Input, Spinner, FileInput, Editor } from "../../components";
 import { useEffect, useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
@@ -27,12 +21,16 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import { useLocation } from "react-router-dom";
 import { SelectOption } from "../../components/SelectTags/SelectTags";
-import { CloudArrowUpIcon, InformationCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  CloudArrowUpIcon,
+  InformationCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { BookmarkIcon, PlusIcon } from "@heroicons/react/24/solid";
 import UploadImgEmptyState from "./components/UploadImgEmptyState";
 import UploadedImage from "./components/UploadedImage";
 import { selectTheme } from "../../components/SelectTags/theme";
-import { EditorContentChanged } from "../../components/Editor/Editor";
+import { Carousel } from "@material-tailwind/react";
 
 export type IPreviewItems = {
   url: string;
@@ -53,13 +51,7 @@ const CreatePost = () => {
   const [preview, setPreview] = useState<IPreviewItems[]>([]);
   const [title, setTitle] = useState<string>("");
   const [author, setAuthor] = useState<string>("");
-  
   const [editorValue, setEditorValue] = useState<string>("");
-
-  const onEditorContentChanged = (content: string) => {
-    setEditorValue(content);
-  };
-
 
   const [loading, setLoading] = useState<boolean>(false);
   const [thumbnail, setThumbnail] = useState<IThumbnail>();
@@ -286,98 +278,97 @@ const CreatePost = () => {
   };
 
   const renderThumbnailInfoMessage = () => {
-    if ((!thumbnail || thumbnail.url.trim() == "")) {
+    if (!thumbnail || thumbnail.url.trim() == "") {
       return (
         <div className="flex flex-col w-full justify-center text-sm text-gray-700 text-center bg-gray-100 rounded-md p-3 mb-2">
-          <InformationCircleIcon className="w-5 h-5 mx-auto mb-2"/>
-          Pick a thumbnail by hovering/clicking on the image and clicking on the bookmark icon.
+          <InformationCircleIcon className="w-5 h-5 mx-auto mb-2" />
+          Pick a thumbnail by hovering/clicking on the image and clicking on the
+          bookmark icon.
         </div>
-      )
+      );
     }
-  }
+  };
 
   return (
-    <div className="bg-white flex flex-col flex-grow">
-      <div className="flex flex-col lg:flex-row w-full">
-        <div className="max-w-1/3 justify-center items-center m-5 p-5 border-2 border-gray-400 border-dashed rounded-md">
-          <div className="h-full flex flex-col justify-center items-center">
-            <UploadImgEmptyState
-              preview={preview}
-            />
-            <div className="flex flex-col justify-center items-center">
-              {preview.length > 0 && (
-                <>
-                  {renderThumbnailInfoMessage()}
-                  <div className="grid grid-cols-2 gap-2 place-items-center">
-                    {preview.map((img, key) => (
-                      <UploadedImage
-                        img={img}
-                        thumbnail={thumbnail}
-                        removeImage={removeImage}
-                        setThumbnail={setThumbnail}
-                        key={key}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-            <div className="flex justify-center">
-              {renderUploadBtn()}
+    <div className="flex flex-col flex-grow w-full justify-center items-center">
+      <div className="flex flex-col w-full px-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div className="justify-center items-center p-5 border-2 border-gray-400 border-dashed rounded-md">
+            <div className="h-full flex flex-col justify-center items-center">
+              <UploadImgEmptyState preview={preview} />
+              <div className="flex flex-col justify-center items-center">
+                {preview.length > 0 && (
+                  <>
+                    {renderThumbnailInfoMessage()}
+                    <div className="grid grid-cols-2 gap-2">
+                      {preview.map((img, key) => (
+                        <UploadedImage
+                          img={img}
+                          thumbnail={thumbnail}
+                          removeImage={removeImage}
+                          setThumbnail={setThumbnail}
+                          key={key}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className="flex justify-center">{renderUploadBtn()}</div>
             </div>
           </div>
-        </div>
-        <div className="flex-grow m-5">
-          <Input
-            type="text"
-            label="Post Title"
-            placeholder="Title here!"
-            onChange={(e) => setTitle(e.target.value)}
-            value={title}
-            styles={"focus:outline-umeed-tangerine-300"}
-          />
+          <div className="flex-grow mt-5">
+            <Input
+              type="text"
+              label="Post Title"
+              placeholder="Title here!"
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+              styles={"focus:outline-umeed-tangerine-300"}
+            />
 
-          <Input
-            type="text"
-            label="Author"
-            placeholder="Author of the post"
-            onChange={(e) => setAuthor(e.target.value)}
-            value={author}
-            styles={"focus:outline-umeed-tangerine-300"}
-          />
+            <Input
+              type="text"
+              label="Author"
+              placeholder="Author of the post"
+              onChange={(e) => setAuthor(e.target.value)}
+              value={author}
+              styles={"focus:outline-umeed-tangerine-300"}
+            />
 
-          <label className="font-bold font-cormorant text-xl text-gray-600 pb-1 block">
-            Tags
-          </label>
-          <Select
-            closeMenuOnSelect={false}
-            isMulti
-            options={loadOptions()}
-            onInputChange={(keyword) => setSearchTagsKeyword(keyword as string)}
-            onChange={onChange}
-            value={[...selectedTags]}
-            theme={selectTheme}
-            className="font-sans font-light"
-          />
+            <label className="font-bold font-cormorant text-xl text-gray-600 pb-1 block">
+              Tags
+            </label>
+            <Select
+              closeMenuOnSelect={false}
+              isMulti
+              options={loadOptions()}
+              onInputChange={(keyword) => setSearchTagsKeyword(keyword as string)}
+              onChange={onChange}
+              value={[...selectedTags]}
+              theme={selectTheme}
+              className="font-sans font-light"
+            />
+            <div className="mt-10">
+              <Editor
+                valueState={{ value: editorValue, setValue: setEditorValue }}
+              />
+            </div>
+            <Button styles="mt-5 w-full text-lg" onClick={handleSubmit}>
+              {params.get("postId") ? (
+                loading ? (
+                  <Spinner />
+                ) : (
+                  "Edit Post"
+                )
+              ) : loading ? (
+                <Spinner />
+              ) : (
+                "Post"
+              )}
+            </Button>
+          </div>
         </div>
-      </div>
-      <div className="mt-5 mx-5 h-full" >
-        <Editor value={editorValue} onChange={onEditorContentChanged}/>
-      </div>
-      <div className="mb-10 mx-5 h-full">
-        <Button styles="mt-5 w-full text-lg" onClick={handleSubmit}>
-          {params.get("postId") ? (
-            loading ? (
-              <Spinner />
-            ) : (
-              "Edit Post"
-            )
-          ) : loading ? (
-            <Spinner />
-          ) : (
-            "Post"
-          )}
-        </Button>
       </div>
     </div>
   );

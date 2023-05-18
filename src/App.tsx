@@ -41,14 +41,14 @@ function App() {
   },[])
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthContext.Provider value={authToken}>
+    <AuthContext.Provider value={authToken}>
+      <QueryClientProvider client={queryClient}>
         <Router>
           <Root/>
         </Router>
-      </AuthContext.Provider>
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </AuthContext.Provider>
   )
 }
 
