@@ -14,9 +14,9 @@ export const useSearchTags = (keyword: string) => {
   );
 };
 
-const createTags = async (data:string[]) => {
+const createTags = async (data:{ tags: string[]}) => {
   const r = {
-    url: tagEndpoint + '/create',
+    url: tagEndpoint + '/batch-create',
     method: "POST",
     data: data,
     headers: { "Content-Type": "application/json" },

@@ -24,9 +24,7 @@ const MyPostTable = ({ tabData }: Props) => {
   const navigate = useNavigate();
 
   const handleDelete = (data: any) => {
-    console.log(data.row.original.id);
     deletePost({ postId: data?.row?.original?.id });
-    console.log("deleted");
   };
 
   const handleEdit = (data: any) => {
