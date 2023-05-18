@@ -64,9 +64,11 @@ const EditProfile = () => {
   }
 
   const checkTagsChanged = () => {
-    const oldTagIds = tags as number[]
+    const oldTagIds = tags.map((t: Tag) => t.id)
     const postTagIds = selectedTags.map(t => t.id)
-    return oldTagIds.sort().toString() === postTagIds.sort().toString()
+    console.log(oldTagIds.sort().toString())
+    console.log(postTagIds.sort().toString())
+    return oldTagIds.sort().toString() != postTagIds.sort().toString()
   }
 
   const handleSubmit = async () => {
@@ -80,11 +82,11 @@ const EditProfile = () => {
         await upsertEContact({name: eContactName, phoneNumber: eContact})
         toast.success("Emergency Contact succesfully updated")
       }
-      if(!checkUserChanged()) {
+      if(checkTagsChanged()) {
         await assignUserTags(selectedTags.map(t => t.id))
         toast.success("Tags succesfully updated")
       }
-      if (!checkUserChanged() && !checkEContactChanged() && !!checkUserChanged()) {
+      if (!checkUserChanged() && !checkEContactChanged() && !checkTagsChanged()) {
         toast.info("No information was modified!")
       }
     } catch (error) {
