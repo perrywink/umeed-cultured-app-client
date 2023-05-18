@@ -15,6 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { auth } from "../../config/firebase";
 import { SelectOption } from "./InterestsStep";
 import { useGetTagWithId } from "../../api/tag";
+import { useFormValidator } from "../../hooks";
 
 const Onboarding = () => {
   const [pageNum, setPageNum] = useState<number>(0);
@@ -35,8 +36,19 @@ const Onboarding = () => {
   const { data: userTags } = useGetUserTags();
   const { data: tags, isSuccess: getTagsSuccess } = useGetTagWithId(userTags?.map((ut:{tagId: number}) => ut.tagId));
 
+  const { checkEmptyFields } = useFormValidator()
+
 
   const handleSubmit = async () => {
+    if (!checkEmptyFields([name, phoneNumber])) {
+      toast.error("All required fields are not filled up.");
+      return;
+    }
+    if (selectedTags.length <= 0) {
+      toast.error("Please pick your interests.")
+      return;
+    }
+
     try {
       // using mutateAsync makes sure that one does not happen before the other.
       await registerEContact({
