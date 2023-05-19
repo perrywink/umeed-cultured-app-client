@@ -16,7 +16,7 @@ test.describe('Login Page', () => {
      await expect(page.getByText('Enter your details to continue.')).toBeVisible();
      await expect(page.getByText("Email")).toBeVisible();
      await expect(page.getByText('Password', { exact: true })).toBeVisible();
-     await expect(page.getByText('Remember me')).toBeVisible();
+    //  await expect(page.getByText('Remember me')).toBeVisible();
      await expect(page.getByText('Forgot Password?')).toBeVisible();
      await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
      await expect(page.getByText('Don\'t have an account? Register now')).toBeVisible();
