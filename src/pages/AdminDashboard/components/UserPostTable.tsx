@@ -145,7 +145,7 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
     }
 
     return (
-      <td className='border-b-2 border-gray-200 py-4 px-12' key={cell.id}>
+      <td className='border-b border-gray-200 py-4 px-12' key={cell.id}>
         {ele}
       </td>
     );
@@ -162,12 +162,12 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
   });
 
   return (
-    <div className='w-full text-gray-600'>
-      <table className='w-full table-auto my-10 border-collapse '>
+    <div className='w-full text-gray-700'>
+      <table className='w-full table-auto my-10 border-collapse rounded-md border'>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
-              className='border-b-2 border-gray-200 text-left'
+              className='border-b bg-gray-50 text-left'
               key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (

@@ -85,16 +85,16 @@ const AdminDashboard = () => {
 
 
   return (
-    <div className="bg-gray-50 flex flex-col min-h-screen">
-      <div className="flex flex-row my-10 pb-6 mx-8">
-        <div className="w-1/2 h-10 ">
+    <div className='flex flex-col min-h-screen'>
+      <div className='text-center my-10 pb-4'>
+        <div className='w-full h-10 justify-center'>
           <div>
-            <span className="font-cormorant rounded-none p-2 font-bold text-3xl">
+            <span className='font-cormorant rounded-none p-2 font-bold text-3xl text-gray-800'>
               Admin Dashboard
             </span>
           </div>
           <div>
-            <span className="font-manrope rounded-none p-2 font-regular text-lg text-slate-500">
+            <span className='font-manrope rounded-none p-2 font-regular text-lg text-gray-500'>
               Welcome back, SuperUser
             </span>
           </div>
@@ -110,7 +110,7 @@ const AdminDashboard = () => {
           onMyPostClick={handleMyPosts}
           type={postType}
         />
-        <div className='flex flex-row my-2 p-2 shadow bg-gray-100'>
+        <div className='flex flex-row mb-2 py-2'>
           <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
             <Search />
           </SearchContext.Provider>
@@ -119,8 +119,8 @@ const AdminDashboard = () => {
             <div>
               <div
                 onClick={(event) => setAnchorEl(event.currentTarget)}
-                className={`flex flex-row text-md py-2 px-5 mx-3 bg-white text-gray-600 hover:bg-umeed-tangerine-100`}>
-                <FunnelIcon className='h-6 w-6' />
+                className={`flex flex-row items-center text-md py-2 px-5 mx-3 bg-white text-gray-500 hover:bg-gray-200 hover:text-gray-800 rounded-md text-sm`}>
+                <FunnelIcon className='h-6 w-6 mr-2' />
                 Filter
               </div>
               <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
