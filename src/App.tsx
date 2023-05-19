@@ -11,6 +11,7 @@ import {
 } from '@tanstack/react-query';
 import { encryptData } from "./utils/crypto";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { signOut } from "firebase/auth";
 
 function App() {
   const [authToken, setAuthToken] = useState<string | null>(
@@ -28,7 +29,9 @@ function App() {
             setAuthToken(token)
           })
           .catch((e) => {
-            sessionStorage.clear()
+            // potential need to signOut here if we want to clear session storage and handle error
+            sessionStorage.clear() 
+            signOut(auth);
             console.error(e)
           })
       } else {

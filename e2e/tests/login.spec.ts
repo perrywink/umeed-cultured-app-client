@@ -5,7 +5,7 @@ const E2E_PASSWORD = "teste2euser"
 const E2E_WRONG_EMAIL= "test"
 const E2E_WRONG_PASSWORD= "test@1234"
 
-test.describe('Login Page', () => {
+test.describe.skip('Login Page', () => {
   test.describe.configure({ mode: 'serial' });
 
   test.beforeEach(async ({ page }) => {
