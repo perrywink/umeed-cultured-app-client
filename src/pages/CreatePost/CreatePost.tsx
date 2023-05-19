@@ -21,16 +21,14 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import { useLocation } from "react-router-dom";
 import { SelectOption } from "../../components/SelectTags/SelectTags";
-import {
-  CloudArrowUpIcon,
-  InformationCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { BookmarkIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/solid";
 import UploadImgEmptyState from "./components/UploadImgEmptyState";
 import UploadedImage from "./components/UploadedImage";
 import { selectTheme } from "../../components/SelectTags/theme";
-import { Carousel } from "@material-tailwind/react";
+
+
+
 
 export type IPreviewItems = {
   url: string;
@@ -85,7 +83,6 @@ const CreatePost = () => {
     if (getPostSuccess && postData) {
       setTitle(postData.title);
       setAuthor(postData.author);
-      // setDesc(postData.desc);
       setEditorValue(postData.desc);
     }
   }, [getPostSuccess]);
@@ -110,6 +107,7 @@ const CreatePost = () => {
           isFirebaseUrl: true,
         }))
       );
+      initThumbnail();
     }
   }, [getMediaSuccess]);
 
@@ -159,6 +157,16 @@ const CreatePost = () => {
       toast.success("Post published");
     }
   };
+
+  const initThumbnail = () => {
+    if (params.get("postId")) {
+      media.map((m:Media) => {
+        if (m.isThumbnail) {
+          setThumbnail({url:m.mediaUrl,filename:""})
+        }
+      })
+    }
+  }
 
   const sendPreExistingMedia = async (postId: number) => {
     preview.map(async (p) => {
