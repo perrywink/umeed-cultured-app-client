@@ -17,11 +17,18 @@ export interface IPostWithMedia {
 }
 
 export type Post = {
+  id?: number,
   title: string,
   author: string,
   desc: string,
   status?: PostStatus,
   rejectDsc?: string
+};
+
+export interface PostTable extends Post {
+    id: number
+    approve?: string,
+    reject?: string
 };
 
 export type Media = {
