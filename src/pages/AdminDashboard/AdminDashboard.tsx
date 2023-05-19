@@ -1,21 +1,29 @@
-import { useNavigate } from "react-router-dom";
 import { useGetRelevantPosts } from "../../api/post";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PostStatus, PostType } from "../../types/Post";
 import AdminTabs from "./components/AdminTabs";
 import UserPostTable from "./components/UserPostTable";
 import MyPostTable from "./components/AdminPostTable";
 import Search from "../../components/Search/Search";
 import SearchContext from "../../context/SearchContext";
+import { PlusIcon } from "@heroicons/react/24/solid";
+import MultipleInput from "../../components/Input/MultipleInput";
+import Modal from "../../components/Modal/Modal";
 import { FunnelIcon } from "@heroicons/react/24/outline";
 import { Menu, MenuItem } from "@mui/material";
+import { useCreateTags } from "../../api/tag";
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
   const [postType, setPostType] = useState<PostType>("MY_POST");
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [postStatus, setPostStatus] = useState<PostStatus>("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [inputFields, setInputFields] = useState<string[]>([""]);
+  
+ 
+  const {mutate: createTags} = useCreateTags();
+
+
   const open = Boolean(anchorEl);
 
   const handleClose = () => {
@@ -50,6 +58,11 @@ const AdminDashboard = () => {
     refetch();
   };
 
+  const handleCreateTags = () => {
+    console.log("loveee")
+    console.log("tags",inputFields)
+    createTags({tags: inputFields})
+  }
   const handleApprovedPosts = () => {
     setPostStatus("APPROVED");
     setAnchorEl(null);
@@ -70,20 +83,25 @@ const AdminDashboard = () => {
     setAnchorEl(null);
   };
 
+
   return (
-    <div className='bg-gray-50 flex flex-col min-h-screen'>
+    <div className='flex flex-col min-h-screen'>
       <div className='text-center my-10 pb-4'>
         <div className='w-full h-10 justify-center'>
           <div>
-            <span className='font-cormorant rounded-none p-2 font-bold text-3xl'>
+            <span className='font-cormorant rounded-none p-2 font-bold text-3xl text-gray-800'>
               Admin Dashboard
             </span>
           </div>
           <div>
-            <span className='font-manrope rounded-none p-2 font-regular text-lg text-slate-500'>
+            <span className='font-manrope rounded-none p-2 font-regular text-lg text-gray-500'>
               Welcome back, SuperUser
             </span>
           </div>
+        </div>
+        <div className="w-1/2 flex justify-end">
+          <Modal icon={<div className="flex p-2 bg-umeed-tangerine-300 text-gray-800 hover:bg-umeed-tangerine-700 hover:text-white"><PlusIcon className="h-6 w-6 " /> Create Post Tags </div>}
+          title="Create Tags" action="Create" onClick={handleCreateTags} body={<MultipleInput createdTags={{inputFields, setInputFields}}/>}></Modal>
         </div>
       </div>
       <div className='mx-10 '>
@@ -92,7 +110,7 @@ const AdminDashboard = () => {
           onMyPostClick={handleMyPosts}
           type={postType}
         />
-        <div className='flex flex-row my-2 p-2 shadow bg-gray-100'>
+        <div className='flex flex-row mb-2 py-2'>
           <SearchContext.Provider value={{ searchKeyword, setSearchKeyword }}>
             <Search />
           </SearchContext.Provider>
@@ -101,8 +119,8 @@ const AdminDashboard = () => {
             <div>
               <div
                 onClick={(event) => setAnchorEl(event.currentTarget)}
-                className={`flex flex-row text-md py-2 px-5 mx-3 bg-white text-gray-600 hover:bg-umeed-tangerine-100`}>
-                <FunnelIcon className='h-6 w-6' />
+                className={`flex flex-row items-center text-md py-2 px-5 mx-3 bg-white text-gray-500 hover:bg-gray-200 hover:text-gray-800 rounded-md text-sm`}>
+                <FunnelIcon className='h-6 w-6 mr-2' />
                 Filter
               </div>
               <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>

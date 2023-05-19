@@ -1,12 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetPost, useGetPostMedia } from "../../api/post";
-import { ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ArrowRightIcon, ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import { useGetTagByPost } from "../../api/tag";
 import { Tag } from "../../types/Tag";
 import { Media } from "../../types/Post";
-import { Carousel } from "@material-tailwind/react";
+import { Carousel, IconButton } from "@material-tailwind/react";
 import DOMPurify from "dompurify";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import ImageCarousel from "./components/ImageCarousel";
 
 const Post = () => {
   const { postId } = useParams();
@@ -36,50 +38,52 @@ const Post = () => {
   return (
     <div className="flex flex-grow">
       
-      <div className="p-5 bg-white w-full lg:min-w-2/3">
+      <div className="bg-white w-full p-5">
         <div className="border-b">
-          <div className="flex flex-col lg:flex-row w-full items-left lg:items-center justify-between mb-2">
-            <div className="flex flex-row">
+          <div className="flex flex-col lg:flex-row w-full items-left lg:items-center lg:justify-between mb-2 gap-2">
+            <div className="flex gap-2 flex-col lg:flex-row lg:max-w-3/5 overflow-scroll scrollbar-hide">
               <div className="flex items-center">
                 <ArrowUturnLeftIcon
-                  className="w-5 h-5 hover:text-umeed-tangerine-500 cursor-pointer items-center justify-center mr-5"
+                  className="w-5 h-5 lg:w-7 lg:h-7 hover:text-umeed-tangerine-500 cursor-pointer items-center justify-center mr-5"
                   onClick={returnToPrevScreen}
                 />
               </div>
-              <div className="items-end text-4xl lg:text-5xl font-bold">
+              <div className="text-4xl lg:text-5xl font-bold">
                 {getPostSuccess && post.title}
               </div>
             </div>
-            <div className="flex items-center space-x-2 ml-10 mt-3 lg:ml-0 lg:mt-0">
-              {getPostTagsSuccess &&
-                !!tags &&
-                tags.map(({ tag }: { tag: Tag }) => (
-                  <div
-                    className="rounded-2xl border bg-neutral-100 px-3 py-1 text-xs font-semibold"
-                    key={tag.id}
-                  >
-                    {tag.name}
-                  </div>
-              ))}
-              <div className="text-xs text-neutral-500">
+            <div className="lg:ml-0 lg:max-w-2/5 text-xs text-neutral-500 flex flex-col lg:flex-row lg:items-center gap-2">
+              <div className="flex items-center space-x-2 mt-3 lg:mt-0 lg:justify-end overflow-x-auto scrollbar-hide">
+                {getPostTagsSuccess &&
+                  !!tags &&
+                  tags.map(({ tag }: { tag: Tag }) => (
+                    <div
+                      className="rounded-2xl border bg-neutral-100 px-3 py-1 text-xs font-semibold"
+                      key={tag.id}
+                    >
+                      {tag.name}
+                    </div>
+                ))}
+              </div>
+              <div className="ml-2 lg:ml-0 flex-none">
                 {getPostSuccess && moment(post.updatedAt).fromNow()}
               </div>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 lg:ml-10 mt-3 lg:mt-10">
-          <div className="w-full h-fit my-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3">
+          <div className="flex justify-center mt-5">
             {media && (
-              <Carousel className="bg-gray-100 max-h-[500px] lg:max-h-none rounded-xl">
+              <ImageCarousel>
                 {(media as Media[]).map((m, i) => (
                   <div key={i}>
-                    <img src={m.mediaUrl} className="h-full w-full object-cover" />
+                    <img key={i} src={m.mediaUrl} className="h-[200] w-full object-cover" />
                   </div>
                 ))}
-              </Carousel>
+              </ImageCarousel>
             )}
           </div>
-          <div className="mx-auto mt-4 mb-6 prose prose-sm lg:prose-md col-span-2 w-full">
+          <div className="mx-auto mt-4 mb-6 prose prose-sm lg:prose-md col-span-2 break-words">
             <div className="quill">{getPostSuccess && renderHTMLData(post.desc)}</div>
           </div>
         </div>

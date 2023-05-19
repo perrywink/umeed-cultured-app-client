@@ -15,7 +15,7 @@ const Search = () => {
         <input
           type="text"
           id="simple-search"
-          className="bg-white border border-gray-300 text-gray-900 text-sm rounded-md focus:outline-none focus:shadow-md block w-full pl-10 p-2"
+          className="border border-gray-300 text-gray-900 text-sm rounded-md focus:outline-none focus:shadow-md block w-full pl-10 p-2"
           placeholder="Search Posts by Title..."
           required
           value={searchKeyword}

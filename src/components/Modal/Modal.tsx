@@ -3,7 +3,7 @@ import { useState } from "react";
 interface IModalItem {
     icon: JSX.Element;
     title: string;
-    body: string;
+    body: JSX.Element;
     action: string;
     onClick: React.MouseEventHandler<HTMLButtonElement>;
     label?: string;
@@ -36,9 +36,9 @@ export const Modal = ({icon, title, body, action, onClick, label}: IModalItem) =
                                 </div>
                     
                                 <div className="relative p-6 flex-auto text-center">
-                                    <p className="my-4 text-gray-500 text-lg leading-relaxed">
+                                    <div className="my-4 text-gray-500 text-lg leading-relaxed">
                                         {body}
-                                    </p>
+                                    </div>
                                 </div>
                 
                                 <div className="flex items-center justify-center p-6 border-t border-solid border-slate-200 rounded-b">
