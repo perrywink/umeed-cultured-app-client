@@ -24,9 +24,7 @@ const MyPostTable = ({ tabData }: Props) => {
   const navigate = useNavigate();
 
   const handleDelete = (data: any) => {
-    console.log(data.row.original.id);
     deletePost({ postId: data?.row?.original?.id });
-    console.log("deleted");
   };
 
   const handleEdit = (data: any) => {
@@ -66,7 +64,7 @@ const MyPostTable = ({ tabData }: Props) => {
               <TrashIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" />
             }
             title="Delete Post"
-            body={`Are you sure you want to permanantly delete the post "${props?.row?.original?.title}" ?`}
+            body= {<div>{`Are you sure you want to permanantly delete the post "${props?.row?.original?.title}" ?`}</div>}
             action="Delete"
             onClick={() => handleDelete(props)}
           ></Modal>
