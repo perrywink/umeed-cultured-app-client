@@ -23,11 +23,11 @@ export default function Nav() {
       link: "/admin/post",
       icon: <ArrowUpOnSquareStackIcon className="h-6 w-6"/>,
     },
-    {
-      label: "Create Admin",
-      link: "/admin/create",
-      icon: <UserPlusIcon className="h-6 w-6"/>,
-    },
+    // {
+    //   label: "Create Admin",
+    //   link: "/admin/create",
+    //   icon: <UserPlusIcon className="h-6 w-6"/>,
+    // },
     {
       label: "User Mode",
       link: "/",
