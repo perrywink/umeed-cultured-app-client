@@ -1,5 +1,5 @@
 import { PostTable } from "../../../types/Post";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, MouseEvent } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -15,6 +15,7 @@ import { useUpdatePost } from "../../../api/post";
 import { toast } from "react-toastify";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
+import RejectModal from "./RejectModal";
 
 interface Props {
   tabData: PostTable[];
@@ -24,11 +25,13 @@ interface Props {
 const UserPostTable = ({ tabData, refetch }: Props) => {
   const data = tabData || [];
   const [dataUpdate, setDataUpdate] = useState<boolean>(false);
-  const { mutateAsync: updatePostStatus } = useUpdatePost();
+  const { mutateAsync: updatePost } = useUpdatePost();
   const navigate = useNavigate();
+  
+  const [rejectReason, setRejectReason] = useState<string>("");
 
   useEffect(() => {
-    refetch();
+    // refetch();
     setDataUpdate(false);
   }, [dataUpdate]);
 
@@ -44,6 +47,8 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
   });
 
   data.sort((a, b) => a.id - b.id);
+
+
 
   const columnHelper = createColumnHelper<PostTable>();
 
@@ -77,7 +82,7 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
   );
 
   const handleApproveClick = async (rowData: any) => {
-    await updatePostStatus({
+    await updatePost({
       status: "APPROVED",
       id: rowData.id,
     });
@@ -86,12 +91,17 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
   };
 
   const handleRejectClick = async (rowData: any) => {
-    await updatePostStatus({
+    if (rejectReason == "") {
+      toast.error("No rejection reason given. Aborting reject.")
+      return
+    }
+    await updatePost({
       status: "REJECTED",
       id: rowData.id,
+      rejectDsc: rejectReason
     });
     setDataUpdate(true);
-    toast.error(`Post "${rowData.title}" is rejected! `);
+    toast.success(`Post "${rowData.title}" is rejected! `);
   };
 
   const handleClick = (rowData: any) => {
@@ -110,11 +120,11 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
 
     if (columnId == "title") {
       ele = (
-        <a
-          className='font-regular text-slate-600 underline'
+        <div
+          className='font-regular text-slate-600 underline cursor-pointer overflow-hidden max-w-md flex-nowrap text-ellipsis'
           onClick={() => handleClick(rowItem)}>
           {val}
-        </a>
+        </div>
       );
     } else if (columnId == "edit"){
       ele = (
@@ -133,11 +143,24 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
       );
     } else if (val == "Reject") {
       ele = (
-        <Button
-          className='bg-umeed-tangerine-100 hover:bg-umeed-tangerine-300 text-gray-600 px-5 py-1 rounded'
-          onClick={() => handleRejectClick(rowItem)}>
-          {val}
-        </Button>
+        <div className='bg-umeed-tangerine-100 hover:bg-umeed-tangerine-300 text-gray-600 px-5 py-1 rounded'>
+          <RejectModal 
+            buttonChildren={<>Reject</>}
+            title="Give a reason" 
+            action="Submit" 
+            onClick={() => {handleRejectClick(rowItem)}}
+          >
+            <input
+              className="border border-gray-300 rounded-none p-2 text-md w-full text-gray-700 font-light outline-gray-300 placeholder:text-gray-400"
+              onChange={(event) => setRejectReason(event.target.value)}
+            />
+          </RejectModal>
+          {/* <Button
+            className='bg-umeed-tangerine-100 hover:bg-umeed-tangerine-300 text-gray-600 px-5 py-1 rounded'
+            onClick={() => handleRejectClick(rowItem)}>
+            {val}
+          </Button> */}
+        </div>
       );
     } else if (val == "APPROVED") {
       ele = (
@@ -148,7 +171,13 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
     } else if (val == "REJECTED") {
       ele = (
         <span className='bg-umeed-tangerine-100 text-umeed-tangerine-500 text-xs font-medium mr-2 px-2.5 py-0.5 rounded'>
-          {val}
+          <RejectModal 
+            buttonChildren={val} 
+            title={"Rejection Reason:"} 
+            action={""} 
+          >
+            <div>{rowItem.rejectDsc}</div>
+          </RejectModal>
         </span>
       );
     } else if (val == "IN_REVIEW") {
@@ -180,47 +209,48 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
 
   return (
     <div className='w-full text-gray-700'>
-      <table className='w-full table-auto my-10 border-collapse rounded-md border'>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr
-              className='border-b bg-gray-50 text-left'
-              key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th
-                    className='py-4 px-12'
-                    key={header.id}
-                    colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <div>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                      </div>
-                    )}
-                  </th>
-                );
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
-                  {
-                    return getCell(cell);
-                  }
-        
+      <div className="overflow-scroll">
+        <table className='w-full table-auto my-10 border-collapse rounded-md border'>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr
+                className='border-b bg-gray-50 text-left'
+                key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <th
+                      className='py-4 px-12'
+                      key={header.id}
+                      colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <div>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </div>
+                      )}
+                    </th>
+                  );
                 })}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => {
+                    {
+                      return getCell(cell);
+                    }
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
       <TablePagination table={table}></TablePagination>
     </div>
   );

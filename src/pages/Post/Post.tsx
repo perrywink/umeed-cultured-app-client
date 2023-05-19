@@ -37,9 +37,13 @@ const Post = () => {
 
   return (
     <div className="flex flex-grow">
-      
       <div className="bg-white w-full p-5">
         <div className="border-b">
+          {post?.rejectDsc &&
+            <div className="w-full bg-red-300 text-red-900 rounded-md p-3 mb-4">
+              {`Rejected: "${post.rejectDsc}"`}
+            </div>
+          }
           <div className="flex flex-col lg:flex-row w-full items-left lg:items-center lg:justify-between mb-2 gap-2">
             <div className="flex gap-2 flex-col lg:flex-row lg:max-w-3/5 overflow-scroll scrollbar-hide">
               <div className="flex items-center">
@@ -48,12 +52,12 @@ const Post = () => {
                   onClick={returnToPrevScreen}
                 />
               </div>
-              <div className="text-4xl lg:text-5xl font-bold">
+              <div className="text-4xl lg:text-3xl font-bold line-clamp-1">
                 {getPostSuccess && post.title}
               </div>
             </div>
             <div className="lg:ml-0 lg:max-w-2/5 text-xs text-neutral-500 flex flex-col lg:flex-row lg:items-center gap-2">
-              <div className="flex items-center space-x-2 mt-3 lg:mt-0 lg:justify-end overflow-x-auto scrollbar-hide">
+              <div className="flex items-center space-x-2 mt-3 lg:mt-0 lg:justify-end">
                 {getPostTagsSuccess &&
                   !!tags &&
                   tags.map(({ tag }: { tag: Tag }) => (
@@ -65,7 +69,7 @@ const Post = () => {
                     </div>
                 ))}
               </div>
-              <div className="ml-2 lg:ml-0 flex-none">
+              <div className="ml-2 lg:ml-0">
                 {getPostSuccess && moment(post.updatedAt).fromNow()}
               </div>
             </div>
@@ -77,13 +81,13 @@ const Post = () => {
               <ImageCarousel>
                 {(media as Media[]).map((m, i) => (
                   <div key={i}>
-                    <img key={i} src={m.mediaUrl} className="h-[200] w-full object-cover" />
+                    <img key={i} src={m.mediaUrl} className="h-[30em] w-[30em] object-cover" />
                   </div>
                 ))}
               </ImageCarousel>
             )}
           </div>
-          <div className="mx-auto mt-4 mb-6 prose prose-sm lg:prose-md col-span-2 break-words">
+          <div className="mx-auto mt-4 mb-6 prose prose-sm lg:prose-lg col-span-2 break-words">
             <div className="quill">{getPostSuccess && renderHTMLData(post.desc)}</div>
           </div>
         </div>
