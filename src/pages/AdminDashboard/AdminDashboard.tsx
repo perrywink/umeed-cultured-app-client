@@ -86,15 +86,15 @@ const AdminDashboard = () => {
 
   return (
     <div className='flex flex-col min-h-screen'>
-      <div className='text-center my-10 pb-4'>
-        <div className='w-full h-10 justify-center'>
+      <div className="flex flex-row my-10 pb-6 mx-8">
+        <div className="w-1/2 h-10 ">
           <div>
-            <span className='font-cormorant rounded-none p-2 font-bold text-3xl text-gray-800'>
+            <span className="font-cormorant rounded-none p-2 font-bold text-3xl">
               Admin Dashboard
             </span>
           </div>
           <div>
-            <span className='font-manrope rounded-none p-2 font-regular text-lg text-gray-500'>
+            <span className="font-manrope rounded-none p-2 font-regular text-lg text-slate-500">
               Welcome back, SuperUser
             </span>
           </div>
