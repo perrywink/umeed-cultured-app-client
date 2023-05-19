@@ -12,6 +12,7 @@ import { Button } from "../../../components";
 import TablePagination from "../components/TablePagination";
 import { useUpdatePost } from "../../../api/post";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   tabData: PostTable[];
@@ -22,6 +23,8 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
   const data = tabData || [];
   const [dataUpdate, setDataUpdate] = useState<boolean>(false);
   const { mutateAsync: updatePostStatus } = useUpdatePost();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     refetch();
@@ -86,7 +89,7 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
   };
 
   const handleClick = (rowData: any) => {
-    alert(JSON.stringify(rowData));
+    navigate(`/post/${rowData.id}`);
   };
 
   const getCell = (cell: any) => {
@@ -98,9 +101,8 @@ const UserPostTable = ({ tabData, refetch }: Props) => {
     if (columnId == "title") {
       ele = (
         <a
-          href='#'
           className='font-regular text-slate-600 underline'
-          onClick={() => handleClick(val)}>
+          onClick={() => handleClick(rowItem)}>
           {val}
         </a>
       );
