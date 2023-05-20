@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
 import { useAuthContext } from "../../context/AuthContext";
-import { Navigate, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useGetUser } from "../../api/user";
 
 type Props = {
     children: JSX.Element
@@ -8,7 +8,20 @@ type Props = {
 
 const PrivateRoute = ({children} : Props) => {
     const authToken = useAuthContext();
-    return (authToken ? children : <Navigate to='/login'/>);
+    const {data: resUser, isLoading} = useGetUser();
+
+    if (!authToken) {
+        return <Navigate to='/login'/>
+    }
+
+    if (isLoading || !resUser) 
+        return <></>
+
+    if (!resUser.onboarded){
+        return <Navigate to='/onboarding'/>
+    } 
+
+    return children
 }
  
 export default PrivateRoute;

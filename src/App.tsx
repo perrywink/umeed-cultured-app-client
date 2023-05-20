@@ -1,5 +1,5 @@
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
 } from "react-router-dom";
 import { auth } from "./config/firebase";
 import { useEffect, useState } from "react";
@@ -10,6 +10,8 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { encryptData } from "./utils/crypto";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { signOut } from "firebase/auth";
 
 function App() {
   const [authToken, setAuthToken] = useState<string | null>(
@@ -18,31 +20,43 @@ function App() {
   const queryClient = new QueryClient()
 
   useEffect(() => {
+    auth.onIdTokenChanged((user) => {  
+      user?.getIdToken().then((token) => {  
+        sessionStorage.setItem("auth_token", encryptData(token, import.meta.env.VITE_SALT))
+        setAuthToken(token)
+      })
+    })
+  }, [])
+
+  useEffect(() => {
     return auth.onAuthStateChanged(async (userCred) => {
       if (userCred){
         userCred.getIdToken()
           .then((token) => {
+            // console.log('TOKEN', token)
             sessionStorage.setItem("auth_token", encryptData(token, import.meta.env.VITE_SALT))
             setAuthToken(token)
           })
           .catch((e) => {
-            setAuthToken(null)
-            console.error(e)
+            console.error("unable to retrieve user token",e)
           })
       } else {
-        setAuthToken(null)
+        console.log("Automatically signing out...")
+        signOut(auth);
+        sessionStorage.clear()
       }
     });
   },[])
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthContext.Provider value={authToken}>
+    <AuthContext.Provider value={authToken}>
+      <QueryClientProvider client={queryClient}>
         <Router>
           <Root/>
         </Router>
-      </AuthContext.Provider>
-    </QueryClientProvider>
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      </QueryClientProvider>
+    </AuthContext.Provider>
   )
 }
 
