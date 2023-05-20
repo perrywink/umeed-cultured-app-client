@@ -26,14 +26,14 @@ const TablePagination = ({ table }: Props) => {
       </div>
       <div>
         <span>
-          Page
+          {` Page `}
           <strong>
             {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </strong>
         </span>
         <span>
-          | Go to page:
+          {` | Go to page: `}
           <input
             type='number'
             defaultValue={table.getState().pagination.pageIndex + 1}

@@ -4,7 +4,7 @@ import { Carousel, IconButton } from "@material-tailwind/react";
 const ImageCarousel = ({children}: {children: JSX.Element[]}) => {
   return ( 
     <Carousel 
-      className="bg-gray-800 h-fit lg:sticky lg:top-0 items-start rounded-lg lg:mt-4 overflow-hidden"
+      className="w-[30em] h-[30em] bg-gray-800 lg:sticky lg:top-0 items-start rounded-lg lg:mt-4 overflow-hidden"
       prevArrow={({ handlePrev }) => (
         <IconButton
           variant="text"
