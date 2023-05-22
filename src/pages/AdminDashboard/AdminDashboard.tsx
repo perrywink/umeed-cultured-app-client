@@ -134,8 +134,8 @@ const AdminDashboard = () => {
         </div>
 
         <div className='w-full'>
-          {postType === "USER_POST" && (
-            <UserPostTable tabData={data} refetch={refetch} />
+          {postType === "USER_POST" && data && (
+            <UserPostTable tabData={data} />
           )}
           {postType === "MY_POST" && data && <MyPostTable tabData={data} />}
         </div>
