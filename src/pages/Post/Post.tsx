@@ -39,7 +39,7 @@ const Post = () => {
     <div className="flex flex-grow">
       <div className="bg-white w-full p-5">
         <div className="border-b">
-          {post?.rejectDsc &&
+          {post?.rejectDsc && post?.status === "REJECTED" &&
             <div className="w-full bg-red-300 text-red-900 rounded-md p-3 mb-4">
               {`Rejected: "${post.rejectDsc}"`}
             </div>
