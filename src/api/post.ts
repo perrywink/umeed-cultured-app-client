@@ -266,6 +266,7 @@ export const useUpdatePost = () => {
   return useMutation(updatePost, {
     onSuccess: () => {
       queryClient.invalidateQueries(["post-status"]);
+      queryClient.invalidateQueries(["post"]);
     },
     onError: (e: any) => {
       console.error(e);

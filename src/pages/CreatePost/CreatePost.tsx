@@ -19,7 +19,7 @@ import React from "react";
 import { useFormValidator } from "../../hooks";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SelectOption } from "../../components/SelectTags/SelectTags";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/24/solid";
@@ -74,6 +74,8 @@ const CreatePost = () => {
   const { data: media, isSuccess: getMediaSuccess } = useGetPostMedia(
     parseInt(params.get("postId") as string)
   );
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     refetch();
@@ -132,6 +134,7 @@ const CreatePost = () => {
     if (!validateForm()) return;
     setLoading(true);
 
+    let postId;
     const newPost: Post = {
       id: params?.get("postId") ? parseInt(params.get("postId") as string) : 0,
       title: title,
@@ -150,11 +153,13 @@ const CreatePost = () => {
         await sendPreExistingMedia(postId);
       }
       await uploadFile(res.data.id);
+      postId = res.data.id
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
       toast.success("Post published");
+      navigate(`/post/${postId}`)
     }
   };
 
