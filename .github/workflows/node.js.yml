@@ -45,7 +45,7 @@ jobs:
 
     runs-on: 'ubuntu-latest'
 
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     steps:
     - name: checkout repository
       uses: actions/checkout@v3
@@ -93,9 +93,9 @@ jobs:
         database_id: ${{ secrets.DATABASE_ID }}
         digitalocean_token: ${{ secrets.DO_ACCESS_TOKEN }}
     
-    - name: Deploy
-      if: ${{ matrix.node-version == '18'}}
-      run: doctl apps create-deployment ${{ secrets.APP_ID }} --wait=true
+    # - name: Deploy
+    #   if: ${{ matrix.node-version == '18'}}
+    #   run: doctl apps create-deployment ${{ secrets.APP_ID }} --wait=true
   
   
     
