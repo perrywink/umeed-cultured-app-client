@@ -4,7 +4,7 @@ import { PostItem, Search } from "../../../components";
 import { useSearchUserPosts } from "../../../api/post";
 import { useEffect, useState } from "react";
 import { IPostWithMedia } from "../../../types/Post";
-import { ArrowDownCircleIcon, EllipsisHorizontalCircleIcon, FaceFrownIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
+import { ArrowDownCircleIcon, EllipsisHorizontalCircleIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
 import { useInView } from "react-intersection-observer";
 import React from "react";
 import { Masonry } from "@mui/lab";
@@ -26,9 +26,12 @@ const UserPosts = () => {
     fetchNextPage,
   } = useSearchUserPosts(searchKeyword);
 
+
   useEffect(() => {
     queryClient.removeQueries(["user-posts"])
   }, [])
+
+  useEffect(()=> {}, [data])
 
   useEffect(() => {
     if (inView) {
