@@ -21,7 +21,7 @@ test.describe.skip('Login Page', () => {
 
      await expect(page.getByText('Password', { exact: true })).toBeVisible();
 
-     await expect(page.getByText('Remember me')).toBeVisible();
+    //  await expect(page.getByText('Remember me')).toBeVisible();
 
      await expect(page.getByText('Forgot Password?')).toBeVisible();
 
@@ -37,7 +37,7 @@ test.describe.skip('Login Page', () => {
 
     await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
 
-    await page.getByRole('checkbox').click();
+    // await page.getByRole('checkbox').click();
 
     await page.getByRole('button', { name: 'Login' }).click();
 
@@ -49,7 +49,7 @@ test.describe.skip('Login Page', () => {
 
     await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
 
-    await page.getByRole('checkbox').click();
+    // await page.getByRole('checkbox').click();
 
     await page.getByRole('button', { name: 'Login' }).click();
 

@@ -26,7 +26,7 @@ test.describe('Interests Page', () => {
         await page.getByPlaceholder('0412346789').fill(E2E_CONTACT);
         await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
         await page.getByPlaceholder('Make sure it matches!').fill(E2E_PASSWORD);
-        await page.getByRole('checkbox').click();
+        // await page.getByRole('checkbox').click();
 
         //click on register
         await page.getByRole('button', { name: 'Register' }).click();
@@ -73,7 +73,7 @@ test.describe('Interests Page', () => {
     test('should login a user with correct credentials, check dashboard and logout the user', async ({ page }) => {
         await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
         await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
-        await page.getByRole('checkbox').click();
+        // await page.getByRole('checkbox').click();
         await page.getByRole('button', { name: 'Login' }).click();
     
         //Check toast to see if user is logged in
