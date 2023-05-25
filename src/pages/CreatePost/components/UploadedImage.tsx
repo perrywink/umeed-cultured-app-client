@@ -11,13 +11,17 @@ interface IProps {
 
 const UploadedImage = ({img, thumbnail, removeImage, setThumbnail} : IProps) => {
   return ( 
-    <div className="relative group">
+    <div className={`relative group rounded-md flex justify-center ${
+      img.url == thumbnail?.url
+            ? "border-4 border-umeed-tangerine-300 duration-100"
+            : ""
+    }`}>
       <img
         src={img.url}
         alt=""
-        className={`max-h-[240px] max-w-[240px] rounded group-hover:opacity-30 ${
+        className={`w-56 h-56 object-cover rounded group-hover:opacity-30 ${
           img.url == thumbnail?.url
-            ? "border-4 border-gray-900 duration-100"
+            ? "m-1 duration-100"
             : ""
         }`}
       />

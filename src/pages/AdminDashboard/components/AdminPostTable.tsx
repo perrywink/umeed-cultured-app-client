@@ -1,6 +1,6 @@
 import { Post } from "../../../types/Post";
 import React, { useMemo } from "react";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import {
   useReactTable,
   getCoreRowModel,
@@ -24,9 +24,7 @@ const MyPostTable = ({ tabData }: Props) => {
   const navigate = useNavigate();
 
   const handleDelete = (data: any) => {
-    console.log(data.row.original.id);
     deletePost({ postId: data?.row?.original?.id });
-    console.log("deleted");
   };
 
   const handleEdit = (data: any) => {
@@ -66,7 +64,7 @@ const MyPostTable = ({ tabData }: Props) => {
               <TrashIcon className="h-6 w-6 text-gray-500 hover:text-umeed-beige" />
             }
             title="Delete Post"
-            body={`Are you sure you want to permanantly delete the post "${props?.row?.original?.title}" ?`}
+            body= {<div>{`Are you sure you want to permanantly delete the post "${props?.row?.original?.title}" ?`}</div>}
             action="Delete"
             onClick={() => handleDelete(props)}
           ></Modal>
@@ -91,12 +89,12 @@ const MyPostTable = ({ tabData }: Props) => {
   });
 
   return (
-    <div className="w-full text-gray-600">
-      <table className="w-full table-auto my-10 border-collapse ">
-        <thead>
+    <div className="w-full text-gray-700">
+      <table className="w-full table-auto my-10 border-collapse rounded-md border">
+        <thead className="text-sm">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
-              className="border-b-2 border-gray-200 text-left"
+              className="border-b bg-gray-50 text-left"
               key={headerGroup.id}
             >
               {headerGroup.headers.map((column) => (
@@ -120,7 +118,7 @@ const MyPostTable = ({ tabData }: Props) => {
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <td
-                    className="border-b-2 border-gray-200 py-2 px-12"
+                    className="border-b border-gray-200 py-2 px-12"
                     key={cell.id}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

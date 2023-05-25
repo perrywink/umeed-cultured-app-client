@@ -68,7 +68,7 @@ const Dashboard = () => {
   }, [searchKeyword]);
 
   useEffect(() => {
-    if (inView && selectedTags && selectedTags.length > 0) {
+    if (inView) {
       fetchNextPage();
     }
   }, [inView]);

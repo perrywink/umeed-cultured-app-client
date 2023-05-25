@@ -26,14 +26,14 @@ const TablePagination = ({ table }: Props) => {
       </div>
       <div>
         <span>
-          Page
+          {` Page `}
           <strong>
             {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </strong>
         </span>
         <span>
-          | Go to page:
+          {` | Go to page: `}
           <input
             type='number'
             defaultValue={table.getState().pagination.pageIndex + 1}
@@ -41,7 +41,7 @@ const TablePagination = ({ table }: Props) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0;
               table.setPageIndex(page);
             }}
-            className='border p-1 rounded w-16'
+            className='border p-1 rounded w-16 outline-umeed-tangerine-300'
           />
         </span>
 
@@ -50,7 +50,7 @@ const TablePagination = ({ table }: Props) => {
           onChange={(e) => {
             table.setPageSize(Number(e.target.value));
           }}
-          className='h-8 mx-2 border'>
+          className='h-8 mx-2 border outline-umeed-tangerine-300'>
           {[5, 10].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
