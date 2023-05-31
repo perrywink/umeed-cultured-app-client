@@ -1,8 +1,8 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 
-name: Node.js CI
+name: Staging CI/CD
 
-on: [push, pull_request] 
+on: [push, pull_request, workflow_dispatch] 
   
   # to cancel previous runs
 concurrency:

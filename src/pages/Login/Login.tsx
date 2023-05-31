@@ -49,11 +49,11 @@ const AuthForm = () => {
 
   useEffect(() => {
     if (submitClicked && getUserFetched && getUserError) {
-      toast.error("Internal server error occured. Please contact an admin.", {
+      toast.error("Internal server error occured.", {
         toastId: "login-toast",
       });
-      auth.signOut();
-      sessionStorage.clear();
+      // auth.signOut();
+      // sessionStorage.clear();
       setLoading(false);
     }
   }, [submitClicked, getUserError, getUserFetched]);
@@ -106,10 +106,11 @@ const AuthForm = () => {
             label="Password"
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Minimum 6 characters."
+            styles="!mb-2"
           />
           <div className="grid grid-cols-2 gap-1 mb-5">
-            <div className="text-left whitespace-nowrap">
-              <CheckboxInput label="Remember me" />
+            <div className="text-left whitespace-nowrap w-full">
+              {/* <CheckboxInput label="Remember me" /> */}
             </div>
             <LinkButton onClick={() => navigate("/reset-password")}>
               Forgot Password?

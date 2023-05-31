@@ -147,6 +147,7 @@ export const useDeletePost = () => {
   return useMutation(deletePost, {
     onSuccess: () => {
       queryClient.invalidateQueries(["post"]);
+      queryClient.invalidateQueries(["user-posts",""]);
       toast.success("Post Deleted");
     },
     onError: (e: any) => {
@@ -249,11 +250,11 @@ export const useGetPostsByStatus = (status: PostStatus) => {
   );
 };
 
-const updatePostStatus = async (status: PostStatus) => {
+const updatePost = async (data: Partial<PostStatus>) => {
   const r = {
-    url: postEndpoint + "/update-post-status",
+    url: postEndpoint + "/update-post",
     method: "PUT",
-    data: status,
+    data: data,
     headers: { "Content-Type": "application/json" },
   };
   const response = await request(r);
@@ -263,9 +264,10 @@ const updatePostStatus = async (status: PostStatus) => {
 export const useUpdatePost = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(updatePostStatus, {
+  return useMutation(updatePost, {
     onSuccess: () => {
       queryClient.invalidateQueries(["post-status"]);
+      queryClient.invalidateQueries(["post"]);
     },
     onError: (e: any) => {
       console.error(e);

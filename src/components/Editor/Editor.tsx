@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import * as Emoji from "quill-emoji";
 
@@ -7,14 +7,11 @@ import "quill-emoji/dist/quill-emoji.css";
 
 Quill.register("modules/emoji", Emoji);
 
-export interface EditorContentChanged {
-  html: string;
-  markdown: string;
-}
-
 export interface EditorProps {
-  value: string;
-  onChange: (changes: string) => void;
+  valueState: {
+    value: string
+    setValue: React.Dispatch<React.SetStateAction<string>>
+  }
 }
 
 const TOOLBAR_OPTIONS = [
@@ -26,18 +23,9 @@ const TOOLBAR_OPTIONS = [
   ["clean"]
 ];
 
-export default function Editor(props: EditorProps) {
-  const [value, setValue] = useState<string>(props.value || "");
+export default function Editor({valueState}: EditorProps) {
+  const {value, setValue} = valueState
   const reactQuillRef = useRef<ReactQuill>(null);
-
-  const onChange = (content: string) => {
-    setValue(content);
-
-    if (props.onChange) {
-      console.log(content)
-      props.onChange(content);
-    }
-  };
 
   return (
     <ReactQuill
@@ -53,7 +41,7 @@ export default function Editor(props: EditorProps) {
         "emoji-shortname": true,
       }}
       value={value}
-      onChange={onChange}
+      onChange={(newContent) => setValue(newContent)}
     />
   );
 }
