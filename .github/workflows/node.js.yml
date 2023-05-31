@@ -94,7 +94,7 @@ jobs:
         digitalocean_token: ${{ secrets.DO_ACCESS_TOKEN }}
     
     - name: Deploy
-      if: ${{ matrix.node-version == '18'}}
+      if: ${{ matrix.node-version == '16'}}
       run: doctl apps create-deployment ${{ secrets.APP_ID }} --wait=true
   
   
