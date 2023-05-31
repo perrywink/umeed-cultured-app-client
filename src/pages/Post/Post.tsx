@@ -1,13 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetPost, useGetPostMedia } from "../../api/post";
-import { ArrowLeftIcon, ArrowRightIcon, ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
+import {ArrowUturnLeftIcon } from "@heroicons/react/24/outline";
 import moment from "moment";
 import { useGetTagByPost } from "../../api/tag";
 import { Tag } from "../../types/Tag";
 import { Media } from "../../types/Post";
-import { Carousel, IconButton } from "@material-tailwind/react";
 import DOMPurify from "dompurify";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import ImageCarousel from "./components/ImageCarousel";
 
 const Post = () => {

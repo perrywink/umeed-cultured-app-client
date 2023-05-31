@@ -1,6 +1,6 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 
-name: Node.js CI
+name: Staging CI/CD
 
 on: [push, pull_request, workflow_dispatch] 
   
@@ -41,7 +41,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ${{ fromJSON(github.ref == 'refs/heads/main' && '[18]' || '[16,18]') }}
+        node-version: ${{ fromJSON(github.ref == 'refs/heads/main' && '[16,18]' || '[16,18]') }}
 
     runs-on: 'ubuntu-latest'
 
@@ -94,7 +94,7 @@ jobs:
         digitalocean_token: ${{ secrets.DO_ACCESS_TOKEN }}
     
     - name: Deploy
-      if: ${{ matrix.node-version == '18'}}
+      if: ${{ matrix.node-version == '16'}}
       run: doctl apps create-deployment ${{ secrets.APP_ID }} --wait=true
   
   
