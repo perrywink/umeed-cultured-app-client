@@ -63,6 +63,8 @@ test.describe('Interests Page', () => {
         await expect(page.getByText(selected_interest_2)).toBeVisible();
         await expect(page.getByText(selected_interest_3)).toBeVisible();
 
+        await page.waitForTimeout(1500); // Hard wait needed to allow onboarded to be set to true for next test
+
     });
 
     test('should login a user with correct credentials, check dashboard and logout the user', async ({ page }) => {
