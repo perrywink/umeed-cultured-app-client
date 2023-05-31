@@ -147,6 +147,7 @@ export const useDeletePost = () => {
   return useMutation(deletePost, {
     onSuccess: () => {
       queryClient.invalidateQueries(["post"]);
+      queryClient.invalidateQueries(["user-posts",""]);
       toast.success("Post Deleted");
     },
     onError: (e: any) => {
