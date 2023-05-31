@@ -1,6 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 
-const E2E_EMAIL = "teste2euser@gmail.com"
 const E2E_USERNAME = "teste2euser"
 const E2E_PASSWORD = "teste2euser"
 const E2E_CONTACT = "0422222221"
@@ -8,16 +7,13 @@ const datetime=Date.now();
 
 test.describe('Interests Page', () => {
 
-    test.describe.configure({ mode: 'serial' });
-  
-    test.beforeEach(async ({ page }) => {
-        await page.goto('/login');
-    });
+    let selected_interest_1: string, selected_interest_2: string, selected_interest_3: string = "";
 
+    test.describe.configure({ mode: 'serial' });
 
     test("should register a new user and check their dashboard", async ({page}) => {
-        await page.getByText('Register now').click();
-        await expect(page).toHaveURL('/login#/register');
+        await page.goto('#/register');
+
         await expect(page.getByRole('img', { name: 'Cultured Up All Logo' })).toBeVisible();
 
         //fill in all the details on the register page
@@ -27,12 +23,11 @@ test.describe('Interests Page', () => {
         await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
         await page.getByPlaceholder('Make sure it matches!').fill(E2E_PASSWORD);
         // await page.getByRole('checkbox').click();
-
         //click on register
         await page.getByRole('button', { name: 'Register' }).click();
 
         //navigate to the econtact page
-        await expect(page).toHaveURL('login#/onboarding');
+        await expect(page).toHaveURL('#/onboarding');
 
         // Fill in the emergency contact details
         const nameInput = "Test Emergency Contact UserName1";
@@ -41,24 +36,24 @@ test.describe('Interests Page', () => {
         await page.getByPlaceholder('0412346789').fill(numberInput);
         await page.getByRole('button', { name: "Next" }).click()
         await expect(page.getByText("Get Started")).toBeVisible();
-        await expect(page).toHaveURL('login#/onboarding');
+        await expect(page).toHaveURL('#/onboarding');
         
         //Select an interest
         await page.getByTestId("react-select-3-input").click();
         await expect(page.getByTestId("react-select-3-listbox")).toBeVisible();
-        const selected_interest_1 = (await page.getByTestId("react-select-3-option-1").innerText()).valueOf()
+        selected_interest_1 = (await page.getByTestId("react-select-3-option-1").innerText()).valueOf()
         await page.getByTestId("react-select-3-option-1").click();
 
         //Select another interest
         await page.getByTestId("react-select-3-input").click();
         await expect(page.getByTestId("react-select-3-listbox")).toBeVisible();
-        const selected_interest_2 = (await page.getByTestId("react-select-3-option-5").innerText()).valueOf()
+        selected_interest_2 = (await page.getByTestId("react-select-3-option-5").innerText()).valueOf()
         await page.getByTestId("react-select-3-option-5").click();
 
         //Select another interest
         await page.getByTestId("react-select-3-input").click();
         await expect(page.getByTestId("react-select-3-listbox")).toBeVisible();
-        const selected_interest_3 = (await page.getByTestId("react-select-3-option-7").innerText()).valueOf()
+        selected_interest_3 = (await page.getByTestId("react-select-3-option-7").innerText()).valueOf()
         await page.getByTestId("react-select-3-option-7").click();
 
         await page.getByRole('button', { name: "Get Started" }).click()
@@ -71,7 +66,9 @@ test.describe('Interests Page', () => {
     });
 
     test('should login a user with correct credentials, check dashboard and logout the user', async ({ page }) => {
-        await page.getByPlaceholder('john@doe.com').fill(E2E_EMAIL);
+        await page.goto('#/login');
+
+        await page.getByPlaceholder('john@doe.com').fill(E2E_USERNAME+datetime+"@gmail.com");
         await page.getByPlaceholder('Minimum 6 characters.').fill(E2E_PASSWORD);
         // await page.getByRole('checkbox').click();
         await page.getByRole('button', { name: 'Login' }).click();
@@ -80,15 +77,15 @@ test.describe('Interests Page', () => {
         await expect(page.getByText("You're logged in!")).toBeVisible();
 
         //Check that the user interests are displayed
-        await expect(page.getByText("Depression")).toBeVisible();
-        await expect(page.getByText("Anxiety")).toBeVisible();
-        await expect(page.getByText("Cultured")).toBeVisible();
+        await expect(page.getByText(selected_interest_1)).toBeVisible();
+        await expect(page.getByText(selected_interest_2)).toBeVisible();
+        await expect(page.getByText(selected_interest_3)).toBeVisible();
 
         //Logout the user
         await page.getByRole('navigation').locator('svg').nth(3).click();
 
         //check user is taken back to login page
-        await expect(page).toHaveURL('login#/login');
+        await expect(page).toHaveURL('#/login');
 
     });
 
