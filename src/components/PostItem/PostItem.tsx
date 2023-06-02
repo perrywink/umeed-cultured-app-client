@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Modal from "../Modal/Modal";
 import { useDeletePost } from "../../api/post";
+import { useGetUser } from "../../api/user";
 
 interface IProps {
   showStatus?: boolean;
@@ -13,6 +14,7 @@ interface IProps {
 const PostItem = ({ post, showStatus = false }: IProps) => {
   const navigate = useNavigate();
   const { mutate: deletePost } = useDeletePost();
+  const {data: user, isLoading} = useGetUser();
 
   const retrieveThumbnailMediaUrl = (post: IPostWithMedia) => {
     const thumbnailMedia = post.media?.find((m) => m.isThumbnail);
@@ -30,7 +32,11 @@ const PostItem = ({ post, showStatus = false }: IProps) => {
   };
 
   const handleEdit = () => {
-    navigate(`/admin/post?postId=${post.id}`);
+    if (!isLoading && user?.userType == "ADMIN"){
+      navigate(`/admin/post?postId=${post.id}`);
+    } else {
+      navigate(`/create-post?postId=${post.id}`);
+    }
   };
 
   const handleDelete = () => {
