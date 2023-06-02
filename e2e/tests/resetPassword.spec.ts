@@ -29,7 +29,7 @@ test.describe.skip('Reset Password Page', () => {
 
   test('should show success message after submitting valid registered email', async ({ page }) => {
     // enter valid email
-    await page.getByPlaceholder('john@doe.com').fill('teste2euser@gmail.com'); 
+    await page.getByPlaceholder('john@doe.com').fill('admin@gmail.com'); 
     //click on submit
     await page.getByRole('button', { name: 'Send' }).click();
     //check the toast

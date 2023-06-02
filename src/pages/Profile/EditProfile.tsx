@@ -11,7 +11,6 @@ const EditProfile = () => {
   const { data: userData, isSuccess: successUserData } = useGetUser();
   const { data: getEContact, isSuccess: getEContactSuccess } = useGetUserEContact();
 
-  const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [contact, setContact] = useState<string>("");
   const [eContactName, setEContactName] = useState<string>("");
@@ -36,7 +35,6 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (successUserData && !!userData) {
-      setEmail(userData.email)
       setUsername(userData.username)
       setContact(userData.contact)
     }
@@ -48,10 +46,9 @@ const EditProfile = () => {
       setEContactName(getEContact?.name)
       setEContact(getEContact?.phoneNumber)
     }
-  })
+  }, [getEContactSuccess])
 
   const checkUserChanged = () => {
-    if (email !== userData?.email) return true
     if (username !== userData?.username) return true
     if (contact !== userData?.contact) return true
     return false
@@ -75,7 +72,7 @@ const EditProfile = () => {
     setLoading(true)
     try{
       if (checkUserChanged()){
-        await updateUser({email, contact, username})
+        await updateUser({contact, username})
         toast.success("User succesfully updated")
       }
       if (checkEContactChanged()) {
@@ -112,13 +109,6 @@ const EditProfile = () => {
             <div className="text-center font-sans text-sm font-light text-gray-600 mt-2 mb-5">
               Once you are happy with your changes, click on save!
             </div>
-            <Input
-              type="text"
-              label="Email"
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="john@doe.com"
-              value={email}
-            />
             <Input
               type="text"
               label="Username"
